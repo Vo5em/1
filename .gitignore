@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+config.py
 .env
 
 # SQLite (если переходишь на Postgres — точно игнорируй)
