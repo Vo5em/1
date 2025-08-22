@@ -28,7 +28,7 @@ class User(Base):
     uuid: Mapped[str] = mapped_column(String(60),nullable=True)
     daybalance: Mapped[int] = mapped_column(default=7)
     dayend: Mapped[datetime] = mapped_column(DateTime, nullable=True)
-    referrer_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("users.id"), nullable=True)
+    referrer_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
     payment_method_id: Mapped[str] = mapped_column(String(100), nullable=True)
     payload: Mapped[str] = mapped_column(String(100), unique=True, nullable=True)
 
