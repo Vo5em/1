@@ -160,7 +160,9 @@ async def create_payment(tg_id: int, amount: float = 199.0, currency: str = "RUB
             user.payload = str(uuid.uuid4())
         payload_value = user.payload
 
-        order = Order(user_id=user.id, create_at=datetime.now(tz=MOSCOW_TZ), status="pending")
+        now_naive = datetime.now().replace(tzinfo=None)
+
+        order = Order(user_id=user.id, create_at=now_naive, status="pending")
         session.add(order)
         await session.commit()
 
