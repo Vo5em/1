@@ -54,9 +54,10 @@ async def set_key(tg_id, vless_link, new_uuid):
         daybalance = result.scalar_one_or_none()
         now_moscow = datetime.now(tz=MOSCOW_TZ)
         dayend = now_moscow + timedelta(days=daybalance)
+        dayend_naive = dayend.replace(tzinfo=None)
         await session.execute(update(User).where(User.tg_id == tg_id).values(vpnkey=vless_link,
                                                                              uuid=new_uuid,
-                                                                             dayend=dayend,
+                                                                             dayend=dayend_naive,
                                                                              daybalance=0))
         await session.commit()
         if dayend:
