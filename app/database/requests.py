@@ -254,5 +254,5 @@ async def check_subscriptions():
     scheduler.start()
 
 @app.route("/")
-async def index():
-    return "Hello world"
+async def index(request: Request):
+    return {"message":"HElo"}
