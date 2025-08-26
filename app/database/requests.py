@@ -150,7 +150,7 @@ async def restore_notifications():
                 schedule_notifications(tg_id, dayend)
 
 
-async def create_payment(tg_id: int, amount: float = 199.0, currency: str = "RUB") -> str:
+async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB") -> str:
     async with async_session() as session:
         user = await session.scalar(select(User).where(User.tg_id == tg_id))
         if not user:
@@ -252,3 +252,7 @@ async def check_subscriptions():
             await create_auto_payment(user)
     scheduler.add_job(check_subscriptions, "interval", hours=12)
     scheduler.start()
+
+@app.route("/")
+def index():
+    return "Hello world"
