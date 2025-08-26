@@ -240,6 +240,8 @@ async def yookassa_webhook(request: Request):
 
                 await session.commit()
 
+            await activatekey(ruuid, tg_id)
+
     elif event == "payment.canceled":
         payload = obj.get("metadata", {}).get("payload")
 
