@@ -221,7 +221,10 @@ async def yookassa_webhook(request: Request):
                 else:
                     user.dayend += timedelta(days=30)
 
-                await activatekey(user.uuid, user.tg_id)
+                ruuid = user.uuid
+                tg_id = user.tg_id
+
+                await activatekey(ruuid,tg_id)
 
                 if payment_method_id:
                     user.payment_method_id = payment_method_id
