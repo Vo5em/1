@@ -245,6 +245,6 @@ async def sub(callback: CallbackQuery):
 @user.callback_query(F.data == 'doitpls')
 async def pay(callback: CallbackQuery):
     tg_id = callback.from_user.id
-    url = await create_payment(tg_id)
-    kburl = await payment_ketboard(url)
-    await callback.message.answer(f"💳 Оплатите по ссылке:\n{url}", reply_markup=kburl)
+    payment_url, payment_id = await create_payment(tg_id)
+    kburl = await payment_ketboard(payment_url, payment_id)
+    await callback.message.answer(f"💳 Оплатите по ссылке:\n{payment_url}", reply_markup=kburl)
