@@ -152,6 +152,7 @@ async def restore_notifications():
 
 
 async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB") -> tuple[str, str]:
+    # 1️⃣ Создаём заказ в БД
     async with async_session() as session:
         user = await session.scalar(select(User).where(User.tg_id == tg_id))
         if not user:
@@ -162,29 +163,28 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
         payload_value = user.payload
 
         now_naive = datetime.now().replace(tzinfo=None)
-
         order = Order(user_id=user.id, create_at=now_naive, status="pending")
         session.add(order)
         await session.commit()
 
-        user_id = user.id   # ⚡ сохраняем id заранее
+        user_id = user.id  # сохраняем отдельно
 
+    # 2️⃣ Создаём платёж в YooKassa в отдельном потоке
     def _sync_create():
         return Payment.create({
             "amount": {"value": f"{amount:.2f}", "currency": currency},
             "capture": True,
-            "confirmation": {"type": "redirect", "return_url": mybot},
+            "confirmation": {"type": "redirect", "return_url": str(mybot)},  # строка!
             "description": f"Оплата подписки VPN для {tg_id}",
             "save_payment_method": True,
             "metadata": {"payload": payload_value},
         })
 
     payment = await asyncio.to_thread(_sync_create)
-
     payment_id = payment.id
     payment_url = payment.confirmation.confirmation_url
 
-    # Сохраняем payment_id в заказ
+    # 3️⃣ Сохраняем payment_id в заказ в новой сессии
     async with async_session() as session:
         order = await session.scalar(
             select(Order).where(Order.user_id == user_id).order_by(Order.create_at.desc())
@@ -194,7 +194,6 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
             await session.commit()
 
     return payment_url, payment_id
-
 
 
 @app.post("/yookassa/webhook")
