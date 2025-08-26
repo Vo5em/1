@@ -253,6 +253,6 @@ async def check_subscriptions():
     scheduler.add_job(check_subscriptions, "interval", hours=12)
     scheduler.start()
 
-@app.route("/")
+@app.get("/")
 async def index(request: Request):
-    return {"message":"HElo"}
+    return {"message": "Hello"}
