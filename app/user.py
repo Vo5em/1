@@ -246,5 +246,5 @@ async def sub(callback: CallbackQuery):
 async def pay(callback: CallbackQuery):
     tg_id = callback.from_user.id
     payment_url, payment_id = await create_payment(tg_id)
-    kburl = await payment_ketboard(payment_url, payment_id)
+    kburl = payment_ketboard(payment_url, payment_id)
     await callback.message.answer(f"💳 Оплатите по ссылке:\n{payment_url}", reply_markup=kburl)
