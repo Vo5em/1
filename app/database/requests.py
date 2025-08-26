@@ -161,13 +161,14 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
         if not user.payload:
             user.payload = str(uuid.uuid4())
         payload_value = user.payload
+        tg_id = user.tg_id
+        user_id = user.id
 
         now_naive = datetime.now().replace(tzinfo=None)
         order = Order(user_id=user.id, create_at=now_naive, status="pending")
         session.add(order)
         await session.commit()
 
-        user_id = user.id  # сохраняем отдельно
 
     # 2️⃣ Создаём платёж в YooKassa в отдельном потоке
     def _sync_create():
