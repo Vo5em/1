@@ -184,8 +184,8 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
 @app.post("/yookassa/webhook")
 async def yookassa_webhook(request: Request):
     raw = await request.body()
-    print("RAW webhook:", raw.decode())
-    return {"status": "ok"}
+    print("RAW webhook:", raw.decode())  # для отладки
+
     data = await request.json()
     event = data.get("event")
     obj = data.get("object", {})
@@ -219,6 +219,7 @@ async def yookassa_webhook(request: Request):
 
                 await session.commit()
 
+    # Ответ ЮKassa должен быть в конце, после всей обработки
     return {"status": "ok"}
 
 
