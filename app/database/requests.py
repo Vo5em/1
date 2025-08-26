@@ -9,7 +9,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from datetime import datetime, timedelta
 from yookassa import Payment, Configuration
 from config import yookassa_shopid, yookassa_api, mybot
-from app.gen import activatekey
+from app.gen2 import activatekey
 
 
 MOSCOW_TZ = ZoneInfo("Europe/Moscow")
