@@ -151,7 +151,7 @@ async def restore_notifications():
                 schedule_notifications(tg_id, dayend)
 
 
-async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB") -> str:
+async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB") -> tuple[str, str]:
     async with async_session() as session:
         user = await session.scalar(select(User).where(User.tg_id == tg_id))
         if not user:
@@ -167,6 +167,7 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
         session.add(order)
         await session.commit()
 
+        user_id = user.id   # ⚡ сохраняем id заранее
 
     def _sync_create():
         return Payment.create({
@@ -186,13 +187,14 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
     # Сохраняем payment_id в заказ
     async with async_session() as session:
         order = await session.scalar(
-            select(Order).where(Order.user_id == user.id).order_by(Order.create_at.desc())
+            select(Order).where(Order.user_id == user_id).order_by(Order.create_at.desc())
         )
         if order:
             order.payment_id = payment_id
             await session.commit()
 
     return payment_url, payment_id
+
 
 
 @app.post("/yookassa/webhook")
