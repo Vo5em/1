@@ -196,7 +196,8 @@ async def yookassa_webhook(request: Request):
 
         if payload:
             async with async_session() as session:
-                user = await session.scalar(select(User).where(User.payload == payload))
+                result = await session.execute(select(User).where(User.payload == payload))
+                user = result.scalars().first()  # это ORM-объект
                 if not user:
                     return {"status": "user_not_found"}
 
@@ -204,16 +205,18 @@ async def yookassa_webhook(request: Request):
                 if not user.dayend or user.dayend < now:
                     user.dayend = now + timedelta(days=30)
                 else:
-                    user.dayend = user.dayend + timedelta(days=30)
+                    user.dayend += timedelta(days=30)
 
                 if payment_method_id:
                     user.payment_method_id = payment_method_id
 
-                order = await session.scalar(
+                # Работа с заказом
+                result = await session.execute(
                     select(Order)
                     .where(Order.user_id == user.id)
                     .order_by(Order.create_at.desc())
                 )
+                order = result.scalars().first()
                 if order:
                     order.status = "paid"
 
@@ -223,7 +226,7 @@ async def yookassa_webhook(request: Request):
     return {"status": "ok"}
 
 
-async def create_auto_payment(user: User, amount: float = 199.0, currency: str = "RUB"):
+async def create_auto_payment(user: User, amount: float = 150.0, currency: str = "RUB"):
     if not user.payment_method_id:
         raise ValueError("Нет сохранённого способа оплаты")
 
