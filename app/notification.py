@@ -7,3 +7,6 @@ async def notify_before_end(tg_id: int):
 
 async def notify_end(tg_id: int):
     await bot.send_message(tg_id, "🔴 Ваша подписка истекла.", reply_markup=kb.go_pay)
+
+async def notify_sps(tg_id: int):
+    await bot.send_message(tg_id, "djfkdf")

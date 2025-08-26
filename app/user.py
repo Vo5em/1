@@ -4,7 +4,7 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.filters import CommandStart, Command, CommandObject
 from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta
-
+from app.keyboard import payment_ketboard
 import app.keyboard as kb
 from app.gen import addkey
 
@@ -246,4 +246,5 @@ async def sub(callback: CallbackQuery):
 async def pay(callback: CallbackQuery):
     tg_id = callback.from_user.id
     url = await create_payment(tg_id)
-    await callback.message.answer(f"💳 Оплатите по ссылке:\n{url}")
+    kburl = await payment_ketboard(url)
+    await callback.message.answer(f"💳 Оплатите по ссылке:\n{url}", reply_markup=kburl)

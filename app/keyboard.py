@@ -67,3 +67,10 @@ admin = InlineKeyboardMarkup(inline_keyboard=[
 admin_panel = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Отмена', callback_data='cancel')]
 ])
+
+def payment_ketboard(payurl, payid) -> InlineKeyboardMarkup:
+    get_pay = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text='Оплатить', url=payurl)],
+        [InlineKeyboardButton(text='Отмена',callback_data=f"cancel{payid}")]
+    ])
+    return get_pay

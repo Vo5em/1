@@ -9,6 +9,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from datetime import datetime, timedelta
 from yookassa import Payment, Configuration
 from config import yookassa_shopid, yookassa_api, mybot
+from app.gen import activatekey
 
 
 MOSCOW_TZ = ZoneInfo("Europe/Moscow")
@@ -113,7 +114,7 @@ async def find_dayend(tg_id):
 async def schedulers():
     while True:
         await check_end()
-        await asyncio.sleep(3000)
+        await asyncio.sleep(1500)
 
 
 def schedule_notifications(tg_id, dayend):
@@ -178,7 +179,20 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
         })
 
     payment = await asyncio.to_thread(_sync_create)
-    return payment.confirmation.confirmation_url
+
+    payment_id = payment.id
+    payment_url = payment.confirmation.confirmation_url
+
+    # Сохраняем payment_id в заказ
+    async with async_session() as session:
+        order = await session.scalar(
+            select(Order).where(Order.user_id == user.id).order_by(Order.create_at.desc())
+        )
+        if order:
+            order.payment_id = payment_id
+            await session.commit()
+
+    return payment_url, payment_id
 
 
 @app.post("/yookassa/webhook")
@@ -197,7 +211,7 @@ async def yookassa_webhook(request: Request):
         if payload:
             async with async_session() as session:
                 result = await session.execute(select(User).where(User.payload == payload))
-                user = result.scalars().first()  # это ORM-объект
+                user = result.scalars().first()
                 if not user:
                     return {"status": "user_not_found"}
 
@@ -207,10 +221,11 @@ async def yookassa_webhook(request: Request):
                 else:
                     user.dayend += timedelta(days=30)
 
+                await activatekey(user.uuid, user.tg_id)
+
                 if payment_method_id:
                     user.payment_method_id = payment_method_id
 
-                # Работа с заказом
                 result = await session.execute(
                     select(Order)
                     .where(Order.user_id == user.id)
@@ -222,7 +237,29 @@ async def yookassa_webhook(request: Request):
 
                 await session.commit()
 
-    # Ответ ЮKassa должен быть в конце, после всей обработки
+    elif event == "payment.canceled":
+        payload = obj.get("metadata", {}).get("payload")
+
+        if payload:
+            async with async_session() as session:
+                result = await session.execute(
+                    select(User).where(User.payload == payload)
+                )
+                user = result.scalars().first()
+                if not user:
+                    return {"status": "user_not_found"}
+
+                result = await session.execute(
+                    select(Order)
+                    .where(Order.user_id == user.id)
+                    .order_by(Order.create_at.desc())
+                )
+                order = result.scalars().first()
+                if order:
+                    order.status = "canceled"
+
+                await session.commit()
+
     return {"status": "ok"}
 
 
