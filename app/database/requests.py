@@ -305,7 +305,7 @@ async def index(request: Request):
 
 
 async def cancel_payment(payment_id: str):
+    # Статический метод Payment.cancel()
     def _cancel():
-        payment = Payment.find_one(payment_id)
-        return payment.cancel()  # вернёт Payment объект с status='canceled'
+        return Payment.cancel(payment_id)
     return await asyncio.to_thread(_cancel)
