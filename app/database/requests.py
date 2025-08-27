@@ -1,3 +1,5 @@
+import base64
+import httpx
 import asyncio
 import uuid
 from fastapi import FastAPI, Request
@@ -304,3 +306,20 @@ async def check_subscriptions():
 @app.get("/")
 async def index(request: Request):
     return {"message": "Hello"}
+
+
+async def cancelpay(payment_id: str):
+    url = f"https://api.yookassa.ru/v3/payments/{payment_id}/cancel"
+
+    token = f"{yookassa_shopid}:{yookassa_api}"
+    b64token = base64.b64encode(token.encode()).decode()
+
+    headers = {
+        "Authorization": f"Basic {b64token}",
+        "Content-Type": "application/json"
+    }
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(url, headers=headers)
+        response.raise_for_status()
+        return response.json()
