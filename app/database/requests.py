@@ -159,23 +159,18 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
         if not user:
             raise ValueError("Пользователь не найден")
 
-        # генерим payload, если его нет
         if not user.payload:
             user.payload = str(uuid.uuid4())
         payload_value = user.payload
-        tg_id = user.tg_id
-        user_id = user.id
 
-        # создаём заказ
         now_naive = datetime.now().replace(tzinfo=None)
         order = Order(user_id=user.id, create_at=now_naive, status="pending")
         session.add(order)
         await session.commit()
-        await session.refresh(order)   # гарантируем, что order.id получен из БД
+        await session.refresh(order)  # получаем order.id
 
-        order_id = order.id
+    order_id = order.id
 
-    # создаём платёж в YooKassa в отдельном потоке
     def _sync_create():
         return Payment.create({
             "amount": {"value": f"{amount:.2f}", "currency": currency},
@@ -190,13 +185,10 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
     payment_id = payment.id
     payment_url = payment.confirmation.confirmation_url
 
-    # сохраняем только payment_id в заказ
+    # Сохраняем payment_id в заказе
     async with async_session() as session:
-        await session.execute(
-            update(Order)
-            .where(Order.id == order_id)
-            .values(payment_id=payment_id)
-        )
+        order = await session.get(Order, order_id)
+        order.payment_id = payment_id
         await session.commit()
 
     return payment_url, order_id
