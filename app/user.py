@@ -255,17 +255,19 @@ async def pay(callback: CallbackQuery):
 
 @user.callback_query(F.data.startswith("cancel"))
 async def delitepay(callback: CallbackQuery):
-    order_id_str = callback.data.split(":", 1)[1]  # берём всё после ":"
-    order_id = int(order_id_str)
+    order_id = int(callback.data.split(":")[1])
     async with async_session() as session:
         order = await session.get(Order, order_id)
         if not order or not order.payment_id:
-            return await callback.answer("❌ Ошибка: платеж не найден", show_alert=True)
+            return await callback.answer("❌ Платёж не найден", show_alert=True)
 
-        result = await cancel_payment(order.payment_id)
-        if "error" in result:
-            await callback.message.edit_text(f"❌ {result['error']}", reply_markup=kb.go_home)
-        else:
+    result = await cancel_payment(order.payment_id)
+
+    if result.status == "canceled":
+        async with async_session() as session:
+            order = await session.get(Order, order_id)
             order.status = "canceled"
-            await session.commit()  # ✅ только один коммит
-            await callback.message.edit_text("✅ Платёж отменен", reply_markup=kb.go_home)
+            await session.commit()
+        await callback.message.edit_text("✅ Платёж отменен", reply_markup=kb.go_home)
+    else:
+        await callback.message.edit_text(f"❌ Ошибка отмены: {result.status}", reply_markup=kb.go_home)

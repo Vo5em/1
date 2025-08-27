@@ -304,40 +304,8 @@ async def index(request: Request):
     return {"message": "Hello"}
 
 
-def _auth_headers():
-    token = f"{yookassa_shopid}:{yookassa_api}"
-    b64_token = base64.b64encode(token.encode()).decode()
-    return {
-        "Authorization": f"Basic {b64_token}",
-        "Idempotence-Key": str(uuid.uuid4()),
-        "Content-Type": "application/json"
-    }
-
-async def get_payment_status(payment_id: str):
-    url = f"https://api.yookassa.ru/v3/payments/{payment_id}"
-    async with httpx.AsyncClient() as client:
-        resp = await client.get(url, headers=_auth_headers())
-        print("Status check:", resp.status_code, resp.text)  # 👀 лог
-        resp.raise_for_status()
-        return resp.json()
-
-
 async def cancel_payment(payment_id: str):
-    status_data = await get_payment_status(payment_id)
-    status = status_data.get("status")
-
-    if status in ("succeeded", "canceled"):
-        return {"error": f"Нельзя отменить платёж, статус: {status}"}
-
-    url = f"https://api.yookassa.ru/v3/payments/{payment_id}/cancel"
-    async with httpx.AsyncClient() as client:
-        resp = await client.post(url, headers=_auth_headers())
-        if resp.status_code >= 400:
-            # вернем только краткий текст
-            try:
-                data = resp.json()
-                desc = data.get("description", "Ошибка при отмене")
-            except Exception:
-                desc = "Ошибка при отмене"
-            return {"error": desc}
-        return resp.json()
+    def _cancel():
+        payment = Payment.find_one(payment_id)
+        return payment.cancel()  # вернёт Payment объект с status='canceled'
+    return await asyncio.to_thread(_cancel)
