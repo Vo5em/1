@@ -8,7 +8,7 @@ from app.keyboard import payment_ketboard
 import app.keyboard as kb
 from app.gen import addkey
 
-from app.database.requests import set_user, find_key, find_dayend, create_payment, cancelpay
+from app.database.requests import set_user, find_key, find_dayend, create_payment, cancel_payment
 MOSCOW_TZ = ZoneInfo("Europe/Moscow")
 
 user = Router()
@@ -252,5 +252,5 @@ async def pay(callback: CallbackQuery):
 @user.callback_query(F.data.startswith("cancel"))
 async def delitepay(callback: CallbackQuery):
     payment_id = callback.data.replace("cancel", "")
-    await cancelpay(payment_id)
+    await cancel_payment(payment_id)
     await callback.message.edit_text('Платеж отменен', reply_markup=kb.go_home)
