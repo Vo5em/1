@@ -308,19 +308,26 @@ async def index(request: Request):
     return {"message": "Hello"}
 
 
-async def cancelpay(payment_id: str):
-    url = f"https://api.yookassa.ru/v3/payments/{payment_id}/cancel"
-
+def _auth_headers():
     token = f"{yookassa_shopid}:{yookassa_api}"
-    b64token = base64.b64encode(token.encode()).decode()
-
-    headers = {
-        "Authorization": f"Basic {b64token}",
+    b64_token = base64.b64encode(token.encode()).decode()
+    return {
+        "Authorization": f"Basic {b64_token}",
         "Idempotence-Key": str(uuid.uuid4()),
         "Content-Type": "application/json"
     }
 
+async def get_payment_status(payment_id: str):
+    url = f"https://api.yookassa.ru/v3/payments/{payment_id}"
     async with httpx.AsyncClient() as client:
-        response = await client.post(url, headers=headers)
-        response.raise_for_status()
-        return response.json()
+        resp = await client.get(url, headers=_auth_headers())
+        resp.raise_for_status()
+        return resp.json()
+
+async def cancel_payment(payment_id: str):
+    url = f"https://api.yookassa.ru/v3/payments/{payment_id}/cancel"
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(url, headers=_auth_headers())
+        print(resp.status_code, resp.text)  # для отладки
+        resp.raise_for_status()
+        return resp.json()
