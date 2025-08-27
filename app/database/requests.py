@@ -182,7 +182,7 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
         })
 
     payment = await asyncio.to_thread(_sync_create)
-    payment_id = payment.id
+    payment_id = str(payment.id)
     payment_url = payment.confirmation.confirmation_url
 
     # Сохраняем payment_id в заказе
@@ -191,6 +191,7 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
         order.payment_id = payment_id
         await session.commit()
 
+    print(f"[LOG] Created payment: {payment_id}, order_id: {order_id}")
     return payment_url, order_id
 
 
@@ -307,5 +308,17 @@ async def index(request: Request):
 async def cancel_payment(payment_id: str):
     # Статический метод Payment.cancel()
     def _cancel():
+        try:
+            payment = Payment.find_one(payment_id)
+            print(f"[LOG] Found payment {payment_id} with status: {payment.status}")
+        except Exception as e:
+            print(f"[LOG] Payment not found: {e}")
+            raise
+
+        if payment.status != "pending":
+            return {"error": f"Платёж уже {payment.status}, отмена невозможна"}
+
+            # Отменяем платеж
         return Payment.cancel(payment_id)
+
     return await asyncio.to_thread(_cancel)

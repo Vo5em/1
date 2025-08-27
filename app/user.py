@@ -266,11 +266,13 @@ async def delitepay(callback: CallbackQuery):
     except Exception as e:
         return await callback.message.edit_text(f"❌ Ошибка отмены: {str(e)}", reply_markup=kb.go_home)
 
-    if result.status == "canceled":
+    if isinstance(result, dict) and "error" in result:
+        await callback.message.edit_text(f"❌ {result['error']}", reply_markup=kb.go_home)
+    elif result.status == "canceled":
         async with async_session() as session:
             order = await session.get(Order, order_id)
             order.status = "canceled"
             await session.commit()
         await callback.message.edit_text("✅ Платёж отменен", reply_markup=kb.go_home)
     else:
-        await callback.message.edit_text(f"❌ Невозможно отменить платеж, статус: {result.status}", reply_markup=kb.go_home)
+        await callback.message.edit_text(f"❌ Неизвестная ошибка, статус: {result.status}", reply_markup=kb.go_home)
