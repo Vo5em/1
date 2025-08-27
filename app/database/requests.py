@@ -316,6 +316,7 @@ async def cancelpay(payment_id: str):
 
     headers = {
         "Authorization": f"Basic {b64token}",
+        "Idempotence-Key": str(uuid.uuid4()),
         "Content-Type": "application/json"
     }
 
