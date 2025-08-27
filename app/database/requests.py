@@ -168,8 +168,7 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
         session.add(order)
         await session.commit()
         await session.refresh(order)  # получаем order.id
-
-    order_id = order.id
+        order_id = order.id
 
     def _sync_create():
         return Payment.create({
@@ -306,19 +305,12 @@ async def index(request: Request):
 
 
 async def cancel_payment(payment_id: str):
-    # Статический метод Payment.cancel()
+    # Проверяем, существует ли платеж и статус
     def _cancel():
-        try:
-            payment = Payment.find_one(payment_id)
-            print(f"[LOG] Found payment {payment_id} with status: {payment.status}")
-        except Exception as e:
-            print(f"[LOG] Payment not found: {e}")
-            raise
-
+        payment = Payment.find_one(payment_id)
+        print(f"[LOG] Found payment {payment_id} with status: {payment.status}")
         if payment.status != "pending":
             return {"error": f"Платёж уже {payment.status}, отмена невозможна"}
-
-            # Отменяем платеж
         return Payment.cancel(payment_id)
-
     return await asyncio.to_thread(_cancel)
+
