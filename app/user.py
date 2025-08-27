@@ -2,9 +2,10 @@ import re
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import CommandStart, Command, CommandObject
+from app.database.models import async_session, User, Order
 from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta
-from app.keyboard import payment_ketboard
+from app.keyboard import payment_keyboard
 import app.keyboard as kb
 from app.gen import addkey
 
@@ -245,12 +246,25 @@ async def sub(callback: CallbackQuery):
 @user.callback_query(F.data == 'doitpls')
 async def pay(callback: CallbackQuery):
     tg_id = callback.from_user.id
-    payment_url, payment_id = await create_payment(tg_id)
-    kburl = payment_ketboard(payment_url, payment_id)
-    await callback.message.answer(f"💳 Оплатите по ссылке:\n{payment_url}", reply_markup=kburl)
+    payment_url, order_id = await create_payment(tg_id)
+    kburl = payment_keyboard(payment_url, order_id)
+    await callback.message.edit_text(
+        f"💳 Оплатите по ссылке:\n{payment_url}",
+        reply_markup=kburl
+    )
 
-@user.callback_query(F.data.startswith("cancel"))
+@user.callback_query(F.data.startswith("cancel_order"))
 async def delitepay(callback: CallbackQuery):
-    payment_id = callback.data.replace("cancel", "")
-    await cancel_payment(payment_id)
-    await callback.message.edit_text('Платеж отменен', reply_markup=kb.go_home)
+    order_id = int(callback.data.replace("cancel_order", ""))
+    async with async_session() as session:
+        order = await session.get(Order, order_id)
+        if not order or not order.payment_id:
+            return await callback.answer("❌ Ошибка: платеж не найден", show_alert=True)
+
+        result = await cancel_payment(order.payment_id)
+        if "error" in result:
+            await callback.answer(result["error"], show_alert=True)
+        else:
+            order.status = "canceled"
+            await session.commit()
+            await callback.message.edit_text("✅ Платеж отменен", reply_markup=kb.go_home)

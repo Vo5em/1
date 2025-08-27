@@ -153,8 +153,7 @@ async def restore_notifications():
                 schedule_notifications(tg_id, dayend)
 
 
-async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB") -> tuple[str, str]:
-    # 1️⃣ Создаём заказ в БД
+async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB") -> tuple[str, int]:
     async with async_session() as session:
         user = await session.scalar(select(User).where(User.tg_id == tg_id))
         if not user:
@@ -169,15 +168,16 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
         now_naive = datetime.now().replace(tzinfo=None)
         order = Order(user_id=user.id, create_at=now_naive, status="pending")
         session.add(order)
-        await session.commit()
+        await session.commit()   # ✅ тут order.id уже есть
 
+        order_id = order.id
 
-    # 2️⃣ Создаём платёж в YooKassa в отдельном потоке
+    # Создаём платёж в YooKassa
     def _sync_create():
         return Payment.create({
             "amount": {"value": f"{amount:.2f}", "currency": currency},
             "capture": True,
-            "confirmation": {"type": "redirect", "return_url": str(mybot)},  # строка!
+            "confirmation": {"type": "redirect", "return_url": str(mybot)},
             "description": f"Оплата подписки VPN для {tg_id}",
             "save_payment_method": True,
             "metadata": {"payload": payload_value},
@@ -187,16 +187,14 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
     payment_id = payment.id
     payment_url = payment.confirmation.confirmation_url
 
-    # 3️⃣ Сохраняем payment_id в заказ в новой сессии
+    # Сохраняем payment_id в заказ
     async with async_session() as session:
-        order = await session.scalar(
-            select(Order).where(Order.user_id == user_id).order_by(Order.create_at.desc())
-        )
+        order = await session.get(Order, order_id)
         if order:
             order.payment_id = payment_id
             await session.commit()
 
-    return payment_url, payment_id
+    return payment_url, order_id
 
 
 @app.post("/yookassa/webhook")
