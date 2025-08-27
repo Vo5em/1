@@ -329,19 +329,23 @@ async def get_payment_status(payment_id: str):
         resp.raise_for_status()
         return resp.json()
 
+
 async def cancel_payment(payment_id: str):
-    # 1️⃣ Проверяем статус платежа
     status_data = await get_payment_status(payment_id)
     status = status_data.get("status")
 
     if status in ("succeeded", "canceled"):
         return {"error": f"Нельзя отменить платёж, статус: {status}"}
 
-    # 2️⃣ Отправляем запрос на отмену
     url = f"https://api.yookassa.ru/v3/payments/{payment_id}/cancel"
     async with httpx.AsyncClient() as client:
         resp = await client.post(url, headers=_auth_headers())
-        print("Cancel response:", resp.status_code, resp.text)  # 👀 лог
         if resp.status_code >= 400:
-            return {"error": f"Ошибка при отмене: {resp.text}"}
+            # вернем только краткий текст
+            try:
+                data = resp.json()
+                desc = data.get("description", "Ошибка при отмене")
+            except Exception:
+                desc = "Ошибка при отмене"
+            return {"error": desc}
         return resp.json()
