@@ -265,10 +265,10 @@ async def delitepay(callback: CallbackQuery):
         result = await cancel_payment(order.payment_id)
         if "error" in result:
             error_text = result["error"]
-            if len(error_text) > 150:  # ограничение для alert
+            if len(error_text) > 150:
                 error_text = error_text[:150] + "..."
             await callback.answer(error_text, show_alert=True)
         else:
             order.status = "canceled"
-            await session.commit()
-            await callback.message.edit_text("✅ Платеж отменен", reply_markup=kb.go_home)
+            await session.commit()  # ✅ только один коммит
+            await callback.message.edit_text("✅ Платёж отменен", reply_markup=kb.go_home)
