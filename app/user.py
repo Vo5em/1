@@ -253,9 +253,9 @@ async def pay(callback: CallbackQuery):
         reply_markup=kburl
     )
 
-@user.callback_query(F.data.startswith("cancel_order"))
+@user.callback_query(F.data.startswith("cancel"))
 async def delitepay(callback: CallbackQuery):
-    order_id = int(callback.data.replace("cancel_order", ""))
+    order_id = int(callback.data.replace("cancel", ""))
     async with async_session() as session:
         order = await session.get(Order, order_id)
         if not order or not order.payment_id:
