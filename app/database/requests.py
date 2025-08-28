@@ -112,6 +112,11 @@ async def find_dayend(tg_id):
         day = await session.scalar(select(User.dayend).where(User.tg_id == tg_id))
     return day
 
+async def find_payload(tg_id):
+    async with async_session() as session:
+        payload = await session.scalar(select(User.payload).where(User.tg_id == tg_id))
+    return payload
+
 
 async def schedulers():
     while True:
