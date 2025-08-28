@@ -191,7 +191,7 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
         await session.commit()
 
     print(f"[LOG] Created payment: {payment_id}, order_id: {order_id}")
-    return payment_url, order_id
+    return payment_url
 
 
 @app.post("/yookassa/webhook")
