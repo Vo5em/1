@@ -12,7 +12,5 @@ async def notify_end(tg_id: int):
 
 
 async def notify_sps(tg_id):
-    print(f"[notify_sps] start tg_id={tg_id}")
-    await bot.send_message(tg_id, "Поздравляю 🎉 Вы успешно приобрели подписку!", reply_markup=kb.go_home)
-    print("[notify_sps] message sent")
+    await bot.edit_message_text(tg_id, "Поздравляю 🎉 Вы успешно приобрели подписку!", reply_markup=kb.go_home)
 
