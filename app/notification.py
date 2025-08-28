@@ -9,4 +9,5 @@ async def notify_end(tg_id: int):
     await bot.send_message(tg_id, "🔴 Ваша подписка истекла.", reply_markup=kb.go_pay)
 
 async def notify_sps(tg_id: int):
-    await bot.send_message(tg_id, "Поздравляю вы успешно преобрели подписку🎉", reply_markup=kb.go_home)
+    print(f"[DEBUG] sending to {tg_id}")
+    await bot.send_message(tg_id, "Тестовое сообщение")
