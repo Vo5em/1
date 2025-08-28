@@ -73,6 +73,5 @@ async def delkey(uuides, tg_id):
         resp = await client.post(f"panel/inbound/updateClient/{new_uuid}", json=payload)
 
         if resp.status_code == 200:
-            return
-    await notify_end(tg_id)
+            return await notify_end(tg_id)
 
