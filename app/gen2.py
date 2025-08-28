@@ -1,7 +1,6 @@
 import httpx
 import json
 from config import BASE_URL
-from app.notification import notify_sps
 
 async def activatekey(uuides, tg_id):
     async with httpx.AsyncClient(base_url=BASE_URL, timeout=10.0) as client:
@@ -27,4 +26,4 @@ async def activatekey(uuides, tg_id):
         resp = await client.post(f"panel/inbound/updateClient/{new_uuid}", json=payload)
 
         if resp.status_code == 200:
-            return await notify_sps(tg_id)
+            return

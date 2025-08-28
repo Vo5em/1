@@ -232,9 +232,14 @@ async def yookassa_webhook(request: Request):
                     user.dayend += timedelta(days=30)
 
                 ruuid = user.uuid
-                tg_id = user.tg_id
+                tg_id = int(user.tg_id)
 
                 await activatekey(ruuid,tg_id)
+
+                try:
+                    await notify_sps(tg_id)
+                except Exception as e:
+                    print(f"❌ Ошибка при отправке сообщения пользователю {tg_id}: {e}")
 
                 if payment_method_id:
                     user.payment_method_id = payment_method_id
