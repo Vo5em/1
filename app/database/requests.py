@@ -4,7 +4,7 @@ import asyncio
 import uuid
 from fastapi import FastAPI, Request
 from app.database.models import async_session, User, Order
-from app.notification import notify_before_end
+from app.notification import notify_before_end, notify_sps
 from zoneinfo import ZoneInfo
 from sqlalchemy import select, update, delete, desc
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -194,7 +194,6 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
     return payment_url, order_id
 
 
-
 @app.post("/yookassa/webhook")
 async def yookassa_webhook(request: Request):
     raw = await request.body()
@@ -241,6 +240,7 @@ async def yookassa_webhook(request: Request):
                 await session.commit()
 
             await activatekey(ruuid, tg_id)
+            await notify_sps(tg_id)
 
     elif event == "payment.canceled":
         payload = obj.get("metadata", {}).get("payload")
@@ -302,15 +302,4 @@ async def check_subscriptions():
 @app.get("/")
 async def index(request: Request):
     return {"message": "Hello"}
-
-
-async def cancel_payment(payment_id: str):
-    # Проверяем, существует ли платеж и статус
-    def _cancel():
-        payment = Payment.find_one(payment_id)
-        print(f"[LOG] Found payment {payment_id} with status: {payment.status}")
-        if payment.status != "pending":
-            return {"error": f"Платёж уже {payment.status}, отмена невозможна"}
-        return Payment.cancel(payment_id)
-    return await asyncio.to_thread(_cancel)
 

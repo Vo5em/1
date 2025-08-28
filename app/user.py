@@ -9,7 +9,7 @@ from app.keyboard import payment_keyboard
 import app.keyboard as kb
 from app.gen import addkey
 
-from app.database.requests import set_user, find_key, find_dayend, create_payment, cancel_payment
+from app.database.requests import set_user, find_key, find_dayend, create_payment
 MOSCOW_TZ = ZoneInfo("Europe/Moscow")
 
 user = Router()
@@ -246,33 +246,9 @@ async def sub(callback: CallbackQuery):
 @user.callback_query(F.data == 'doitpls')
 async def pay(callback: CallbackQuery):
     tg_id = callback.from_user.id
-    payment_url, order_id = await create_payment(tg_id)
-    kburl = payment_keyboard(payment_url, order_id)
+    payment_url = await create_payment(tg_id)
+    kburl = payment_keyboard(payment_url)
     await callback.message.edit_text(
         f"💳 Оплатите по ссылке:\n{payment_url}",
         reply_markup=kburl
     )
-
-@user.callback_query(F.data.startswith("cancel"))
-async def delitepay(callback: CallbackQuery):
-    order_id = int(callback.data.split(":")[1])
-    async with async_session() as session:
-        order = await session.get(Order, order_id)
-        if not order or not order.payment_id:
-            return await callback.answer("❌ Платёж не найден", show_alert=True)
-
-    try:
-        result = await cancel_payment(order.payment_id)
-    except Exception as e:
-        return await callback.message.edit_text(f"❌ Ошибка отмены: {str(e)}", reply_markup=kb.go_home)
-
-    if isinstance(result, dict) and "error" in result:
-        await callback.message.edit_text(f"❌ {result['error']}", reply_markup=kb.go_home)
-    elif result.status == "canceled":
-        async with async_session() as session:
-            order = await session.get(Order, order_id)
-            order.status = "canceled"
-            await session.commit()
-        await callback.message.edit_text("✅ Платёж отменен", reply_markup=kb.go_home)
-    else:
-        await callback.message.edit_text(f"❌ Неизвестная ошибка, статус: {result.status}", reply_markup=kb.go_home)
