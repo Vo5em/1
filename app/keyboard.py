@@ -31,7 +31,7 @@ download = InlineKeyboardMarkup(inline_keyboard=[
 
 
 go_home = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='↩️Назад', callback_data='home')],
+    [InlineKeyboardButton(text='↩️Назад', callback_data='home')]
 ])
 
 
