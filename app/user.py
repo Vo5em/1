@@ -9,7 +9,7 @@ from app.keyboard import payment_keyboard
 import app.keyboard as kb
 from app.gen import addkey
 
-from app.database.requests import set_user, find_key, find_dayend, create_payment
+from app.database.requests import set_user, find_key, find_dayend, create_payment, save_message
 MOSCOW_TZ = ZoneInfo("Europe/Moscow")
 
 user = Router()
@@ -237,6 +237,7 @@ async def sub(callback: CallbackQuery):
     await callback.answer('')
     tg_id = callback.from_user.id
     message_id = callback.message.message_id
+    await save_message(tg_id, message_id)
     await callback.message.edit_text(
         'балалабалалабалалб \nДИСКЛЕЙМЕР'
         '\nкароч вы обязанны мне платить деньги каждый месяц\n'
