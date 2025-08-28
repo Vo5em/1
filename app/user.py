@@ -235,9 +235,6 @@ async def refka(callback: CallbackQuery):
 @user.callback_query(F.data == 'pay')
 async def sub(callback: CallbackQuery):
     await callback.answer('')
-    tg_id = callback.from_user.id
-    message_id = callback.message.message_id
-    await save_message(tg_id, message_id)
     await callback.message.edit_text(
         'балалабалалабалалб \nДИСКЛЕЙМЕР'
         '\nкароч вы обязанны мне платить деньги каждый месяц\n'
@@ -251,6 +248,8 @@ async def pay(callback: CallbackQuery):
     tg_id = callback.from_user.id
     payment_url = await create_payment(tg_id)
     kburl = payment_keyboard(payment_url)
+    message_id = callback.message.message_id
+    await save_message(tg_id, message_id)
     await callback.message.edit_text(
         f"💳 Оплатите по ссылке:\n{payment_url}",
         reply_markup=kburl

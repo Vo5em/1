@@ -121,6 +121,7 @@ async def save_message(tg_id, message_id):
     async with async_session() as session:
         result = await session.execute(select(User).where(User.tg_id == tg_id))
         user = result.scalars().first()
+        print("t")
         if user:
             user.last_message_id = message_id
             await session.commit()
