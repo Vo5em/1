@@ -18,7 +18,7 @@ async def notify_sps(tg_id):
         result = await session.execute(select(User).where(User.tg_id == tg_id))
         user = result.scalars().first()
         if not user or not user.message_id:
-            return
+            return print ("t")
 
         try:
             await bot.edit_message_text(
