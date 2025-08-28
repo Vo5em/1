@@ -14,29 +14,8 @@ async def notify_end(tg_id: int):
 
 
 async def notify_spss(tg_id: int):
-    print("🔥 notify_sps_test вызвана")
-    async with async_session() as session:
-        result = await session.execute(select(User).where(User.tg_id == tg_id))
-        user = result.scalars().first()
-
-        if not user:
-            print(f"[notify_sps] Пользователь с tg_id={tg_id} не найден")
-            return
-
-        if user.message_id:
-            try:
-                await bot.delete_message(chat_id=tg_id, message_id=user.message_id)
-                print(f"[notify_sps] Удалено старое сообщение {user.message_id} для {tg_id}")
-            except Exception as e:
-                print(f"[notify_sps] Ошибка при удалении старого сообщения: {e}")
-
-        try:
-            msg = await bot.send_message(
-                chat_id=tg_id,
-                text="Поздравляю 🎉 Вы успешно приобрели подписку!",
-                reply_markup=kb.go_pay
-            )
-            await session.commit()
-            print(f"[notify_sps] Отправлено новое сообщение {msg.message_id} пользователю {tg_id}")
-        except Exception as e:
-            print(f"[notify_sps] Ошибка при отправке нового сообщения: {e}")
+    await bot.send_message(
+        chat_id=tg_id,
+        text="Поздравляю 🎉 Вы успешно приобрели подписку!",
+        reply_markup=kb.go_pay
+    )
