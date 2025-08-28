@@ -4,7 +4,7 @@ import asyncio
 import uuid
 from fastapi import FastAPI, Request
 from app.database.models import async_session, User, Order
-from app.notification import notify_before_end, notify_sps
+from app.notification import notify_before_end, notify_sps, notify_end
 from zoneinfo import ZoneInfo
 from sqlalchemy import select, update, delete, desc
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -116,22 +116,33 @@ async def find_dayend(tg_id):
 async def schedulers():
     while True:
         await check_end()
-        await asyncio.sleep(30)
+        await asyncio.sleep(1200)
 
 
 def schedule_notifications(tg_id, dayend):
     if dayend.tzinfo is None:
         dayend = dayend.replace(tzinfo=MOSCOW_TZ)
+
     before = dayend - timedelta(days=1)
     now = datetime.now(tz=MOSCOW_TZ)
 
     if before > now:
         scheduler.add_job(
             notify_before_end,
-            trigger='date',
+            trigger="date",
             run_date=before,
             args=[tg_id],
-            id=f'before_{tg_id}',
+            id=f"before_{tg_id}",
+            replace_existing=True
+        )
+
+    if dayend > now:
+        scheduler.add_job(
+            notify_end,
+            trigger="date",
+            run_date=dayend,
+            args=[tg_id],
+            id=f"end_{tg_id}",
             replace_existing=True
         )
 
@@ -224,6 +235,7 @@ async def yookassa_webhook(request: Request):
                 tg_id = user.tg_id
 
                 await activatekey(ruuid,tg_id)
+                await notify_sps(tg_id)
 
                 if payment_method_id:
                     user.payment_method_id = payment_method_id
@@ -239,8 +251,6 @@ async def yookassa_webhook(request: Request):
 
                 await session.commit()
 
-            await activatekey(ruuid, tg_id)
-            await notify_sps(tg_id)
 
     elif event == "payment.canceled":
         payload = obj.get("metadata", {}).get("payload")
