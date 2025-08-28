@@ -25,7 +25,7 @@ async def notify_sps(tg_id):
                 chat_id=tg_id,
                 message_id=user.message_id,
                 text="Поздравляю 🎉 Вы успешно приобрели подписку!",
-                reply_markup=kb.go_home
+                reply_markup=kb.go_pay
             )
         except Exception as e:
             print(f"Ошибка при редактировании сообщения: {e}")
