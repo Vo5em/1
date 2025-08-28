@@ -12,5 +12,4 @@ async def notify_end(tg_id: int):
 
 
 async def notify_sps(tg_id: int):
-    print(f"[DEBUG] sending to {tg_id}")
-    await bot.send_message(tg_id, "Тестовое сообщение")
+    await bot.send_message(tg_id, "Тестовое сообщение", reply_markup=kb.go_pay)
