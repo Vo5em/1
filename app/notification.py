@@ -14,6 +14,7 @@ async def notify_end(tg_id: int):
 
 
 async def notify_spss(tg_id: int):
+    print("🔥 notify_sps_test вызвана")
     async with async_session() as session:
         result = await session.execute(select(User).where(User.tg_id == tg_id))
         user = result.scalars().first()
