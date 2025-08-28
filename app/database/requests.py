@@ -116,7 +116,7 @@ async def find_dayend(tg_id):
 async def schedulers():
     while True:
         await check_end()
-        await asyncio.sleep(1500)
+        await asyncio.sleep(300)
 
 
 def schedule_notifications(tg_id, dayend):
