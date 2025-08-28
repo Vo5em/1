@@ -11,6 +11,6 @@ async def notify_end(tg_id: int):
     await bot.edit_message_text(tg_id, "🔴 Ваша подписка истекла.", reply_markup=kb.go_pay)
 
 
-async def notify_sps(tg_id):
+async def notify_sps(tg_id: int):
     print(f"[DEBUG] sending to {tg_id}")
     await bot.send_message(tg_id, "Тестовое сообщение")
