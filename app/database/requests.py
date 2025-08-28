@@ -4,7 +4,7 @@ import asyncio
 import uuid
 from fastapi import FastAPI, Request
 from app.database.models import async_session, User, Order
-from app.notification import notify_before_end, notify_sps, notify_end
+from app.notification import notify_before_end, notify_spss, notify_end
 from zoneinfo import ZoneInfo
 from sqlalchemy import select, update, delete, desc
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -254,7 +254,7 @@ async def yookassa_webhook(request: Request):
 
                 await asyncio.gather(
                     activatekey(ruuid, tg_id),
-                    notify_sps(tg_id)
+                    notify_spss(tg_id)
                 )
 
                 if payment_method_id:

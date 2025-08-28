@@ -10,10 +10,10 @@ async def notify_before_end(tg_id: int):
 
 
 async def notify_end(tg_id: int):
-    await bot.edit_message_text(tg_id, "🔴 Ваша подписка истекла.", reply_markup=kb.go_pay)
+    await bot.send_message(tg_id, "🔴 Ваша подписка истекла.", reply_markup=kb.go_pay)
 
 
-async def notify_sps(tg_id: int):
+async def notify_spss(tg_id: int):
     async with async_session() as session:
         result = await session.execute(select(User).where(User.tg_id == tg_id))
         user = result.scalars().first()
