@@ -117,6 +117,18 @@ async def find_payload(tg_id):
         payload = await session.scalar(select(User.payload).where(User.tg_id == tg_id))
     return payload
 
+async def save_message(tg_id, message_id):
+    async with async_session() as session:
+        result = await session.execute(select(User).where(User.tg_id == tg_id))
+        user = result.scalars().first()
+        if user:
+            user.last_message_id = message_id
+            await session.commit()
+
+async def find_message(tg_id):
+    async with async_session() as session:
+        message = await session.scalar(select(User.message_id).where(User.tg_id == tg_id))
+    return message
 
 async def schedulers():
     while True:

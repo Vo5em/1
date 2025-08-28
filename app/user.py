@@ -235,6 +235,8 @@ async def refka(callback: CallbackQuery):
 @user.callback_query(F.data == 'pay')
 async def sub(callback: CallbackQuery):
     await callback.answer('')
+    tg_id = callback.from_user.id
+    message_id = callback.message.message_id
     await callback.message.edit_text(
         'балалабалалабалалб \nДИСКЛЕЙМЕР'
         '\nкароч вы обязанны мне платить деньги каждый месяц\n'
