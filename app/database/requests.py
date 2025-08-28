@@ -234,10 +234,10 @@ async def yookassa_webhook(request: Request):
                 ruuid = user.uuid
                 tg_id = int(user.tg_id)
 
+                asyncio.create_task(activatekey(ruuid, tg_id))
+
                 print(f"[Webhook] Sending notify_sps to tg_id={tg_id} (type={type(tg_id)})")
                 await notify_sps(tg_id)
-
-                await activatekey(ruuid,tg_id)
 
                 if payment_method_id:
                     user.payment_method_id = payment_method_id
