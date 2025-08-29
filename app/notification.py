@@ -14,8 +14,15 @@ async def notify_end(tg_id: int):
 
 
 async def notify_spss(tg_id: int):
-    await bot.send_message(
+    async with async_session() as session:
+        result = await session.execute(select(User).where(User.tg_id == tg_id))
+        user = result.scalars().first()
+
+        if not user or not user.message_id:
+            return
+    await bot.edit_message_text(
         chat_id=tg_id,
-        text="Поздравляю 🎉 Вы успешно при13!",
+        message_id=user.message_id,
+        text="Поздравляю 🎉 Вы успешно приоб!",
         reply_markup=kb.go_pay
     )
