@@ -9,7 +9,8 @@ from app.keyboard import payment_keyboard
 import app.keyboard as kb
 from app.gen import addkey
 
-from app.database.requests import set_user, find_key, find_dayend, create_payment, save_message
+from app.database.requests import set_user, find_key, find_dayend, create_payment, save_message, find_paymethod_id
+from app.database.requests import delpaymethod_id
 MOSCOW_TZ = ZoneInfo("Europe/Moscow")
 
 user = Router()
@@ -234,12 +235,33 @@ async def refka(callback: CallbackQuery):
 
 @user.callback_query(F.data == 'pay')
 async def sub(callback: CallbackQuery):
+    tg_id = callback.from_user.id
+    paymenthodid = await find_paymethod_id(tg_id)
+    if not paymenthodid:
+        await callback.answer('')
+        await callback.message.edit_text(
+            'балалабалалабалалб \nДИСКЛЕЙМЕР'
+            '\nкароч вы обязанны мне платить деньги каждый месяц\n'
+            'НЕСОГЛАСНЫ?\nвышлинахеротсюда',
+            reply_markup=kb.give_money
+        )
+    else:
+        await callback.answer('')
+        await callback.message.edit_text(
+            'балалабалалабалалб \nДИСКЛЕЙМЕР'
+            '\nкароч вы обязанны мне платить деньги каждый месяц\n'
+            'НЕСОГЛАСНЫ?\nвышлинахеротсюда',
+            reply_markup=kb.cancelautopay
+        )
+
+@user.callback_query(F.data == 'plsno')
+async def no(callback: CallbackQuery):
+    tg_id = callback.from_user.id
+    await delpaymethod_id(tg_id)
     await callback.answer('')
     await callback.message.edit_text(
-        'балалабалалабалалб \nДИСКЛЕЙМЕР'
-        '\nкароч вы обязанны мне платить деньги каждый месяц\n'
-        'НЕСОГЛАСНЫ?\nвышлинахеротсюда',
-        reply_markup=kb.give_money
+        'Вы успешно отменили автопродление',
+        reply_markup=kb.go_home
     )
 
 

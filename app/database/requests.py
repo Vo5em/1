@@ -22,6 +22,7 @@ Configuration.secret_key = yookassa_api
 
 app = FastAPI()
 
+
 async def set_user(tg_id, ref_id):
     async with async_session() as session:
         user = await session.scalar(select(User).where(User.tg_id == tg_id))
@@ -50,7 +51,6 @@ async def set_user(tg_id, ref_id):
         await session.commit()
 
 
-
 async def set_key(tg_id, vless_link, new_uuid):
     async with async_session() as session:
         result = await session.execute(select(User.daybalance).where(User.tg_id == tg_id))
@@ -70,6 +70,7 @@ async def set_key(tg_id, vless_link, new_uuid):
                 pass
 
             schedule_notifications(tg_id, dayend)
+
 
 async def check_end():
     from app.gen import delkey
@@ -101,6 +102,7 @@ async def get_broke():
         result = await session.execute(select(User.tg_id).where(User.payload == None))
         return [row[0] for row in result.all()]
 
+
 async def find_key(tg_id):
     async with async_session() as session:
         key = await session.scalar(select(User.vpnkey).where(User.tg_id == tg_id))
@@ -112,10 +114,12 @@ async def find_dayend(tg_id):
         day = await session.scalar(select(User.dayend).where(User.tg_id == tg_id))
     return day
 
+
 async def find_payload(tg_id):
     async with async_session() as session:
         payload = await session.scalar(select(User.payload).where(User.tg_id == tg_id))
     return payload
+
 
 async def save_message(tg_id, message_id):
     async with async_session() as session:
@@ -126,15 +130,35 @@ async def save_message(tg_id, message_id):
             user.message_id = message_id
             await session.commit()
 
+
 async def find_message(tg_id):
     async with async_session() as session:
         message = await session.scalar(select(User.message_id).where(User.tg_id == tg_id))
     return message
 
+
+async def find_paymethod_id(tg_id):
+    async with async_session() as session:
+        paymenthod_id = await session.scalar(select(User.payment_method_id).where
+                                             (User.payment_method_id != None, User.tg_id == tg_id))
+        return paymenthod_id
+
+
+async def delpaymethod_id(tg_id):
+    async with async_session() as session:
+        paymenthod_id = await session.scalar(select(User.payment_method_id).where
+                                             (User.payment_method_id != None, User.tg_id == tg_id)
+                                             )
+        if paymenthod_id:
+            await session.update(update(User).where(User.tg_id == tg_id).values(payment_method_id=None))
+            await session.commit()
+
+
 async def schedulers():
     while True:
         await check_end()
-        await asyncio.sleep(1200)
+        await check_subscriptions()
+        await asyncio.sleep(1800)
 
 
 def schedule_notifications(tg_id, dayend):
@@ -164,6 +188,22 @@ def schedule_notifications(tg_id, dayend):
             replace_existing=True
         )
 
+def schedule_notifications2(tg_id, dayend):
+    if dayend.tzinfo is None:
+        dayend = dayend.replace(tzinfo=MOSCOW_TZ)
+
+    now = datetime.now(tz=MOSCOW_TZ)
+
+    if dayend > now:
+        scheduler.add_job(
+            notify_end,
+            trigger="date",
+            run_date=dayend,
+            args=[tg_id],
+            id=f"end_{tg_id}",
+            replace_existing=True
+        )
+
 
 async def restore_notifications():
     async with async_session() as session:
@@ -174,8 +214,8 @@ async def restore_notifications():
         now = datetime.now(tz=MOSCOW_TZ)
 
         for tg_id, dayend, payload in users:
-            if payload:
-                continue
+            if payload and dayend > now:
+                schedule_notifications2(tg_id, dayend)
             if dayend.tzinfo is None:
                 dayend = dayend.replace(tzinfo=MOSCOW_TZ)
             if dayend > now:
@@ -251,11 +291,13 @@ async def yookassa_webhook(request: Request):
 
                 ruuid = user.uuid
                 tg_id = int(user.tg_id)
+                dayend = user.dayend
 
-                await asyncio.gather(
-                    activatekey(ruuid, tg_id),
-                    notify_spss(tg_id)
-                )
+
+                await activatekey(ruuid, tg_id),
+                await notify_spss(tg_id),
+                schedule_notifications2(tg_id,dayend)
+
 
                 if payment_method_id:
                     user.payment_method_id = payment_method_id
@@ -322,12 +364,10 @@ async def check_subscriptions():
     now = datetime.now(tz=MOSCOW_TZ)
     async with async_session() as session:
         users = await session.execute(
-            select(User).where(User.dayend != None, User.dayend - timedelta(days=1) <= now)
+            select(User).where(User.dayend != None, User.dayend - timedelta(hours=1) <= now)
         )
         for user in users.scalars().all():
             await create_auto_payment(user)
-    scheduler.add_job(check_subscriptions, "interval", hours=12)
-    scheduler.start()
 
 @app.get("/")
 async def index(request: Request):
