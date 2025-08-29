@@ -252,8 +252,10 @@ async def yookassa_webhook(request: Request):
                 ruuid = user.uuid
                 tg_id = int(user.tg_id)
 
-                await activatekey(ruuid,tg_id)
-                await notify_spss(tg_id)
+                await asyncio.gather(
+                    activatekey(ruuid, tg_id),
+                    notify_spss(tg_id)
+                )
 
                 if payment_method_id:
                     user.payment_method_id = payment_method_id
