@@ -150,7 +150,7 @@ async def delpaymethod_id(tg_id):
                                              (User.payment_method_id != None, User.tg_id == tg_id)
                                              )
         if paymenthod_id:
-            await session.update(update(User).where(User.tg_id == tg_id).values(payment_method_id=None))
+            await session.execute(update(User).where(User.tg_id == tg_id).values(payment_method_id=None))
             await session.commit()
 
 
