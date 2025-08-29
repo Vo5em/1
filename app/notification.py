@@ -16,6 +16,6 @@ async def notify_end(tg_id: int):
 async def notify_spss(tg_id: int):
     await bot.send_message(
         chat_id=tg_id,
-        text="Поздравляю 🎉 Вы успешно приобрели подписку!",
+        text="Поздравляю 🎉 Вы успешно при13!",
         reply_markup=kb.go_pay
     )
