@@ -1,4 +1,3 @@
-from app.database.requests import restore_notifications
 from config import bot
 from aiogram.types import Message, CallbackQuery
 from app.database.models import async_session, User, Order
