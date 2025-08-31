@@ -111,7 +111,7 @@ async def cmd_ref(message: Message):
     await message.answer(
         f"*Реферальная программа ECHALON*\n\n"
         f"За каждого приглашённого друга, оформившего подписку,\n"
-        f"Твой доступ продлевается на 7 дней VPN\.\n\n"
+        f"Твой доступ продлевается на 7 дней\.\n\n"
         f"*Реферальная ссылка:*\n`{escaped_link}`",
         parse_mode="MarkdownV2",
         reply_markup=kb.go_home
@@ -153,7 +153,7 @@ async def connect_an(callback: CallbackQuery):
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
                                      reply_markup=kb.download)
-    else: await callback.message.edit_text(f"`{is_key}`",
+    else: await callback.message.edit_text(f">{is_key}",
                                            parse_mode="MarkdownV2",
                                            reply_markup=kb.download)
 
@@ -248,7 +248,7 @@ async def refka(callback: CallbackQuery):
     await callback.message.edit_text(
         f"*Реферальная программа ECHALON*\n\n"
         f"За каждого приглашённого друга, оформившего подписку,\n"
-        f"Твой доступ продлевается на 7 дней VPN\.\n\n"
+        f"Твой доступ продлевается на 7 дней\.\n\n"
         f"*Реферальная ссылка:*\n`{escaped_link}`",
         parse_mode="MarkdownV2",
         reply_markup=kb.go_home
