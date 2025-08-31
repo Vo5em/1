@@ -153,8 +153,8 @@ async def connect_an(callback: CallbackQuery):
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
                                      reply_markup=kb.download)
-    else: await callback.message.edit_text(f">{is_key}",
-                                           parse_mode="MarkdownV2",
+    else: await callback.message.edit_text(f"<blockquote>{is_key}</blockquote>",
+                                           parse_mode="HTML",
                                            reply_markup=kb.download)
 
 
