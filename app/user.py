@@ -261,7 +261,7 @@ async def no(callback: CallbackQuery):
     await callback.answer('')
     await callback.message.edit_text(
         'Вы успешно отменили автопродление',
-        reply_markup=kb.go_home
+        reply_markup=kb.on_main
     )
 
 

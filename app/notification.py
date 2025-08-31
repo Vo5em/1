@@ -44,5 +44,5 @@ async def notify_spss(tg_id: int):
         chat_id=tg_id,
         message_id=user.message_id,
         text="Поздравляю 🎉 Вы успешно приоб!",
-        reply_markup=kb.go_home
+        reply_markup=kb.on_main
     )

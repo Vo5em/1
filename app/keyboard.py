@@ -34,6 +34,10 @@ go_home = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='↩️Назад', callback_data='home')]
 ])
 
+on_main = InlineKeyboardMarkup(inline_keybaard=[
+    [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
+])
+
 
 go_pay = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Оформить подписку', callback_data='pay')]
