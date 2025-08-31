@@ -1,4 +1,5 @@
 import re
+import html
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import CommandStart, Command, CommandObject
@@ -146,14 +147,16 @@ async def period(callback: CallbackQuery):
 async def connect_an(callback: CallbackQuery):
     user_id = callback.from_user.id
     is_key = await find_key(user_id)
+    html_msg = f'<pre expandable>{html.escape(is_key)}</pre>'
     if not is_key:
       await addkey(user_id)
       is_key = await find_key(user_id)
+      html_msg = f'<pre expandable>{html.escape(is_key)}</pre>'
       await callback.answer('')
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
                                      reply_markup=kb.download)
-    else: await callback.message.edit_text(f"<pre>{is_key}</pre>",
+    else: await callback.message.edit_text(html_msg,
                                            parse_mode="HTML",
                                            reply_markup=kb.download)
 
