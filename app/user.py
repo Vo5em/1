@@ -2,7 +2,6 @@ import re
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import CommandStart, Command, CommandObject
-from app.database.models import async_session, User, Order
 from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta
 from app.keyboard import payment_keyboard
