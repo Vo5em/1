@@ -39,12 +39,12 @@ async def cmd_start(message: Message, command: CommandObject):
 
         if is_day < now_moscow:
             await message.answer(
-                text=f"Ваш id: <code>{tg_id}</code>\n🔴У вас нет активной подписки",
+                text=f"Ваш id: <code>{tg_id}</code>\n🌩️У вас нет активной подписки",
                 parse_mode="HTML",
                 reply_markup=kb.main_old
             )
         else: await message.answer(
-            text=f"Ваш id: <code>{tg_id}</code>\n🟢Действует до {is_day.strftime('%d.%m.%Y %H:%M')}",
+            text=f"Ваш id: <code>{tg_id}</code>\n💫Действует до {is_day.strftime('%d.%m.%Y %H:%M')}",
             parse_mode="HTML",
             reply_markup=kb.main_old
         )
