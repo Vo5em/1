@@ -60,13 +60,13 @@ async def home(callback: CallbackQuery):
 
     if is_day < now_moscow:
         await callback.message.edit_text(
-            text=f"Ваш id: <code>{tg_id}</code>\n🔴У вас нет активной подписки",
+            text=f"Ваш id: <code>{tg_id}</code>\n🌩️У вас нет активной подписки",
             parse_mode="HTML",
             reply_markup=kb.main_old
         )
     else:
         await callback.message.edit_text(
-            text=f"Ваш id: <code>{tg_id}</code>\n🟢Действует до {is_day.strftime('%d.%m.%Y %H:%M')}",
+            text=f"Ваш id: <code>{tg_id}</code>\n💫Действует до {is_day.strftime('%d.%m.%Y %H:%M')}",
             parse_mode="HTML",
             reply_markup=kb.main_old
         )
