@@ -29,7 +29,14 @@ async def cmd_start(message: Message, command: CommandObject):
 
     is_key = await find_key(tg_id)
     if not is_key:
-        await message.answer(text='привет', reply_markup=kb.main)
+        await message.answer(text='Мы знали, что Ты придешь к нам.\n\n'
+                                  'Наш vpn предлагает лучшие условия:\n'
+                                  '- доступ ко всем сайта и без ограничений;\n'
+                                  '- высокая скорость и стабильное соединение;\n'
+                                  '- настройка занимает меньше минуты;\n'
+                                  '- полная анонимность и конфиденциальность.\n\n'
+                                  'Активируй трёхдневный пробный период прямо сейчас 🌌',
+                             reply_markup=kb.main)
     else:
         is_day = await find_dayend(tg_id)
         now_moscow = datetime.now(tz=MOSCOW_TZ)
@@ -39,12 +46,17 @@ async def cmd_start(message: Message, command: CommandObject):
 
         if is_day < now_moscow:
             await message.answer(
-                text=f"Ваш id: <code>{tg_id}</code>\n💥 У вас нет активной подписки",
+                text=f"Ваш персональный код: <code>{tg_id}</code>\n\n"
+                     f"Статус:\n- подписка неактивна ❄️\n\n"
+                     f"по всем вопросам обращайтесь в",
                 parse_mode="HTML",
                 reply_markup=kb.main_old
             )
         else: await message.answer(
-            text=f"Ваш id: <code>{tg_id}</code>\n💫 Действует до {is_day.strftime('%d.%m.%Y %H:%M')}",
+            text=f"Ваш персональный код: <code>{tg_id}</code>\n\n"
+                 f"Статус:\n"
+                 f"- подписка активна до: {is_day.strftime('%d.%m.%Y')}🌟\n\n"
+                 f"по всем вопросам обращайтесь в",
             parse_mode="HTML",
             reply_markup=kb.main_old
         )
@@ -60,13 +72,18 @@ async def home(callback: CallbackQuery):
 
     if is_day < now_moscow:
         await callback.message.edit_text(
-            text=f"Ваш id: <code>{tg_id}</code>\n💥️ У вас нет активной подписки",
+            text=f"Ваш персональный код: <code>{tg_id}</code>\n\n"
+                 f"Статус:\n- подписка неактивна ❄️\n\n"
+                 f"по всем вопросам обращайтесь в",
             parse_mode="HTML",
             reply_markup=kb.main_old
         )
     else:
         await callback.message.edit_text(
-            text=f"Ваш id: <code>{tg_id}</code>\n💫 Действует до {is_day.strftime('%d.%m.%Y %H:%M')}",
+            text=f"Ваш персональный код: <code>{tg_id}</code>\n\n"
+                 f"Статус:\n"
+                 f"- подписка активна до: {is_day.strftime('%d.%m.%Y')}🌟\n\n"
+                 f"по всем вопросам обращайтесь в",
             parse_mode="HTML",
             reply_markup=kb.main_old
         )

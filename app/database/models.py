@@ -26,7 +26,7 @@ class User(Base):
     tg_id = mapped_column(BigInteger)
     vpnkey: Mapped[str] = mapped_column(String(250),nullable=True)
     uuid: Mapped[str] = mapped_column(String(60),nullable=True)
-    daybalance: Mapped[int] = mapped_column(default=7)
+    daybalance: Mapped[int] = mapped_column(default=3)
     dayend = mapped_column(DateTime(timezone=True))
     referrer_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
     payment_method_id: Mapped[str] = mapped_column(String(100), nullable=True)
