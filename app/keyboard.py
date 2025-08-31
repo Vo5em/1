@@ -45,7 +45,7 @@ go_pay = InlineKeyboardMarkup(inline_keyboard=[
 
 
 give_money = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='150р/мес', callback_data='doitpls')],
+    [InlineKeyboardButton(text='Перейти к оплате', callback_data='doitpls')],
     [InlineKeyboardButton(text='↩️Назад', callback_data='home')]
 ])
 
