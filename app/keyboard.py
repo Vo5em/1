@@ -7,10 +7,10 @@ main = InlineKeyboardMarkup(inline_keyboard=[
 
 
 main_old = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='💳 Таирфы и оплата',callback_data='pay')],
-    [InlineKeyboardButton(text='📡 Перейти к подключенью',callback_data='period')],
-    [InlineKeyboardButton(text='💸 Реферальная программа',callback_data='refka')],
-    [InlineKeyboardButton(text='🛟 Помощь',callback_data='help')]
+    [InlineKeyboardButton(text='🌇 Тарифы и оплата',callback_data='pay')],
+    [InlineKeyboardButton(text='🌆 Перейти к подключенью',callback_data='period')],
+    [InlineKeyboardButton(text='🏙️ Реферальная программа',callback_data='refka')],
+    [InlineKeyboardButton(text='🌃 Помощь',callback_data='help')]
 ])
 
 
