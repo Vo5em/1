@@ -173,7 +173,8 @@ async def connect_i(callback: CallbackQuery):
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
                                      reply_markup=kb.download)
-    else: await callback.message.edit_text(f"{is_key}", html_msg,
+    else: await callback.message.edit_text("tgn cltkfq jnm xnjn gkbkp\n"
+                                           "vyt bvtyyj d glke 'nj bcghfdkznm g' hf,jnfq\n\n\n\n\n", html_msg,
                                            parse_mode="HTML",
                                            reply_markup=kb.download)
 
