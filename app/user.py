@@ -147,16 +147,21 @@ async def period(callback: CallbackQuery):
 async def connect_an(callback: CallbackQuery):
     user_id = callback.from_user.id
     is_key = await find_key(user_id)
-    html_msg = f'<blockquote expandable><pre>{html.escape(is_key)}</pre></blockquote>'
     if not is_key:
       await addkey(user_id)
       is_key = await find_key(user_id)
-      html_msg = f'<pre expandable>{html.escape(is_key)}</pre>'
       await callback.answer('')
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
                                      reply_markup=kb.download)
-    else: await callback.message.edit_text(f"dsfsf\n"
+    else: await callback.message.edit_text(f'<b>№1</b> - скачай приложение'
+                                           f' <a href="https://play.google.com'
+                                           f'/store/apps/details?id=com.v2raytun.android">v2RayTun</a>'"\n"
+                                           "<b>№2</b> Нажми на ключ доступа cнизу ( начинается с vless://)\n"
+                                           "<b>№3</b> Запусти программу v2RayTun и нажми на <b>+</b>"
+                                           " в правом верхнем углу\n"
+                                           "<b>№4</b> Выбери «Импорт из буфера обмена»\n"
+                                           "<b>№5</b> Нажми круглую кнопку включения\n\n"
                                            f"<blockquote expandable><code>{html.escape(is_key)}</code></blockquote>",
                                            parse_mode="HTML",
                                            reply_markup=kb.download)
@@ -268,13 +273,13 @@ async def sub(callback: CallbackQuery):
     if not paymenthodid:
         await callback.answer('')
         await callback.message.edit_text(
-            '🔹 *Подписка на месяц — 150₽\*\n'
+            '🔹 <b>Подписка на месяц — 150₽</b>\n'
             '— Деньги будут списываться каждый месяц.\n'
             '— Отключить автопродление можно в любой момент в этом разделе.\n'
             '— При отключении доступ сохранится до конца оплаченного\n\n'
-            '📜 *Важно знать:\* подключаясь, Ты принимаешь условия\n'
+            '📜 <b>Важно знать:</b> подключаясь, Ты принимаешь условия\n'
             'ежемесячного списания.',
-            parse_mode="MarkdownV2",
+            parse_mode="HTML",
             reply_markup=kb.give_money
         )
     else:
