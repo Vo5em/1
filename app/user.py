@@ -157,7 +157,7 @@ async def connect_an(callback: CallbackQuery):
                                      parse_mode="MarkdownV2",
                                      reply_markup=kb.download)
     else: await callback.message.edit_text(f"dsfsf\n"
-                                           f"<blockquote expandable></code>{html.escape(is_key)}</code></blockquote>",
+                                           f"<blockquote expandable><code>{html.escape(is_key)}</code></blockquote>",
                                            parse_mode="HTML",
                                            reply_markup=kb.download)
 
