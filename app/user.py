@@ -208,7 +208,7 @@ async def connect_hu(callback: CallbackQuery):
                                      parse_mode="MarkdownV2",
                                      reply_markup=kb.download)
     else: await callback.message.edit_text(f'<b>№1</b> - скачай приложение'
-                                           f'<a href="https://play.google.com'
+                                           f' <a href="https://play.google.com'
                                            f'/store/apps/details?id=com.v2raytun.android">v2RayTun</a>'"\n"
                                            "<b>№2</b> - Нажми на ключ доступа cнизу ( начинается с vless://)\n"
                                            "<b>№3</b> - Запусти программу v2RayTun и нажми на <b>+</b>"
@@ -217,8 +217,9 @@ async def connect_hu(callback: CallbackQuery):
                                            "<b>№5</b> - Нажми круглую кнопку включения\n\n"
                                            f"<blockquote expandable><code>{html.escape(is_key)}</code></blockquote>",
                                            disable_web_page_preview=True,
-                                           parse_mode="MarkdownV2",
+                                           parse_mode="HTML",
                                            reply_markup=kb.download)
+
 
 
 @user.callback_query(F.data == 'windows')
