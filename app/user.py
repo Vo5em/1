@@ -147,7 +147,7 @@ async def period(callback: CallbackQuery):
 async def connect_an(callback: CallbackQuery):
     user_id = callback.from_user.id
     is_key = await find_key(user_id)
-    html_msg = f'<blockquote expandable><code>{html.escape(is_key)}</code></blockquote>'
+    html_msg = f'<blockquote expandable><pre>{html.escape(is_key)}</pre></blockquote>'
     if not is_key:
       await addkey(user_id)
       is_key = await find_key(user_id)
