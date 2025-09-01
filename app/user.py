@@ -208,7 +208,7 @@ async def connect_hu(callback: CallbackQuery):
                                      parse_mode="MarkdownV2",
                                      reply_markup=kb.download)
     else: await callback.message.edit_text(f'<b>№1</b> - скачай приложение'
-                                           f' <a href="https://play.google.com'
+                                           f'<a href="https://play.google.com'
                                            f'/store/apps/details?id=com.v2raytun.android">v2RayTun</a>'"\n"
                                            "<b>№2</b> - Нажми на ключ доступа cнизу ( начинается с vless://)\n"
                                            "<b>№3</b> - Запусти программу v2RayTun и нажми на <b>+</b>"
