@@ -156,7 +156,8 @@ async def connect_an(callback: CallbackQuery):
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
                                      reply_markup=kb.download)
-    else: await callback.message.edit_text(f"dsfsf", html_msg,
+    else: await callback.message.edit_text(f"dsfsf\n"
+                                           f"<blockquote expandable></code>{html.escape(is_key)}</code></blockquote>",
                                            parse_mode="HTML",
                                            reply_markup=kb.download)
 
@@ -165,7 +166,6 @@ async def connect_an(callback: CallbackQuery):
 async def connect_i(callback: CallbackQuery):
     user_id = callback.from_user.id
     is_key = await find_key(user_id)
-    html_msg = f'<pre expandable>{html.escape(is_key)}</pre>'
     if not is_key:
       await addkey(user_id)
       is_key = await find_key(user_id)
@@ -173,8 +173,9 @@ async def connect_i(callback: CallbackQuery):
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
                                      reply_markup=kb.download)
-    else: await callback.message.edit_text("tgn cltkfq jnm xnjn gkbkp\n"
-                                           "vyt bvtyyj d glke 'nj bcghfdkznm g' hf,jnfq\n\n\n\n\n", html_msg,
+    else: await callback.message.edit_text(f"tgn cltkfq jnm xnjn gkbkp\n"
+                                           f"vyt bvtyyj d glke 'nj bcghfdkznm g' hf,jnfq\n\n"
+                                           f"<pre expandable>{html.escape(is_key)}</pre>",
                                            parse_mode="HTML",
                                            reply_markup=kb.download)
 
