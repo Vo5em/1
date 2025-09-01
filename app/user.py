@@ -155,7 +155,7 @@ async def connect_an(callback: CallbackQuery):
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
                                      reply_markup=kb.download)
-    else: await callback.message.edit_text(f'<b>ИНСТРУКЦИЯ:</b>\n\n\n'
+    else: await callback.message.edit_text(f'<blockquote expandable><b>ИНСТРУКЦИЯ:</b>\n\n\n'
                                            f'<b>№1</b> - скачай приложение'
                                            f' <a href="https://play.google.com'
                                            f'/store/apps/details?id=com.v2raytun.android">v2RayTun</a>'"\n"
@@ -163,7 +163,7 @@ async def connect_an(callback: CallbackQuery):
                                            "<b>№3</b> - Запусти программу v2RayTun и нажми на <b>+</b>"
                                            " в правом верхнем углу\n"
                                            "<b>№4</b> -  Выбери «Импорт из буфера обмена»\n"
-                                           "<b>№5</b> - Нажми круглую кнопку включения\n\n"
+                                           "<b>№5</b> - Нажми круглую кнопку включения</blockquote>\n\n"
                                            f"<blockquote expandable><code>{html.escape(is_key)}</code></blockquote>",
                                            disable_web_page_preview=True,
                                            parse_mode="HTML",
@@ -181,7 +181,8 @@ async def connect_i(callback: CallbackQuery):
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
                                      reply_markup=kb.download)
-    else: await callback.message.edit_text(f'<b>№1</b> - скачай приложение'
+    else: await callback.message.edit_text(f'<b>ИНСТРУКЦИЯ:</b>\n\n'
+                                           f'<b>№1</b> - скачай приложение'
                                            f' <a href="https://play.google.com'
                                            f'/store/apps/details?id=com.v2raytun.android">v2RayTun</a>'"\n"
                                            "<b>№2</b> - Нажми на ключ доступа cнизу ( начинается с vless://)\n"
@@ -206,7 +207,16 @@ async def connect_hu(callback: CallbackQuery):
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
                                      reply_markup=kb.download)
-    else: await callback.message.edit_text(f"`{is_key}`",
+    else: await callback.message.edit_text(f'<b>№1</b> - скачай приложение'
+                                           f' <a href="https://play.google.com'
+                                           f'/store/apps/details?id=com.v2raytun.android">v2RayTun</a>'"\n"
+                                           "<b>№2</b> - Нажми на ключ доступа cнизу ( начинается с vless://)\n"
+                                           "<b>№3</b> - Запусти программу v2RayTun и нажми на <b>+</b>"
+                                           " в правом верхнем углу\n"
+                                           "<b>№4</b> -  Выбери «Импорт из буфера обмена»\n"
+                                           "<b>№5</b> - Нажми круглую кнопку включения\n\n"
+                                           f"<blockquote expandable><code>{html.escape(is_key)}</code></blockquote>",
+                                           disable_web_page_preview=True,
                                            parse_mode="MarkdownV2",
                                            reply_markup=kb.download)
 
