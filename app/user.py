@@ -114,6 +114,7 @@ async def cmd_ref(message: Message):
         f"За каждого приглашённого друга, оформившего подписку,\n"
         f"Твой доступ продлевается на 7 дней\.\n\n"
         f"*Реферальная ссылка:*\n`{escaped_link}`",
+        disable_web_page_preview=True,
         parse_mode="MarkdownV2",
         reply_markup=kb.go_home
     )
@@ -154,15 +155,17 @@ async def connect_an(callback: CallbackQuery):
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
                                      reply_markup=kb.download)
-    else: await callback.message.edit_text(f'<b>№1</b> - скачай приложение'
+    else: await callback.message.edit_text(f'<b>ИНСТРУКЦИЯ:</b>\n\n\n'
+                                           f'<b>№1</b> - скачай приложение'
                                            f' <a href="https://play.google.com'
                                            f'/store/apps/details?id=com.v2raytun.android">v2RayTun</a>'"\n"
-                                           "<b>№2</b> Нажми на ключ доступа cнизу ( начинается с vless://)\n"
-                                           "<b>№3</b> Запусти программу v2RayTun и нажми на <b>+</b>"
+                                           "<b>№2</b> - Нажми на ключ доступа cнизу ( начинается с vless://)\n"
+                                           "<b>№3</b> - Запусти программу v2RayTun и нажми на <b>+</b>"
                                            " в правом верхнем углу\n"
-                                           "<b>№4</b> Выбери «Импорт из буфера обмена»\n"
-                                           "<b>№5</b> Нажми круглую кнопку включения\n\n"
+                                           "<b>№4</b> -  Выбери «Импорт из буфера обмена»\n"
+                                           "<b>№5</b> - Нажми круглую кнопку включения\n\n"
                                            f"<blockquote expandable><code>{html.escape(is_key)}</code></blockquote>",
+                                           disable_web_page_preview=True,
                                            parse_mode="HTML",
                                            reply_markup=kb.download)
 
@@ -178,9 +181,16 @@ async def connect_i(callback: CallbackQuery):
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
                                      reply_markup=kb.download)
-    else: await callback.message.edit_text(f"tgn cltkfq jnm xnjn gkbkp\n"
-                                           f"vyt bvtyyj d glke 'nj bcghfdkznm g' hf,jnfq\n\n"
-                                           f"<pre expandable>{html.escape(is_key)}</pre>",
+    else: await callback.message.edit_text(f'<b>№1</b> - скачай приложение'
+                                           f' <a href="https://play.google.com'
+                                           f'/store/apps/details?id=com.v2raytun.android">v2RayTun</a>'"\n"
+                                           "<b>№2</b> - Нажми на ключ доступа cнизу ( начинается с vless://)\n"
+                                           "<b>№3</b> - Запусти программу v2RayTun и нажми на <b>+</b>"
+                                           " в правом верхнем углу\n"
+                                           "<b>№4</b> -  Выбери «Импорт из буфера обмена»\n"
+                                           "<b>№5</b> - Нажми круглую кнопку включения\n\n"
+                                           f"<blockquote expandable><code>{html.escape(is_key)}</code></blockquote>",
+                                           disable_web_page_preview=True,
                                            parse_mode="HTML",
                                            reply_markup=kb.download)
 
