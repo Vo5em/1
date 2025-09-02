@@ -24,9 +24,38 @@ gadgets = InlineKeyboardMarkup(inline_keyboard=[
 ])
 
 
-download = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='↩️Назад', callback_data='period')], #после добавлю кнопку видео инструкция
-    [InlineKeyboardButton(text='↩️На главную', callback_data='home')]       # с сылкай на закрытую группу в тг
+downloadand = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='↩️Назад', callback_data='period'),
+     InlineKeyboardButton(text='Видео инструкция', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
+    [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
+])
+
+
+downloadiph = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='↩️Назад', callback_data='period'),
+     InlineKeyboardButton(text='Видео инструкция', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
+    [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
+])
+
+
+downloadHUA = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='↩️Назад', callback_data='period'),
+     InlineKeyboardButton(text='Видео инструкция', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
+    [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
+])
+
+
+downloaddich = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='↩️Назад', callback_data='period'),
+     InlineKeyboardButton(text='Видео инструкция', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
+    [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
+])
+
+
+downloadTV = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='↩️Назад', callback_data='period'),
+     InlineKeyboardButton(text='Видео инструкция', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
+    [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
 ])
 
 
