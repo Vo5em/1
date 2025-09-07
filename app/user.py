@@ -410,6 +410,5 @@ async def pay(callback: CallbackQuery):
 
 
 @user.message(F.photo)
-async def handel_photo(message: Message):
-    file_id = message.photo[-1].file_id
-    await message.answer_photo(file_id)
+async def get_photo(message: Message):
+    await message.answer(f'ID фотографии: {message.photo[-1].file_id}')
