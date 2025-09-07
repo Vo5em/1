@@ -17,7 +17,7 @@ async def notify_before_end(tg_id: int):
             daybeforeend = user.dayend - timedelta(days=1)
             if now < daybeforeend:
                 await bot.send_message(tg_id,
-                                       "⚠️ Ваша подписка закончится через 24 часа!",
+                                       "⚠️ Твоя подписка закончится через 24 часа!",
                                        reply_markup=kb.go_pay)
                 return
 
@@ -27,7 +27,7 @@ async def notify_end(tg_id: int):
         user = await session.get(User, tg_id)
         now = datetime.now(tz=MOSCOW_TZ)
         if user and user.dayend and now < user.dayend:
-            await bot.send_message(tg_id, "🔴 Ваша подписка истекла.", reply_markup=kb.go_pay)
+            await bot.send_message(tg_id, "🔴 Твоя подписка истекла.", reply_markup=kb.go_pay)
             return
 
 
@@ -43,6 +43,6 @@ async def notify_spss(tg_id: int):
     await bot.edit_message_text(
         chat_id=tg_id,
         message_id=user.message_id,
-        text="Поздравляю 🎉 Вы успешно приоб!",
+        text="Поздравляю 🎉",
         reply_markup=kb.on_main
     )

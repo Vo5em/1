@@ -65,6 +65,8 @@ downloadwin = InlineKeyboardMarkup(inline_keyboard=[
 
 
 downloadTV = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Пульт для Android', url='https://www.youtube.com/watch?v=CW5oGRx9CLM'),
+     InlineKeyboardButton(text='Пульт для Iphone', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
     [InlineKeyboardButton(text='↩️Назад', callback_data='period')],
     [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
 ])
