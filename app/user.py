@@ -154,7 +154,7 @@ async def connect_an(callback: CallbackQuery):
       await callback.answer('')
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
-                                     reply_markup=kb.download)
+                                     reply_markup=kb.downloadand)
     else: await callback.message.edit_text(f'<blockquote expandable><b>ИНСТРУКЦИЯ:</b>\n\n\n'
                                            f'<b>№1</b> - скачай приложение'
                                            f' <a href="https://play.google.com'
@@ -167,7 +167,7 @@ async def connect_an(callback: CallbackQuery):
                                            f"<blockquote expandable><code>{html.escape(is_key)}</code></blockquote>",
                                            disable_web_page_preview=True,
                                            parse_mode="HTML",
-                                           reply_markup=kb.download)
+                                           reply_markup=kb.downloadand)
 
 
 @user.callback_query(F.data == 'iphone')
@@ -180,7 +180,7 @@ async def connect_i(callback: CallbackQuery):
       await callback.answer('')
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
-                                     reply_markup=kb.download)
+                                     reply_markup=kb.downloadiph)
     else: await callback.message.edit_text(f'<b>ИНСТРУКЦИЯ:</b>\n\n'
                                            f'<b>№1</b> - скачай приложение'
                                            f' <a href="https://play.google.com'
@@ -193,7 +193,7 @@ async def connect_i(callback: CallbackQuery):
                                            f"<blockquote expandable><code>{html.escape(is_key)}</code></blockquote>",
                                            disable_web_page_preview=True,
                                            parse_mode="HTML",
-                                           reply_markup=kb.download)
+                                           reply_markup=kb.downloadiph)
 
 
 @user.callback_query(F.data == 'huawei')
@@ -206,7 +206,7 @@ async def connect_hu(callback: CallbackQuery):
       await callback.answer('')
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
-                                     reply_markup=kb.download)
+                                     reply_markup=kb.downloadHUA)
     else: await callback.message.edit_text(f'<b>№1</b> - скачай приложение'
                                            f' <a href="https://play.google.com'
                                            f'/store/apps/details?id=com.v2raytun.android">v2RayTun</a>'"\n"
@@ -218,7 +218,7 @@ async def connect_hu(callback: CallbackQuery):
                                            f"<blockquote expandable><code>{html.escape(is_key)}</code></blockquote>",
                                            disable_web_page_preview=True,
                                            parse_mode="HTML",
-                                           reply_markup=kb.download)
+                                           reply_markup=kb.downloadHUA)
 
 
 
@@ -232,10 +232,10 @@ async def connect_win(callback: CallbackQuery):
       await callback.answer('')
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
-                                     reply_markup=kb.download)
+                                     reply_markup=kb.downloadwin)
     else: await callback.message.edit_text(f"`{is_key}`",
                                            parse_mode="MarkdownV2",
-                                           reply_markup=kb.download)
+                                           reply_markup=kb.downloadwin)
 
 
 @user.callback_query(F.data == 'macos')
@@ -248,10 +248,10 @@ async def connect_mc(callback: CallbackQuery):
       await callback.answer('')
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
-                                     reply_markup=kb.download)
+                                     reply_markup=kb.downloaddich)
     else: await callback.message.edit_text(f"`{is_key}`",
                                            parse_mode="MarkdownV2",
-                                           reply_markup=kb.download)
+                                           reply_markup=kb.downloaddich)
 
 
 @user.callback_query(F.data == 'androidtv')
@@ -264,10 +264,10 @@ async def connect_antv(callback: CallbackQuery):
       await callback.answer('')
       await callback.message.edit_text(f"`{is_key}`",
                                      parse_mode="MarkdownV2",
-                                     reply_markup=kb.download)
+                                     reply_markup=kb.downloadTV)
     else: await callback.message.edit_text(f"`{is_key}`",
                                            parse_mode="MarkdownV2",
-                                           reply_markup=kb.download)
+                                           reply_markup=kb.downloadTV)
 
 
 @user.callback_query(F.data == 'refka')
