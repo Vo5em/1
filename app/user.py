@@ -407,3 +407,9 @@ async def pay(callback: CallbackQuery):
         f"💳 Оплатите по ссылке:\n{payment_url}",
         reply_markup=kburl
     )
+
+
+@user.message(F.photo)
+async def handel_photo(message: Message):
+    file_id = message.photo[-1].file_id
+    await message.answer_photo(file_id)
