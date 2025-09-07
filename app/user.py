@@ -15,6 +15,8 @@ MOSCOW_TZ = ZoneInfo("Europe/Moscow")
 
 user = Router()
 
+file_id="AgACAgIAAxkBAAIDJGi98rSpeXZ-DD7LjnQjGlVQhMnzAAI3_zEbYF_wSUQ71x7vAxTSAQADAgADdwADNgQ"
+
 def escape_markdown(text: str) -> str:
     return re.sub(r'([_\*\[\]\(\)~`>#+\-=|{}.!])', r'\\\1', text)
 
@@ -100,7 +102,12 @@ async def cmd_help(message: Message):
 
 @user.message(Command('subscribe'))
 async def cmd_sub(message: Message):
-    await message.answer(text='подписка')
+    await message.answer_photo(
+        file_id,
+        caption="<b>Добро пожаловать!</b>\nВыберите действие ниже 👇",
+        parse_mode="HTML",
+        reply_markup=kb.go_home
+    )
 
 
 @user.message(Command('ref_programm'))
