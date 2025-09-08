@@ -76,7 +76,7 @@ async def home(callback: CallbackQuery):
 
     if is_day < now_moscow:
         await callback.message.edit_media(InputMediaPhoto(
-            media=file_id01,
+            media=file_id02,
             caption=f"Ваш персональный код: <code>{tg_id}</code>\n\n"
                  f"Статус:\n- подписка неактивна ❄️\n\n"
                  f"по всем вопросам обращайтесь в поддержку",
@@ -85,7 +85,7 @@ async def home(callback: CallbackQuery):
         )
     else:
         await callback.message.edit_media(InputMediaPhoto(
-            media=file_id02,
+            media=file_id01,
             caption=f"Ваш персональный код: <code>{tg_id}</code>\n\n"
                  f"Статус:\n"
                  f"- подписка активна до: {is_day.strftime('%d.%m.%Y')}🌟\n\n"
