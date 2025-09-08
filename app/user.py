@@ -136,7 +136,8 @@ async def period(callback: CallbackQuery):
     is_key = await find_key(tg_id)
     if not is_key:
         await callback.answer('')
-        await callback.message.edit_text('*Выберите ваше устройство:*',
+        await callback.message.delete()
+        await callback.message.answer('*Выберите ваше устройство:*',
                                          parse_mode="MarkdownV2",
                                          reply_markup=kb.gadgets)
     else:
@@ -146,10 +147,13 @@ async def period(callback: CallbackQuery):
             is_day = is_day.replace(tzinfo=MOSCOW_TZ)
         if is_day > now_moscow:
             await callback.answer('')
-            await callback.message.edit_text('*Выберите ваше устройство:*',
+            await callback.delete()
+            await callback.message.answer('*Выберите ваше устройство:*',
                                              parse_mode="MarkdownV2",
                                              reply_markup=kb.gadgets_old)
-        else: await callback.message.edit_text('*У вас нет активной подписки*',
+        else:
+            await callback.delete()
+            await callback.message.answer('*У вас нет активной подписки*',
                                                parse_mode="MarkdownV2",
                                                reply_markup=kb.go_pay)
 
@@ -358,7 +362,8 @@ async def refka(callback: CallbackQuery):
     ref_link = f"https://t.me/{BOT_USERNAME}?start={tg_id}"
     escaped_link = escape_markdown(ref_link)
     await callback.answer('')
-    await callback.message.edit_text(
+    await callback.message.delete()
+    await callback.message.answer(
         f"*Реферальная программа ECHALON*\n\n"
         f"За каждого приглашённого друга, оформившего подписку,\n"
         f"Твой доступ продлевается на 7 дней\.\n\n"
@@ -374,7 +379,8 @@ async def sub(callback: CallbackQuery):
     paymenthodid = await find_paymethod_id(tg_id)
     if not paymenthodid:
         await callback.answer('')
-        await callback.message.edit_text(
+        await callback.message.delete()
+        await callback.message.answer(
             '🌠 <b>Подписка на месяц — 150₽</b>\n'
             '— Деньги будут списываться каждый месяц.\n'
             '— Отключить автопродление можно в любой момент в этом разделе.\n'
