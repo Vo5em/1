@@ -147,12 +147,12 @@ async def period(callback: CallbackQuery):
             is_day = is_day.replace(tzinfo=MOSCOW_TZ)
         if is_day > now_moscow:
             await callback.answer('')
-            await callback.delete()
+            await callback.message.delete()
             await callback.message.answer('*Выберите ваше устройство:*',
                                              parse_mode="MarkdownV2",
                                              reply_markup=kb.gadgets_old)
         else:
-            await callback.delete()
+            await callback.message.delete()
             await callback.message.answer('*У вас нет активной подписки*',
                                                parse_mode="MarkdownV2",
                                                reply_markup=kb.go_pay)
