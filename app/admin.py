@@ -74,3 +74,6 @@ async def newsmessage_broke(message: Message, state: FSMContext):
         except Exception as e:
             print (e)
 
+@admin.message(Admin(), F.photo)
+async def get_photo(message: Message):
+    await message.answer(f'ID фотографии: {message.photo[-1].file_id}')

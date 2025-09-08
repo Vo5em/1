@@ -1,7 +1,7 @@
 import re
 import html
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, InputMediaPhoto
 from aiogram.filters import CommandStart, Command, CommandObject
 from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta
@@ -15,7 +15,8 @@ MOSCOW_TZ = ZoneInfo("Europe/Moscow")
 
 user = Router()
 
-file_id="AgACAgIAAxkBAAIDJGi98rSpeXZ-DD7LjnQjGlVQhMnzAAI3_zEbYF_wSUQ71x7vAxTSAQADAgADdwADNgQ"
+file_id01="AgACAgIAAxkBAAIDJGi98rSpeXZ-DD7LjnQjGlVQhMnzAAI3_zEbYF_wSUQ71x7vAxTSAQADAgADdwADNgQ"
+file_id02="AgACAgIAAxkBAAIDNmi-11DgQxRxzRElzTQPzwbZ2553AALw8jEbYF_4SX2hWNO4hiqDAQADAgADdwADNgQ"
 
 def escape_markdown(text: str) -> str:
     return re.sub(r'([_\*\[\]\(\)~`>#+\-=|{}.!])', r'\\\1', text)
@@ -74,20 +75,22 @@ async def home(callback: CallbackQuery):
         is_day = is_day.replace(tzinfo=MOSCOW_TZ)
 
     if is_day < now_moscow:
-        await callback.message.edit_text(
-            text=f"Ваш персональный код: <code>{tg_id}</code>\n\n"
+        await callback.message.edit_media(InputMediaPhoto(
+            media=file_id01,
+            caption=f"Ваш персональный код: <code>{tg_id}</code>\n\n"
                  f"Статус:\n- подписка неактивна ❄️\n\n"
                  f"по всем вопросам обращайтесь в поддержку",
-            parse_mode="HTML",
+            parse_mode="HTML"),
             reply_markup=kb.main_old
         )
     else:
-        await callback.message.edit_text(
-            text=f"Ваш персональный код: <code>{tg_id}</code>\n\n"
+        await callback.message.edit_media(InputMediaPhoto(
+            media=file_id02,
+            caption=f"Ваш персональный код: <code>{tg_id}</code>\n\n"
                  f"Статус:\n"
                  f"- подписка активна до: {is_day.strftime('%d.%m.%Y')}🌟\n\n"
                  f"по всем вопросам обращайтесь в поддержку",
-            parse_mode="HTML",
+            parse_mode="HTML"),
             reply_markup=kb.main_old
         )
 
@@ -103,7 +106,7 @@ async def cmd_help(message: Message):
 @user.message(Command('subscribe'))
 async def cmd_sub(message: Message):
     await message.answer_photo(
-        file_id,
+        file_id01,
         caption="<b>Добро пожаловать!</b>\nВыберите действие ниже 👇",
         parse_mode="HTML",
         reply_markup=kb.go_home
@@ -284,14 +287,16 @@ async def connect_win(callback: CallbackQuery):
                                        parse_mode="HTML",
                                      reply_markup=kb.downloadwin)
     else: await callback.message.edit_text(f'<b>ИНСТРУКЦИЯ:</b>\n\n'
-                                           f'<b>№1</b> - скачай приложение'
+                                           f'<b>№1</b> - Скачай приложение'
                                            f' <a href="https://play.google.com'
                                            f'/store/apps/details?id=com.v2raytun.android">v2RayTun</a>'"\n"
                                            "<b>№2</b> - Нажми на ключ доступа cнизу ( начинается с vless://)\n"
-                                           "<b>№3</b> - Запусти программу v2RayTun и нажми на <b>+</b>"
-                                           " в правом верхнем углу\n"
-                                           "<b>№4</b> - Выбери «Импорт из буфера обмена»\n"
-                                           "<b>№5</b> - Нажми круглую кнопку включения\n\n"
+                                           "<b>№3</b> - Разархивируй и запусти программу «NekoBox» имени администратора\n"
+                                           "<b>№4</b> - Включи режим TUN в правом веерхнем углу \n"
+                                           "<b>№5</b> - Нажми правой кнопкой мыши по пустому пространству"
+                                           " и выбери «Добавить профиль из буфера обмена»\n"
+                                           "<b>№6</b> - Нажми правой кнопкой мыши по появившимуся профилю"
+                                           " и выбери «Запустить»\n\n"
                                            f"<blockquote expandable><code>{html.escape(is_key)}</code></blockquote>",
                                            disable_web_page_preview=True,
                                            parse_mode="HTML",
