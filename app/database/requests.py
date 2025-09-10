@@ -321,12 +321,10 @@ async def yookassa_webhook(request: Request):
                 ruuid = user.uuid
                 tg_id = int(user.tg_id)
                 dayend = user.dayend
-                ref_id = user.referrer_id
 
 
                 await activatekey(ruuid, tg_id),
                 await notify_spss(tg_id),
-                await takeprise(ref_id),
                 schedule_notifications2(tg_id,dayend)
 
 
