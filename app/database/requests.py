@@ -326,7 +326,7 @@ async def yookassa_webhook(request: Request):
 
                 await activatekey(ruuid, tg_id),
                 await notify_spss(tg_id),
-                await takeprise(ref_id)
+                await takeprise(ref_id),
                 schedule_notifications2(tg_id,dayend)
 
 
