@@ -141,7 +141,7 @@ async def takeprise(ref_id2):
                 dayend = is_day + timedelta(days=new_daybalance)
                 await session.execute(update(User).where(User.tg_id == is_tgid).values(dayend=dayend,
                                                                                       daybalance=0))
-    await session.commit
+    await session.commit()
 
 
 async def find_payload(tg_id):
@@ -323,8 +323,8 @@ async def yookassa_webhook(request: Request):
                 dayend = user.dayend
 
 
-                await activatekey(ruuid, tg_id),
-                await notify_spss(tg_id),
+                await activatekey(ruuid, tg_id)
+                await notify_spss(tg_id)
                 schedule_notifications2(tg_id,dayend)
 
 
