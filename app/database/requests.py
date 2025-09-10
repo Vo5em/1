@@ -125,6 +125,7 @@ async def takeprise(ref_id2):
     async with async_session() as session:
          ref_check = await session.scalar(select(User).where(User.id == ref_id2))
          if ref_check:
+            print("ger")
             new_daybalance = (ref_check.daybalance) + 7
             is_tgid = await find_tgid(ref_id2)
             is_day = await find_dayend(is_tgid)
