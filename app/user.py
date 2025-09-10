@@ -27,9 +27,10 @@ async def cmd_start(message: Message, command: CommandObject):
     tg_id = message.from_user.id
     ref_id = command.args
     if ref_id and ref_id.isdigit():
+        ref_id = int(ref_id)
         await set_user(tg_id, ref_id)
     else:
-        await set_user(tg_id, ref_id)
+        await set_user(tg_id, None)
 
     is_key = await find_key(tg_id)
     if not is_key:
