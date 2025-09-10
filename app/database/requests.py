@@ -115,6 +115,33 @@ async def find_dayend(tg_id):
     return day
 
 
+async def find_tgid(id):
+    async with async_session() as session:
+        tg_id = await session.scalar(select(User.tg_id).where(User.id == id))
+    return tg_id
+
+
+async def takeprise(ref_id2):
+    async with async_session() as session:
+         ref_check = await session.scalar(select(User).where(User.id == ref_id2))
+         if ref_check:
+            new_daybalance = (ref_check.daybalance) + 7
+            is_tgid = await find_tgid(ref_id2)
+            is_day = await find_dayend(is_tgid)
+            now_moscow = datetime.now(tz=MOSCOW_TZ)
+            if is_day.tzinfo is None:
+                is_day = is_day.replace(tzinfo=MOSCOW_TZ)
+            if is_day < now_moscow:
+                dayend = now_moscow + timedelta(days=new_daybalance)
+                await session.execute(update(User).where(User.tg_id == is_tgid).values(dayend=dayend,
+                                                                                      daybalance=0))
+            else:
+                dayend = is_day + timedelta(days=new_daybalance)
+                await session.execute(update(User).where(User.tg_id == is_tgid).values(dayend=dayend,
+                                                                                      daybalance=0))
+    await session.commit
+
+
 async def find_payload(tg_id):
     async with async_session() as session:
         payload = await session.scalar(select(User.payload).where(User.tg_id == tg_id))
@@ -292,10 +319,12 @@ async def yookassa_webhook(request: Request):
                 ruuid = user.uuid
                 tg_id = int(user.tg_id)
                 dayend = user.dayend
+                ref_id = user.referrer_id
 
 
                 await activatekey(ruuid, tg_id),
                 await notify_spss(tg_id),
+                await takeprise(ref_id)
                 schedule_notifications2(tg_id,dayend)
 
 

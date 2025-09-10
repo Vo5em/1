@@ -31,7 +31,6 @@ async def notify_end(tg_id: int):
             return
 
 
-
 async def notify_spss(tg_id: int):
     print ("te")
     async with async_session() as session:
