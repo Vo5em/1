@@ -328,7 +328,10 @@ async def yookassa_webhook(request: Request):
 
                 await activatekey(ruuid, tg_id)
                 await notify_spss(tg_id)
-                await takeprise(ref_id)
+                if ref_id is not None:
+                    await takeprise(ref_id)
+                else:
+                    print("User has no referrer, skipping takeprise")
                 schedule_notifications2(tg_id,dayend)
 
 
