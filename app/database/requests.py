@@ -122,7 +122,9 @@ async def find_tgid(id):
 
 
 async def takeprise(ref_id2):
-    print("ge")
+    if ref_id2 is None:
+        print("takeprise called with None, exiting")
+        return
     async with async_session() as session:
          ref_check = await session.scalar(select(User).where(User.id == ref_id2))
          if ref_check:
