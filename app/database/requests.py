@@ -122,9 +122,6 @@ async def find_tgid(id):
 
 
 async def takeprise(ref_id2):
-    if ref_id2 is None:
-        print("takeprise called with None, exiting")
-        return
     async with async_session() as session:
          ref_check = await session.scalar(select(User).where(User.id == ref_id2))
          if ref_check:
@@ -143,7 +140,7 @@ async def takeprise(ref_id2):
                 dayend = is_day + timedelta(days=new_daybalance)
                 await session.execute(update(User).where(User.tg_id == is_tgid).values(dayend=dayend,
                                                                                       daybalance=0))
-    await session.commit()
+         await session.commit()
 
 
 async def find_payload(tg_id):
