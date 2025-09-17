@@ -35,7 +35,7 @@ async def cmd_start(message: Message, command: CommandObject):
 
     is_key = await find_key(tg_id)
     if not is_key:
-        await message.media(
+        await message.photo(
             media=file_id03,
             caption=f"<blockquote>ECALONE district 01</blockquote>\n"
                     f"Ты близко.\n\n\n"
@@ -51,14 +51,14 @@ async def cmd_start(message: Message, command: CommandObject):
             is_day = is_day.replace(tzinfo=MOSCOW_TZ)
 
         if is_day < now_moscow:
-            await message.media(InputMediaPhoto(
+            await message.photo(InputMediaPhoto(
                 media=file_id02,
                 caption=f"<blockquote>project echalon;\n district: 01</blockquote>\n\n\n"
                         f"<b>Абонимент не активен.</b>",
                 parse_mode="HTML"),
                 reply_markup=kb.main_old
             )
-        else: await message.media(InputMediaPhoto(
+        else: await message.photo(InputMediaPhoto(
             media=file_id01,
             caption=f"<blockquote>project echalon;\n district: 01</blockquote>\n\n\n"
                     f"<b>Абонимент активен.</b>",
