@@ -123,7 +123,7 @@ async def find_tgid(id):
 async def maketake(ref_id):
     async with async_session() as session:
         result = await session.execute(
-            select(Order).where(Order.user_id == ref_id.id, Order.status == "paid")
+            select(Order).where(Order.user_id == ref_id, Order.status == "paid")
         )
         paid_orders = result.scalars().all()
 
