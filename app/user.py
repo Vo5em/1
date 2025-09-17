@@ -99,7 +99,7 @@ async def helps(callback: CallbackQuery):
     await callback.answer('')
     await callback.message.delete()
     await callback.message.answer(
-        f"<b>ID:</b><code>{tg_id}</code>\n\n"
+        f"<b>ID:</b> <code>{tg_id}</code>\n\n"
         f"Первым сообщением напиши свой ID\n"
         f"Дальше опиши проблему — и мы тебе поможем.",
         pats_mode="HTML",
