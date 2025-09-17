@@ -102,7 +102,7 @@ async def helps(callback: CallbackQuery):
         f"<b>ID:</b> <code>{tg_id}</code>\n\n"
         f"Первым сообщением напиши свой ID\n"
         f"Дальше опиши проблему — и мы тебе поможем.",
-        pats_mode="HTML",
+        parse_mode="HTML",
         reply_markup=kb.helps
     )
 
