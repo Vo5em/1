@@ -477,7 +477,7 @@ async def sub(callback: CallbackQuery):
         await callback.answer('')
         await callback.message.delete()
         await callback.message.answer(
-            f"Следующее списание {is_day.strftime('%d.%m.%Y')}</b>\n\n"
+            f"<b>Следующее списание {is_day.strftime('%d.%m.%Y')}</b>\n\n"
             f"<b>Подписка на месяц — 150₽</b>\n"
             f"— Деньги будут списываться каждый месяц.\n"
             f"— Отключить автопродление можно в любой момент в этом разделе.\n"
