@@ -120,6 +120,16 @@ async def find_tgid(id):
         tg_id = await session.scalar(select(User.tg_id).where(User.id == id))
     return tg_id
 
+async def maketake(ref_id):
+    async with async_session() as session:
+        result = await session.execute(
+            select(Order).where(Order.user_id == ref_id.id, Order.status == "paid")
+        )
+        paid_orders = result.scalars().all()
+
+        if ref_id and len(paid_orders) == 0:
+            await takeprise(ref_id)
+
 
 async def takeprise(ref_id2):
     async with async_session() as session:
@@ -326,7 +336,7 @@ async def yookassa_webhook(request: Request):
                 await activatekey(ruuid, tg_id)
                 await notify_spss(tg_id)
                 if ref_id is not None:
-                    await takeprise(ref_id)
+                    await maketake(ref_id)
                 else:
                     print("User has no referrer, skipping takeprise")
                 schedule_notifications2(tg_id,dayend)

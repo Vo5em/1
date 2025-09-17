@@ -17,6 +17,7 @@ user = Router()
 
 file_id01="AgACAgIAAxkBAAIDJGi98rSpeXZ-DD7LjnQjGlVQhMnzAAI3_zEbYF_wSUQ71x7vAxTSAQADAgADdwADNgQ"
 file_id02="AgACAgIAAxkBAAIDNmi-11DgQxRxzRElzTQPzwbZ2553AALw8jEbYF_4SX2hWNO4hiqDAQADAgADdwADNgQ"
+file_id03="AgACAgIAAxkBAAIECmjLDehdsa2MTbFTRI7mhgK7hQs5AAIQCTIb985YSgO9r4rHggE3AQADAgADdwADNgQ"
 
 def escape_markdown(text: str) -> str:
     return re.sub(r'([_\*\[\]\(\)~`>#+\-=|{}.!])', r'\\\1', text)
@@ -34,14 +35,14 @@ async def cmd_start(message: Message, command: CommandObject):
 
     is_key = await find_key(tg_id)
     if not is_key:
-        await message.answer(text='Мы знали, что Ты придешь к нам.\n\n'
-                                  'Наш vpn предлагает лучшие условия:\n'
-                                  '- доступ ко всем сайта и без ограничений;\n'
-                                  '- высокая скорость и стабильное соединение;\n'
-                                  '- настройка занимает меньше минуты;\n'
-                                  '- полная анонимность и конфиденциальность.\n\n'
-                                  'Активируй трёхдневный пробный период прямо сейчас 🌌',
-                             reply_markup=kb.main)
+        await message.media(
+            media=file_id03,
+            caption=f"<blockquote>ECALONE district 01</blockquote>\n"
+                    f"Ты близко.\n\n\n"
+                    f"Анонимность начинается здесь, подключи 3 дня пробного периода.",
+            parse_mode="HTML",
+            reply_markup=kb.main
+        )
     else:
         is_day = await find_dayend(tg_id)
         now_moscow = datetime.now(tz=MOSCOW_TZ)
@@ -50,19 +51,18 @@ async def cmd_start(message: Message, command: CommandObject):
             is_day = is_day.replace(tzinfo=MOSCOW_TZ)
 
         if is_day < now_moscow:
-            await message.answer(
-                text=f"Ваш персональный код: <code>{tg_id}</code>\n\n"
-                     f"Статус:\n- подписка неактивна ❄️\n\n"
-                     f"по всем вопросам обращайтесь в поддержку",
-                parse_mode="HTML",
+            await message.media(InputMediaPhoto(
+                media=file_id02,
+                caption=f"<blockquote>project echalon;\n district: 01</blockquote>\n\n\n"
+                        f"<b>Абонимент не активен.</b>",
+                parse_mode="HTML"),
                 reply_markup=kb.main_old
             )
-        else: await message.answer(
-            text=f"Ваш персональный код: <code>{tg_id}</code>\n\n"
-                 f"статус:\n"
-                 f"- подписка активна до: {is_day.strftime('%d.%m.%Y')}🌟\n\n"
-                 f"по всем вопросам обращайтесь в поддержку",
-            parse_mode="HTML",
+        else: await message.media(InputMediaPhoto(
+            media=file_id01,
+            caption=f"<blockquote>project echalon;\n district: 01</blockquote>\n\n\n"
+                    f"<b>Абонимент активен.</b>",
+            parse_mode="HTML"),
             reply_markup=kb.main_old
         )
 
@@ -78,53 +78,90 @@ async def home(callback: CallbackQuery):
     if is_day < now_moscow:
         await callback.message.edit_media(InputMediaPhoto(
             media=file_id02,
-            caption=f"Ваш персональный код: <code>{tg_id}</code>\n\n"
-                 f"Статус:\n- подписка неактивна ❄️\n\n"
-                 f"по всем вопросам обращайтесь в поддержку",
+            caption=f"<blockquote>project echalon;\n district: 01</blockquote>\n\n\n"
+                    f"<b>Абонимент не активен.</b>",
             parse_mode="HTML"),
             reply_markup=kb.main_old
         )
     else:
         await callback.message.edit_media(InputMediaPhoto(
             media=file_id01,
-            caption=f"Ваш персональный код: <code>{tg_id}</code>\n\n"
-                 f"Статус:\n"
-                 f"- подписка активна до: {is_day.strftime('%d.%m.%Y')}🌟\n\n"
-                 f"по всем вопросам обращайтесь в поддержку",
+            caption=f"<blockquote>project echalon;\n district: 01</blockquote>\n\n\n"
+                    f"<b>Абонимент активен.</b>",
             parse_mode="HTML"),
             reply_markup=kb.main_old
         )
 
 
+@user.callback_query(F.data == 'help')
+async def helps(callback: CallbackQuery):
+    tg_id = callback.message.from_user.id
+    await callback.answer('')
+    await callback.message.delete()
+    await callback.message.answer(
+        f"<b>ID:</b><code>{tg_id}</code>\n\n"
+        f"Первым сообщением напиши свой ID\n"
+        f"Дальше опиши проблему — и мы тебе поможем.",
+        pats_mode="HTML",
+        reply_markup=kb.helps
+    )
+
+
+
 @user.message(Command('help'))
 async def cmd_help(message: Message):
     tg_id = message.from_user.id
-    url = await create_payment(tg_id)
-    await message.answer(f"💳 Оплатите по ссылке:\n{url}")
+    await message.answer(
+        f"<b>ID:</b><code>{tg_id}</code>\n\n"
+        f"Первым сообщением напиши свой ID\n"
+        f"Дальше опиши проблему — и мы тебе поможем.",
+        pats_mode="HTML",
+        reply_markup=kb.helps
+    )
 
 
 @user.message(Command('subscribe'))
 async def cmd_sub(message: Message):
     tg_id = message.from_user.id
     paymenthodid = await find_paymethod_id(tg_id)
+
     if not paymenthodid:
-        await message.answer(
-            '🌠 <b>Подписка на месяц — 150₽</b>\n'
-            '— Деньги будут списываться каждый месяц.\n'
-            '— Отключить автопродление можно в любой момент в этом разделе.\n'
-            '— При отключении доступ сохранится до конца оплаченного.\n\n'
-            '📜 <b>Важно знать:</b> подключаясь, Ты принимаешь условия\n'
-            'ежемесячного списания.',
-            parse_mode="HTML",
-            reply_markup=kb.give_money
-        )
+        is_day = await find_dayend(tg_id)
+        now_moscow = datetime.now(tz=MOSCOW_TZ)
+        if is_day.tzinfo is None:
+            is_day = is_day.replace(tzinfo=MOSCOW_TZ)
+
+        if is_day < now_moscow:
+            await message.answer(
+                '<b>Абонимент не активен</b>\n\n'
+                '<b>Подписка на месяц — 150₽</b>\n'
+                '— Деньги будут списываться каждый месяц.\n'
+                '— Отключить автопродление можно в любой момент в этом разделе.\n'
+                '— При отключении доступ сохранится до конца оплаченного.\n\n'
+                '<b>Важно знать:</b> подключаясь, Ты принимаешь условия\n'
+                'ежемесячного списания.',
+                parse_mode="HTML",
+                reply_markup=kb.give_money
+            )
+        else:
+            await message.answer(
+                f"<b>Абонимент до {is_day.strftime('%d.%m.%Y')}</b>\n\n"
+                f"<b>Подписка на месяц — 150₽</b>\n"
+                f"— Деньги будут списываться каждый месяц.\n"
+                f"— Отключить автопродление можно в любой момент в этом разделе.\n"
+                f"— При отключении доступ сохранится до конца оплаченного.\n\n"
+                f"<b>Важно знать:</b> подключаясь, Ты принимаешь условия\n"
+                f"ежемесячного списания.",
+                parse_mode="HTML",
+                reply_markup=kb.give_money
+            )
     else:
         await message.answer(
-            '🔹 <b>Подписка на месяц — 150₽</b>\n'
+            '<b>Подписка на месяц — 150₽</b>\n'
             '— Деньги будут списываться каждый месяц.\n'
             '— Отключить автопродление можно в любой момент в этом разделе.\n'
             '— При отключении доступ сохранится до конца оплаченного\n\n'
-            '📜 <b>Важно знать:</b> подключаясь, Ты принимаешь условия\n'
+            '<b>Важно знать:</b> подключаясь, Ты принимаешь условия\n'
             'ежемесячного списания.',
             parse_mode="HTML",
             reply_markup=kb.cancelautopay
@@ -396,27 +433,48 @@ async def sub(callback: CallbackQuery):
     tg_id = callback.from_user.id
     paymenthodid = await find_paymethod_id(tg_id)
     if not paymenthodid:
-        await callback.answer('')
-        await callback.message.delete()
-        await callback.message.answer(
-            '🌠 <b>Подписка на месяц — 150₽</b>\n'
-            '— Деньги будут списываться каждый месяц.\n'
-            '— Отключить автопродление можно в любой момент в этом разделе.\n'
-            '— При отключении доступ сохранится до конца оплаченного.\n\n'
-            '📜 <b>Важно знать:</b> подключаясь, Ты принимаешь условия\n'
-            'ежемесячного списания.',
-            parse_mode="HTML",
-            reply_markup=kb.give_money
-        )
+        is_day = await find_dayend(tg_id)
+        now_moscow = datetime.now(tz=MOSCOW_TZ)
+        if is_day.tzinfo is None:
+            is_day = is_day.replace(tzinfo=MOSCOW_TZ)
+
+        if is_day < now_moscow:
+            await callback.answer('')
+            await callback.message.delete()
+            await callback.message.answer(
+                '<b>Абонимент не активен</b>\n\n'
+                '<b>Подписка на месяц — 150₽</b>\n'
+                '— Деньги будут списываться каждый месяц.\n'
+                '— Отключить автопродление можно в любой момент в этом разделе.\n'
+                '— При отключении доступ сохранится до конца оплаченного.\n\n'
+                '<b>Важно знать:</b> подключаясь, Ты принимаешь условия\n'
+                'ежемесячного списания.',
+                parse_mode="HTML",
+                reply_markup=kb.give_money
+            )
+        else:
+            await callback.answer('')
+            await callback.message.delete()
+            await callback.message.answer(
+                f"<b>Абонимент до {is_day.strftime('%d.%m.%Y')}</b>\n\n"
+                f"<b>Подписка на месяц — 150₽</b>\n"
+                f"— Деньги будут списываться каждый месяц.\n"
+                f"— Отключить автопродление можно в любой момент в этом разделе.\n"
+                f"— При отключении доступ сохранится до конца оплаченного.\n\n"
+                f"<b>Важно знать:</b> подключаясь, Ты принимаешь условия\n"
+                f"ежемесячного списания.",
+                parse_mode="HTML",
+                reply_markup=kb.give_money
+            )
     else:
         await callback.answer('')
         await callback.message.delete()
         await callback.message.answer(
-            '🔹 <b>Подписка на месяц — 150₽</b>\n'
+            '<b>Подписка на месяц — 150₽</b>\n'
             '— Деньги будут списываться каждый месяц.\n'
             '— Отключить автопродление можно в любой момент в этом разделе.\n'
             '— При отключении доступ сохранится до конца оплаченного\n\n'
-            '📜 <b>Важно знать:</b> подключаясь, Ты принимаешь условия\n'
+            '<b>Важно знать:</b> подключаясь, Ты принимаешь условия\n'
             'ежемесячного списания.',
             parse_mode="HTML",
             reply_markup=kb.cancelautopay

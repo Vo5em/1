@@ -7,10 +7,16 @@ main = InlineKeyboardMarkup(inline_keyboard=[
 
 
 main_old = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='🌇 Тарифы и оплата',callback_data='pay')],
-    [InlineKeyboardButton(text='🌆 Перейти к подключенью',callback_data='period')],
-    [InlineKeyboardButton(text='🏙️ Реферальная программа',callback_data='refka')],
-    [InlineKeyboardButton(text='🌃 Помощь',callback_data='help')]
+    [InlineKeyboardButton(text= 'Оплата',callback_data='pay')],
+    [InlineKeyboardButton(text='Перейти к подключению',callback_data='period')],
+    [InlineKeyboardButton(text='Реферальная программа',callback_data='refka')],
+    [InlineKeyboardButton(text='Помощь',callback_data='help')]
+])
+
+
+helps = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Поддержка',url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
+    [InlineKeyboardButton(text='⬅Назад',callback_data='home')]
 ])
 
 
@@ -26,7 +32,7 @@ gadgets = InlineKeyboardMarkup(inline_keyboard=[
 
 downloadand = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Скачать приложение', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
-    [InlineKeyboardButton(text='↩️Назад', callback_data='period'),
+    [InlineKeyboardButton(text='⬅Назад', callback_data='period'),
      InlineKeyboardButton(text='Видео инструкция', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
     [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
 ])
@@ -34,7 +40,7 @@ downloadand = InlineKeyboardMarkup(inline_keyboard=[
 
 downloadiph = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Скачать приложение', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
-    [InlineKeyboardButton(text='↩️Назад', callback_data='period'),
+    [InlineKeyboardButton(text='⬅Назад', callback_data='period'),
      InlineKeyboardButton(text='Видео инструкция', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
     [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
 ])
@@ -42,7 +48,7 @@ downloadiph = InlineKeyboardMarkup(inline_keyboard=[
 
 downloadHUA = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Скачать приложение', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
-    [InlineKeyboardButton(text='↩️Назад', callback_data='period'),
+    [InlineKeyboardButton(text='⬅Назад', callback_data='period'),
      InlineKeyboardButton(text='Видео инструкция', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
     [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
 ])
@@ -50,7 +56,7 @@ downloadHUA = InlineKeyboardMarkup(inline_keyboard=[
 
 downloaddich = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Скачать приложение', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
-    [InlineKeyboardButton(text='↩️Назад', callback_data='period'),
+    [InlineKeyboardButton(text='⬅Назад', callback_data='period'),
      InlineKeyboardButton(text='Видео инструкция', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
     [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
 ])
@@ -58,7 +64,7 @@ downloaddich = InlineKeyboardMarkup(inline_keyboard=[
 
 downloadwin = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Скачать приложение', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
-    [InlineKeyboardButton(text='↩️Назад', callback_data='period'),
+    [InlineKeyboardButton(text='⬅Назад', callback_data='period'),
      InlineKeyboardButton(text='Видео инструкция', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
     [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
 ])
@@ -67,13 +73,13 @@ downloadwin = InlineKeyboardMarkup(inline_keyboard=[
 downloadTV = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Пульт для Android', url='https://www.youtube.com/watch?v=CW5oGRx9CLM'),
      InlineKeyboardButton(text='Пульт для Iphone', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
-    [InlineKeyboardButton(text='↩️Назад', callback_data='period')],
+    [InlineKeyboardButton(text='⬅Назад', callback_data='period')],
     [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
 ])
 
 
 go_home = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='↩️Назад', callback_data='home')]
+    [InlineKeyboardButton(text='⬅Назад', callback_data='home')]
 ])
 
 
@@ -89,7 +95,7 @@ go_pay = InlineKeyboardMarkup(inline_keyboard=[
 
 give_money = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Перейти к оплате', callback_data='doitpls')],
-    [InlineKeyboardButton(text='↩️Назад', callback_data='home')]
+    [InlineKeyboardButton(text='⬅Назад', callback_data='home')]
 ])
 
 
@@ -100,7 +106,7 @@ gadgets_old = InlineKeyboardMarkup(inline_keyboard=[
      InlineKeyboardButton(text='Windows💻', callback_data='windows')],
     [InlineKeyboardButton(text='MacOS💻', callback_data='macos'),
      InlineKeyboardButton(text='Android TV 📺', callback_data='androidtv')],
-    [InlineKeyboardButton(text='↩️Назад', callback_data='home')]
+    [InlineKeyboardButton(text='⬅Назад', callback_data='home')]
 ])
 
 
@@ -117,7 +123,7 @@ admin_panel = InlineKeyboardMarkup(inline_keyboard=[
 
 cancelautopay = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Отмена авотпродления', callback_data="plsno")],
-    [InlineKeyboardButton(text='↩️Назад', callback_data='home')]
+    [InlineKeyboardButton(text='⬅Назад', callback_data='home')]
 ])
 
 def payment_keyboard(payurl: str) -> InlineKeyboardMarkup:
