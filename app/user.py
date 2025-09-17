@@ -95,7 +95,7 @@ async def home(callback: CallbackQuery):
 
 @user.callback_query(F.data == 'help')
 async def helps(callback: CallbackQuery):
-    tg_id = callback.message.from_user.id
+    tg_id = callback.from_user.id
     await callback.answer('')
     await callback.message.delete()
     await callback.message.answer(
