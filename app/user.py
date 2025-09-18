@@ -54,14 +54,14 @@ async def cmd_start(message: Message, command: CommandObject):
             await message.answer_photo(
                 photo=file_id02,
                 caption=f"<blockquote>project echalon;\n district: 01</blockquote>\n\n\n"
-                        f"<b>Абонимент не активен.</b>",
+                        f"<b>Абонемент не активен.</b>",
                 parse_mode="HTML",
                 reply_markup=kb.main_old
             )
         else: await message.answer_photo(
             photo=file_id01,
             caption=f"<blockquote>project echalon;\n district: 01</blockquote>\n\n\n"
-                    f"<b>Абонимент активен.</b>",
+                    f"<b>Абонемент активен.</b>",
             parse_mode="HTML",
             reply_markup=kb.main_old
         )
@@ -79,7 +79,7 @@ async def home(callback: CallbackQuery):
         await callback.message.edit_media(InputMediaPhoto(
             media=file_id02,
             caption=f"<blockquote>project echalon;\n district: 01</blockquote>\n\n\n"
-                    f"<b>Абонимент не активен.</b>",
+                    f"<b>Абонемент не активен.</b>",
             parse_mode="HTML"),
             reply_markup=kb.main_old
         )
@@ -87,7 +87,7 @@ async def home(callback: CallbackQuery):
         await callback.message.edit_media(InputMediaPhoto(
             media=file_id01,
             caption=f"<blockquote>project echalon;\n district: 01</blockquote>\n\n\n"
-                    f"<b>Абонимент активен.</b>",
+                    f"<b>Абонемент активен.</b>",
             parse_mode="HTML"),
             reply_markup=kb.main_old
         )
@@ -133,7 +133,7 @@ async def cmd_sub(message: Message):
 
         if is_day < now_moscow:
             await message.answer(
-                '<b>Абонимент не активен</b>\n\n'
+                '<b>Абонемент не активен</b>\n\n'
                 '<b>Подписка на месяц — 150₽</b>\n'
                 '— Деньги будут списываться каждый месяц.\n'
                 '— Отключить автопродление можно в любой момент в этом разделе.\n'
@@ -145,7 +145,7 @@ async def cmd_sub(message: Message):
             )
         else:
             await message.answer(
-                f"<b>Абонимент до {is_day.strftime('%d.%m.%Y')}</b>\n\n"
+                f"<b>Абонемент до {is_day.strftime('%d.%m.%Y')}</b>\n\n"
                 f"<b>Подписка на месяц — 150₽</b>\n"
                 f"— Деньги будут списываться каждый месяц.\n"
                 f"— Отключить автопродление можно в любой момент в этом разделе.\n"
@@ -446,7 +446,7 @@ async def sub(callback: CallbackQuery):
             await callback.answer('')
             await callback.message.delete()
             await callback.message.answer(
-                '<b>Абонимент не активен</b>\n\n'
+                '<b>Абонемент не активен</b>\n\n'
                 '<b>Подписка на месяц — 150₽</b>\n'
                 '— Деньги будут списываться каждый месяц.\n'
                 '— Отключить автопродление можно в любой момент в этом разделе.\n'
@@ -460,7 +460,7 @@ async def sub(callback: CallbackQuery):
             await callback.answer('')
             await callback.message.delete()
             await callback.message.answer(
-                f"<b>Абонимент до {is_day.strftime('%d.%m.%Y')}</b>\n\n"
+                f"<b>Абонемент до {is_day.strftime('%d.%m.%Y')}</b>\n\n"
                 f"<b>Подписка на месяц — 150₽</b>\n"
                 f"— Деньги будут списываться каждый месяц.\n"
                 f"— Отключить автопродление можно в любой момент в этом разделе.\n"
