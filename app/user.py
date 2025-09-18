@@ -37,7 +37,7 @@ async def cmd_start(message: Message, command: CommandObject):
     if not is_key:
         await message.answer_photo(
             photo=file_id03,
-            caption=f"<blockquote>ECALONE district 01</blockquote>\n"
+            caption=f"<blockquote>ESCHELON district 01</blockquote>\n"
                     f"Ты близко.\n\n\n"
                     f"Анонимность начинается здесь, подключи 3 дня пробного периода.",
             parse_mode="HTML",
@@ -53,14 +53,14 @@ async def cmd_start(message: Message, command: CommandObject):
         if is_day < now_moscow:
             await message.answer_photo(
                 photo=file_id02,
-                caption=f"<blockquote>project echalon;\n district: 01</blockquote>\n\n\n"
+                caption=f"<blockquote>project eschelon;\n district: 01</blockquote>\n\n\n"
                         f"<b>Абонемент не активен.</b>",
                 parse_mode="HTML",
                 reply_markup=kb.main_old
             )
         else: await message.answer_photo(
             photo=file_id01,
-            caption=f"<blockquote>project echalon;\n district: 01</blockquote>\n\n\n"
+            caption=f"<blockquote>project eschelon;\n district: 01</blockquote>\n\n\n"
                     f"<b>Абонемент активен.</b>",
             parse_mode="HTML",
             reply_markup=kb.main_old
@@ -78,7 +78,7 @@ async def home(callback: CallbackQuery):
     if is_day < now_moscow:
         await callback.message.edit_media(InputMediaPhoto(
             media=file_id02,
-            caption=f"<blockquote>project echalon;\n district: 01</blockquote>\n\n\n"
+            caption=f"<blockquote>project eschelon;\n district: 01</blockquote>\n\n\n"
                     f"<b>Абонемент не активен.</b>",
             parse_mode="HTML"),
             reply_markup=kb.main_old
@@ -86,7 +86,7 @@ async def home(callback: CallbackQuery):
     else:
         await callback.message.edit_media(InputMediaPhoto(
             media=file_id01,
-            caption=f"<blockquote>project echalon;\n district: 01</blockquote>\n\n\n"
+            caption=f"<blockquote>project eschelon;\n district: 01</blockquote>\n\n\n"
                     f"<b>Абонемент активен.</b>",
             parse_mode="HTML"),
             reply_markup=kb.main_old
