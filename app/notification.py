@@ -42,6 +42,6 @@ async def notify_spss(tg_id: int):
     await bot.edit_message_text(
         chat_id=tg_id,
         message_id=user.message_id,
-        text="Теперь ты — один из тех, кто знает.",
+        text="Теперь Ты — один из тех, кто знает.",
         reply_markup=kb.on_main
     )
