@@ -31,7 +31,8 @@ gadgets = InlineKeyboardMarkup(inline_keyboard=[
 
 
 downloadand = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Скачать приложение', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
+    [InlineKeyboardButton(text='Скачать приложение',
+                          url='https://play.google.com/store/apps/details?id=com.v2raytun.android')],
     [InlineKeyboardButton(text='⬅Назад', callback_data='period'),
      InlineKeyboardButton(text='Видео инструкция', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
     [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
@@ -63,7 +64,8 @@ downloaddich = InlineKeyboardMarkup(inline_keyboard=[
 
 
 downloadwin = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Скачать приложение', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
+    [InlineKeyboardButton(text='Скачать приложение', url='https://github.com/MatsuriDayo/nekoray/releases'
+                                                         '/download/4.0.1/nekoray-4.0.1-2024-12-12-windows64.zip')],
     [InlineKeyboardButton(text='⬅Назад', callback_data='period'),
      InlineKeyboardButton(text='Видео инструкция', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
     [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
@@ -71,8 +73,10 @@ downloadwin = InlineKeyboardMarkup(inline_keyboard=[
 
 
 downloadTV = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Пульт для Android', url='https://www.youtube.com/watch?v=CW5oGRx9CLM'),
-     InlineKeyboardButton(text='Пульт для Iphone', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
+    [InlineKeyboardButton(text='Пульт для Android', url='https://play.google.com'
+                                                        '/store/apps/details?id=tech.simha.androidtvremote&hl=en_US'),
+     InlineKeyboardButton(text='Пульт для Iphone', url='https://apps.apple.com'
+                                                       '/ru/app/remote-for-android-tv/id1668755298')],
     [InlineKeyboardButton(text='⬅Назад', callback_data='period')],
     [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
 ])

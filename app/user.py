@@ -179,7 +179,7 @@ async def cmd_ref(message: Message):
     ref_link = f"https://t.me/{BOT_USERNAME}?start={tg_id}"
     escaped_link = escape_markdown(ref_link)
     await message.answer(
-        f"*Реферальная программа ECHALON*\n\n"
+        f"*Реферальная программа ESCHELON*\n\n"
         f"За каждого приглашённого друга, оформившего подписку,\n"
         f"Твой доступ продлевается на 7 дней\.\n\n"
         f"*Реферальная ссылка:*\n`{escaped_link}`",
@@ -263,8 +263,8 @@ async def connect_i(callback: CallbackQuery):
       await callback.answer('')
       await callback.message.edit_text(f'<b>ИНСТРУКЦИЯ:</b>\n\n'
                                        f'<b>№1</b> - Cкачай приложение'
-                                       f' <a href="https://play.google.com'
-                                       f'/store/apps/details?id=com.v2raytun.android">v2RayTun</a>'"\n"
+                                       f' <a href="https://apps.apple.com'
+                                       f'/lt/app/v2raytun/id6476628951">v2RayTun</a>'"\n"
                                        "<b>№2</b> - Нажми на ключ доступа cнизу ( начинается с vless://)\n"
                                        "<b>№3</b> - Запусти программу v2RayTun и нажми на <b>+</b>"
                                        " в правом верхнем углу\n"
@@ -276,8 +276,8 @@ async def connect_i(callback: CallbackQuery):
                                      reply_markup=kb.downloadiph)
     else: await callback.message.edit_text(f'<b>ИНСТРУКЦИЯ:</b>\n\n'
                                            f'<b>№1</b> - Cкачай приложение'
-                                           f' <a href="https://play.google.com'
-                                           f'/store/apps/details?id=com.v2raytun.android">v2RayTun</a>'"\n"
+                                           f' <a href="https://apps.apple.com'
+                                           f'/lt/app/v2raytun/id6476628951">v2RayTun</a>'"\n"
                                            "<b>№2</b> - Нажми на ключ доступа cнизу ( начинается с vless://)\n"
                                            "<b>№3</b> - Запусти программу v2RayTun и нажми на <b>+</b>"
                                            " в правом верхнем углу\n"
@@ -299,8 +299,8 @@ async def connect_hu(callback: CallbackQuery):
       await callback.answer('')
       await callback.message.edit_text(f'<b>ИНСТРУКЦИЯ:</b>\n\n'
                                        f'<b>№1</b> - Cкачай приложение'
-                                       f' <a href="https://play.google.com'
-                                       f'/store/apps/details?id=com.v2raytun.android">v2RayTun</a>'"\n"
+                                       f' <a href="https://github.com/barmaiey5553/V2RayTun-for-china-mobile'
+                                       f'/releases/download/v1.0/v2RayTun_3.10.42_arm64-v8a.apk">v2RayTun</a>'"\n"
                                        "<b>№2</b> - Нажми на ключ доступа cнизу ( начинается с vless://)\n"
                                        "<b>№3</b> - Запусти программу v2RayTun и нажми на <b>+</b>"
                                        " в правом верхнем углу\n"
@@ -312,8 +312,8 @@ async def connect_hu(callback: CallbackQuery):
                                      reply_markup=kb.downloadHUA)
     else: await callback.message.edit_text(f'<b>ИНСТРУКЦИЯ:</b>\n\n'
                                            f'<b>№1</b> - Cкачай приложение'
-                                           f' <a href="https://play.google.com'
-                                           f'/store/apps/details?id=com.v2raytun.android">v2RayTun</a>'"\n"
+                                           f' <a href="https://github.com/barmaiey5553/V2RayTun-for-china-mobile'
+                                           f'/releases/download/v1.0/v2RayTun_3.10.42_arm64-v8a.apk">v2RayTun</a>'"\n"
                                            "<b>№2</b> - Нажми на ключ доступа cнизу ( начинается с vless://)\n"
                                            "<b>№3</b> - Запусти программу v2RayTun и нажми на <b>+</b>"
                                            " в правом верхнем углу\n"
@@ -336,8 +336,8 @@ async def connect_win(callback: CallbackQuery):
       await callback.answer('')
       await callback.message.edit_text(f'<b>ИНСТРУКЦИЯ:</b>\n\n'
                                        f'<b>№1</b> - Скачай приложение'
-                                       f' <a href="https://play.google.com'
-                                       f'/store/apps/details?id=com.v2raytun.android">v2RayTun</a>'"\n"
+                                       f' <a href="https://github.com/MatsuriDayo/nekoray/releases'
+                                       f'/download/4.0.1/nekoray-4.0.1-2024-12-12-windows64.zip">v2RayTun</a>'"\n"
                                        "<b>№2</b> - Нажми на ключ доступа cнизу ( начинается с vless://)\n"
                                        "<b>№3</b> - Разархивируй и запусти программу «NekoBox» имени администратора\n"
                                        "<b>№4</b> - Включи режим TUN в правом веерхнем углу \n"
@@ -351,10 +351,11 @@ async def connect_win(callback: CallbackQuery):
                                      reply_markup=kb.downloadwin)
     else: await callback.message.edit_text(f'<b>ИНСТРУКЦИЯ:</b>\n\n'
                                            f'<b>№1</b> - Скачай приложение'
-                                           f' <a href="https://play.google.com'
-                                           f'/store/apps/details?id=com.v2raytun.android">v2RayTun</a>'"\n"
+                                           f' <a href="https://github.com/MatsuriDayo/nekoray/releases'
+                                           f'/download/4.0.1/nekoray-4.0.1-2024-12-12-windows64.zip">v2RayTun</a>'"\n"
                                            "<b>№2</b> - Нажми на ключ доступа cнизу ( начинается с vless://)\n"
-                                           "<b>№3</b> - Разархивируй и запусти программу «NekoBox» имени администратора\n"
+                                           "<b>№3</b> - Разархивируй и запусти программу «NekoBox»"
+                                           " имени администратора\n"
                                            "<b>№4</b> - Включи режим TUN в правом веерхнем углу \n"
                                            "<b>№5</b> - Нажми правой кнопкой мыши по пустому пространству"
                                            " и выбери «Добавить профиль из буфера обмена»\n"
@@ -507,7 +508,7 @@ async def pay(callback: CallbackQuery):
     message_id = callback.message.message_id
     await save_message(tg_id, message_id)
     await callback.message.edit_text(
-        f"💳 Оплатите по ссылке:\n{payment_url}",
+        f"Оплатите по ссылке:\n{payment_url}",
         reply_markup=kburl
     )
 
