@@ -8,6 +8,8 @@ from datetime import datetime, timedelta
 
 MOSCOW_TZ = ZoneInfo("Europe/Moscow")
 
+file04 = "AgACAgIAAxkBAAIEYGjNKo-pTZvFodzJ3bAaqZ_IQ47EAALk8DEbuxVoSjgwCRvYjFJpAQADAgADeQADNgQ"
+
 
 async def notify_before_end(tg_id: int):
     async with async_session() as session:
@@ -39,9 +41,10 @@ async def notify_spss(tg_id: int):
 
         if not user or not user.message_id:
             return
-    await bot.edit_message_text(
+    await bot.edit_message_media(
         chat_id=tg_id,
         message_id=user.message_id,
-        text="Теперь Ты — один из тех, кто знает.",
+        media=file04,
+        caption="Теперь Ты — один из тех, кто знает.",
         reply_markup=kb.on_main
     )
