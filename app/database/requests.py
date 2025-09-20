@@ -334,10 +334,7 @@ async def yookassa_webhook(request: Request):
 
 
                 await activatekey(ruuid, tg_id)
-                try:
-                    await notify_spss(tg_id)
-                except Exception as e:
-                    print(f"Ошибка при notify_spss: {e}")
+                await notify_spss(tg_id)
                 if ref_id is not None:
                     await maketake(ref_id)
                 else:
@@ -414,7 +411,19 @@ async def check_subscriptions():
             select(User).where(User.dayend != None, User.dayend - timedelta(hours=1) <= now, User.dayend >= now)
         )
         for user in users.scalars().all():
-            await create_auto_payment(user)
+            for user in users.scalars().all():
+                result = await session.execute(
+                    select(Order).where(
+                        Order.user_id == user.id,
+                        Order.status.in_(["pending"])
+                    ).order_by(Order.create_at.desc())
+                )
+                order = result.scalars().first()
+
+            if order:
+                continue
+            else:
+                await create_auto_payment(user)
 
 @app.get("/")
 async def index(request: Request):
