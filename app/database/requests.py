@@ -196,7 +196,7 @@ async def schedulers():
     while True:
         await check_subscriptions()
         await check_end()
-        await asyncio.sleep(18)
+        await asyncio.sleep(1800)
 
 
 def schedule_notifications(tg_id, dayend):
@@ -282,7 +282,7 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
             "amount": {"value": f"{amount:.2f}", "currency": currency},
             "capture": True,
             "confirmation": {"type": "redirect", "return_url": str(mybot)},
-            "description": f"Оплата подписки VPN для {tg_id}",
+            "description": f"Оплата подписки для {tg_id}",
             "save_payment_method": True,
             "metadata": {"payload": payload_value},
         })
@@ -397,7 +397,7 @@ async def create_auto_payment(user: User, amount: float = 150.0, currency: str =
         },
         "capture": True,
         "payment_method_id": user.payment_method_id,  # ключ для автосписания
-        "description": f"Автопродление подписки VPN",
+        "description": f"Автопродление подписки",
         "metadata": {
             "payload": user.payload
         }
