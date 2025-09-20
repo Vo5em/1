@@ -2,7 +2,7 @@ import httpx
 import json
 from config import BASE_URL
 
-async def activatekey(uuides, tg_id):
+async def activatekey(uuides):
     async with httpx.AsyncClient(base_url=BASE_URL, timeout=10.0) as client:
         login_resp = await client.post("login", json={"username": "leg01", "password": "5sdvwlh25S"})
         if login_resp.status_code != 200:

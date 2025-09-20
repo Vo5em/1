@@ -194,8 +194,8 @@ async def delpaymethod_id(tg_id):
 
 async def schedulers():
     while True:
-        await check_end()
         await check_subscriptions()
+        await check_end()
         await asyncio.sleep(15)
 
 
@@ -408,7 +408,7 @@ async def check_subscriptions():
     now = datetime.now(tz=MOSCOW_TZ)
     async with async_session() as session:
         users = await session.execute(
-            select(User).where(User.dayend != None, User.dayend - timedelta(hours=1) <= now)
+            select(User).where(User.dayend != None, User.dayend - timedelta(hours=1) <= now, User.dayend >= now)
         )
         for user in users.scalars().all():
             await create_auto_payment(user)
