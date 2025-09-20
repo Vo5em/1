@@ -54,14 +54,14 @@ async def cmd_start(message: Message, command: CommandObject):
         if is_day < now_moscow:
             await message.answer_photo(
                 photo=file_id02,
-                caption=f"<blockquote>project eschelon;\n district: 01</blockquote>\n\n\n"
+                caption=f"<blockquote>project eschalon;\n district: 01</blockquote>\n\n\n"
                         f"<b>Абонемент не активен.</b>",
                 parse_mode="HTML",
                 reply_markup=kb.main_old
             )
         else: await message.answer_photo(
             photo=file_id01,
-            caption=f"<blockquote>project eschelon;\n district: 01</blockquote>\n\n\n"
+            caption=f"<blockquote>project eschalon;\n district: 01</blockquote>\n\n\n"
                     f"<b>Абонемент активен.</b>",
             parse_mode="HTML",
             reply_markup=kb.main_old
@@ -79,7 +79,7 @@ async def home(callback: CallbackQuery):
     if is_day < now_moscow:
         await callback.message.edit_media(InputMediaPhoto(
             media=file_id02,
-            caption=f"<blockquote>project eschelon;\n district: 01</blockquote>\n\n\n"
+            caption=f"<blockquote>project eschalon;\n district: 01</blockquote>\n\n\n"
                     f"<b>Абонемент не активен.</b>",
             parse_mode="HTML"),
             reply_markup=kb.main_old
@@ -87,7 +87,7 @@ async def home(callback: CallbackQuery):
     else:
         await callback.message.edit_media(InputMediaPhoto(
             media=file_id01,
-            caption=f"<blockquote>project eschelon;\n district: 01</blockquote>\n\n\n"
+            caption=f"<blockquote>project eschalon;\n district: 01</blockquote>\n\n\n"
                     f"<b>Абонемент активен.</b>",
             parse_mode="HTML"),
             reply_markup=kb.main_old
@@ -425,7 +425,7 @@ async def refka(callback: CallbackQuery):
     await callback.answer('')
     await callback.message.delete()
     await callback.message.answer(
-        f"*Реферальная программа eshcalon*\n\n"
+        f"*Реферальная программа eschalon*\n\n"
         f"За каждого приглашённого друга, оформившего подписку,\n"
         f"Твой доступ продлевается на 7 дней\.\n\n"
         f"*Реферальная ссылка:*\n`{escaped_link}`",
