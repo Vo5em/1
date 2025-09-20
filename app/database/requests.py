@@ -196,7 +196,7 @@ async def schedulers():
     while True:
         await check_end()
         await check_subscriptions()
-        await asyncio.sleep(1800)
+        await asyncio.sleep(15)
 
 
 def schedule_notifications(tg_id, dayend):
@@ -404,6 +404,7 @@ async def create_auto_payment(user: User, amount: float = 150.0, currency: str =
 
 
 async def check_subscriptions():
+    print("g")
     now = datetime.now(tz=MOSCOW_TZ)
     async with async_session() as session:
         users = await session.execute(

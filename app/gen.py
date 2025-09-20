@@ -1,9 +1,7 @@
 import httpx
-import asyncio
 import uuid
 import json
 from app.database.requests import set_key
-from app.notification import notify_end
 from config import BASE_URL
 
 BASE_URL =  BASE_URL
@@ -23,7 +21,7 @@ async def addkey(user_id: int):
 
         # 2. Создание клиента
         new_uuid = str(uuid.uuid4())
-        client_email = f"user_{new_uuid[:8]}example.com"
+        client_email = f"eschalon[{new_uuid[:8]}]"
         payload = {
             "id": 1,
             "settings": json.dumps({
