@@ -49,8 +49,7 @@ downloadiph = InlineKeyboardMarkup(inline_keyboard=[
 
 downloadHUA = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Скачать приложение', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
-    [InlineKeyboardButton(text='⬅Назад', callback_data='period'),
-     InlineKeyboardButton(text='Видео инструкция', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
+    [InlineKeyboardButton(text='⬅Назад', callback_data='period')],
     [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
 ])
 

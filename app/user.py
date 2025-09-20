@@ -18,6 +18,7 @@ user = Router()
 file_id01="AgACAgIAAxkBAAIDJGi98rSpeXZ-DD7LjnQjGlVQhMnzAAI3_zEbYF_wSUQ71x7vAxTSAQADAgADdwADNgQ"
 file_id02="AgACAgIAAxkBAAIDNmi-11DgQxRxzRElzTQPzwbZ2553AALw8jEbYF_4SX2hWNO4hiqDAQADAgADdwADNgQ"
 file_id03="AgACAgIAAxkBAAIECmjLDehdsa2MTbFTRI7mhgK7hQs5AAIQCTIb985YSgO9r4rHggE3AQADAgADdwADNgQ"
+file_id05="AgACAgIAAxkBAAIEpWjO8lftdK0WJ4FQ_8PqhtynMKjeAAKUAzIbDlF4SuF4nMChjDQ6AQADAgADeQADNgQ"
 
 def escape_markdown(text: str) -> str:
     return re.sub(r'([_\*\[\]\(\)~`>#+\-=|{}.!])', r'\\\1', text)
@@ -36,7 +37,7 @@ async def cmd_start(message: Message, command: CommandObject):
     is_key = await find_key(tg_id)
     if not is_key:
         await message.answer_photo(
-            photo=file_id03,
+            photo=file_id05,
             caption=f"<blockquote>ESCHELON district 01</blockquote>\n"
                     f"Ты близко.\n\n\n"
                     f"Анонимность начинается здесь, подключи 3 дня пробного периода.",
@@ -179,7 +180,7 @@ async def cmd_ref(message: Message):
     ref_link = f"https://t.me/{BOT_USERNAME}?start={tg_id}"
     escaped_link = escape_markdown(ref_link)
     await message.answer(
-        f"*Реферальная программа ESCHELON*\n\n"
+        f"*Реферальная программа eschalon*\n\n"
         f"За каждого приглашённого друга, оформившего подписку,\n"
         f"Твой доступ продлевается на 7 дней\.\n\n"
         f"*Реферальная ссылка:*\n`{escaped_link}`",
@@ -394,7 +395,7 @@ async def connect_antv(callback: CallbackQuery):
       await callback.message.edit_text(f'<b>ИНСТРУКЦИЯ:</b>\n\n'
                                        f"<b>№1</b> - Установи пульт на свой телефон по кнопке ниже\n"
                                        "<b>№2</b> - Нажми на ключ доступа cнизу ( начинается с vless://)\n"
-                                       "<b>№3</b> - Установи v2RayTun на Android TV"
+                                       "<b>№3</b> - Установи v2RayTun на Android TV\n"
                                        "<b>№4</b> - Запусти v2RayTun и выбери пункт «ручной ввод»\n"
                                        "<b>№5</b> - Вставь скопированный ключ используя установленный пульт\n"
                                        "<b>№6</b> - Нажми <b>Ок</b>\n\n"
@@ -424,7 +425,7 @@ async def refka(callback: CallbackQuery):
     await callback.answer('')
     await callback.message.delete()
     await callback.message.answer(
-        f"*Реферальная программа ECHALON*\n\n"
+        f"*Реферальная программа eshcalon*\n\n"
         f"За каждого приглашённого друга, оформившего подписку,\n"
         f"Твой доступ продлевается на 7 дней\.\n\n"
         f"*Реферальная ссылка:*\n`{escaped_link}`",
