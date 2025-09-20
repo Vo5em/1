@@ -38,7 +38,7 @@ async def cmd_start(message: Message, command: CommandObject):
     if not is_key:
         await message.answer_photo(
             photo=file_id05,
-            caption=f"<blockquote>ESCHELON district 01</blockquote>\n"
+            caption=f"<blockquote>eschalon district 01</blockquote>\n"
                     f"Ты близко.\n\n\n"
                     f"Анонимность начинается здесь, подключи 3 дня пробного периода.",
             parse_mode="HTML",
