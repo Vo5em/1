@@ -196,7 +196,7 @@ async def schedulers():
     while True:
         await check_subscriptions()
         await check_end()
-        await asyncio.sleep(15)
+        await asyncio.sleep(1800)
 
 
 def schedule_notifications(tg_id, dayend):
@@ -334,7 +334,10 @@ async def yookassa_webhook(request: Request):
 
 
                 await activatekey(ruuid, tg_id)
-                await notify_spss(tg_id)
+                try:
+                    await notify_spss(tg_id)
+                except Exception as e:
+                    print(f"Ошибка при notify_spss: {e}")
                 if ref_id is not None:
                     await maketake(ref_id)
                 else:
