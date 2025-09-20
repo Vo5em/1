@@ -411,19 +411,20 @@ async def check_subscriptions():
             select(User).where(User.dayend != None, User.dayend - timedelta(hours=1) <= now, User.dayend >= now)
         )
         for user in users.scalars().all():
-            for user in users.scalars().all():
-                result = await session.execute(
-                    select(Order).where(
-                        Order.user_id == user.id,
-                        Order.status.in_(["pending"])
-                    ).order_by(Order.create_at.desc())
-                )
-                order = result.scalars().first()
+            result = await session.execute(
+                select(Order).where(
+                    Order.user_id == user.id,
+                    Order.status.in_(["pending"])
+                ).order_by(Order.create_at.desc())
+            )
+            order = result.scalars().first()
 
             if order:
                 continue
-            else:
-                await create_auto_payment(user)
+
+            await create_auto_payment(user)
+
+        await session.commit()
 
 @app.get("/")
 async def index(request: Request):
