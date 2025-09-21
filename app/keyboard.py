@@ -21,12 +21,12 @@ helps = InlineKeyboardMarkup(inline_keyboard=[
 
 
 gadgets = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Android📱', callback_data='android'),
-     InlineKeyboardButton(text='Iphone📱', callback_data='iphone')],
-    [InlineKeyboardButton(text='Huawei 🇨🇳', callback_data='huawei'),
-     InlineKeyboardButton(text='Windows💻', callback_data='windows')],
-    [InlineKeyboardButton(text='MacOS💻', callback_data='macos'),
-     InlineKeyboardButton(text='Android TV 📺', callback_data='androidtv')]
+    [InlineKeyboardButton(text='Android', callback_data='android'),
+     InlineKeyboardButton(text='Iphone', callback_data='iphone')],
+    [InlineKeyboardButton(text='Huawei', callback_data='huawei'),
+     InlineKeyboardButton(text='Windows', callback_data='windows')],
+    [InlineKeyboardButton(text='MacOS', callback_data='macos'),
+     InlineKeyboardButton(text='Android TV', callback_data='androidtv')]
 ])
 
 
@@ -103,12 +103,12 @@ give_money = InlineKeyboardMarkup(inline_keyboard=[
 
 
 gadgets_old = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Android📱', callback_data='android'),
-     InlineKeyboardButton(text='Iphone📱', callback_data='iphone')],
-    [InlineKeyboardButton(text='Huawei 🇨🇳', callback_data='huawei'),
-     InlineKeyboardButton(text='Windows💻', callback_data='windows')],
-    [InlineKeyboardButton(text='MacOS💻', callback_data='macos'),
-     InlineKeyboardButton(text='Android TV 📺', callback_data='androidtv')],
+    [InlineKeyboardButton(text='Android', callback_data='android'),
+     InlineKeyboardButton(text='Iphone', callback_data='iphone')],
+    [InlineKeyboardButton(text='Huawei', callback_data='huawei'),
+     InlineKeyboardButton(text='Windows', callback_data='windows')],
+    [InlineKeyboardButton(text='MacOS', callback_data='macos'),
+     InlineKeyboardButton(text='Android TV', callback_data='androidtv')],
     [InlineKeyboardButton(text='⬅Назад', callback_data='home')]
 ])
 
