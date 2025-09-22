@@ -10,7 +10,7 @@ API_URL = BASE_URL + "panel/inbound/addClient"
 REALITY_PBK = "wV19LWOWi6RmSJne51QbGL8A8MjalDgbNlMnQUO9C0g"
 REALITY_SNI = "yahoo.com"
 REALITY_SID = "1de065d8"
-INBOUND_NAME = "eschalon"
+INBOUND_NAME = "leg"
 
 async def addkey(user_id: int):
     async with httpx.AsyncClient(base_url=BASE_URL, timeout=10.0) as client:
