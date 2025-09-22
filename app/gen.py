@@ -10,7 +10,7 @@ API_URL = BASE_URL + "panel/inbound/addClient"
 REALITY_PBK = "wV19LWOWi6RmSJne51QbGL8A8MjalDgbNlMnQUO9C0g"
 REALITY_SNI = "yahoo.com"
 REALITY_SID = "1de065d8"
-INBOUND_NAME = "leg"
+INBOUND_NAME = "eschalon"
 
 async def addkey(user_id: int):
     async with httpx.AsyncClient(base_url=BASE_URL, timeout=10.0) as client:
@@ -21,7 +21,7 @@ async def addkey(user_id: int):
 
         # 2. Создание клиента
         new_uuid = str(uuid.uuid4())
-        client_email = f"eschalon[{new_uuid[:8]}]"
+        client_email = f"NL_[{new_uuid[:8]}]"
         payload = {
             "id": 1,
             "settings": json.dumps({
@@ -55,7 +55,7 @@ async def delkey(uuides, tg_id):
 
 
         new_uuid = str(uuides)
-        client_email = f"eschalon[{new_uuid[:8]}]"
+        client_email = f"NL_[{new_uuid[:8]}]"
         payload = {
             "id": 1,
             "settings": json.dumps({
