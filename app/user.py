@@ -36,13 +36,13 @@ async def cmd_start(message: Message, command: CommandObject):
 
     is_key = await find_key(tg_id)
     if not is_key:
-        await message.answer("ghd"'''_photo(
+        await message.answer_photo(
             photo=file_id05,
             caption=f"<blockquote>eschalon district 01</blockquote>\n"
                     f"Ты близко.\n\n\n"
                     f"Анонимность начинается здесь, подключи 3 дня пробного периода.",
             parse_mode="HTML",
-            reply_markup=kb.main'''
+            reply_markup=kb.main
         )
     else:
         is_day = await find_dayend(tg_id)
