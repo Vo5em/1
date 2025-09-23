@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 
 MOSCOW_TZ = ZoneInfo("Europe/Moscow")
 
-file04 = "AgACAgIAAxkBAAIEuWjO9WtN-eVi5S0dvQg8Xzhx49ZvAAKmAzIbDlF4SttHuJP4-X39AQADAgADeQADNgQ"
+file04 = "AgACAgIAAxkBAAMaaNMPnzGPdHKD_6UQTSuLxSiiT54AAg4MMhtRY5lKmvQCMwSLnvwBAAMCAAN5AAM2BA"
 
 async def notify_before_end(tg_id: int):
     async with async_session() as session:

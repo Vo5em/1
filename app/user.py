@@ -15,10 +15,10 @@ MOSCOW_TZ = ZoneInfo("Europe/Moscow")
 
 user = Router()
 
-file_id01="AgACAgIAAxkBAAIDJGi98rSpeXZ-DD7LjnQjGlVQhMnzAAI3_zEbYF_wSUQ71x7vAxTSAQADAgADdwADNgQ"
-file_id02="AgACAgIAAxkBAAIDNmi-11DgQxRxzRElzTQPzwbZ2553AALw8jEbYF_4SX2hWNO4hiqDAQADAgADdwADNgQ"
+file_id01="AgACAgIAAxkBAAMWaNMPKMhM0eMxvxxeVS5IyS3D9ZgAAgkMMhtRY5lKXCfNw71egRABAAMCAAN3AAM2BA"
+file_id02="AgACAgIAAxkBAAMUaNMO4S-2Y9lCRep1HONkhCy5ORkAAggMMhtRY5lKwXcd_K2BLJEBAAMCAAN3AAM2BA"
 file_id03="AgACAgIAAxkBAAIECmjLDehdsa2MTbFTRI7mhgK7hQs5AAIQCTIb985YSgO9r4rHggE3AQADAgADdwADNgQ"
-file_id05="AgACAgIAAxkBAAIEpWjO8lftdK0WJ4FQ_8PqhtynMKjeAAKUAzIbDlF4SuF4nMChjDQ6AQADAgADeQADNgQ"
+file_id05="AgACAgIAAxkBAAMYaNMPUVK_-d6ijTvoMtzzuFj_NpYAAgsMMhtRY5lKmiN6t7UeSm0BAAMCAAN5AAM2BA"
 
 def escape_markdown(text: str) -> str:
     return re.sub(r'([_\*\[\]\(\)~`>#+\-=|{}.!])', r'\\\1', text)
