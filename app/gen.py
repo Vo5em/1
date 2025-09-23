@@ -7,10 +7,10 @@ from config import BASE_URL
 BASE_URL =  BASE_URL
 LOGIN_URL = BASE_URL + "login"
 API_URL = BASE_URL + "panel/inbound/addClient"
-REALITY_PBK = "wV19LWOWi6RmSJne51QbGL8A8MjalDgbNlMnQUO9C0g"
-REALITY_SNI = "yahoo.com"
-REALITY_SID = "1de065d8"
-INBOUND_NAME = "leg"
+REALITY_PBK = "hQdDcFaCu3e5aF2De1x7FcP7NwLEdBWowAo0FZaEu24"
+REALITY_SNI = "google.com"
+REALITY_SID = "3535352f08be"
+INBOUND_NAME = "eschalon"
 
 async def addkey(user_id: int):
     async with httpx.AsyncClient(base_url=BASE_URL, timeout=10.0) as client:
@@ -38,7 +38,7 @@ async def addkey(user_id: int):
         if resp.status_code == 200:
             vless_link = (
                 f"vless://{new_uuid}@set.kabinetboos.ru:443?"
-                f"type=tcp&security=reality&"
+                f"type=tcp&encryption=none&security=reality&"
                 f"pbk={REALITY_PBK}&fp=chrome&"
                 f"sni={REALITY_SNI}&sid={REALITY_SID}&spx=%2F&"
                 f"flow=xtls-rprx-vision"
