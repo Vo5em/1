@@ -55,11 +55,16 @@ async def addkey(user_id: int):
         login_resp = await client.post("login", json={"username": "leg01", "password": "5sdvwlh25S"})
         login_resp.raise_for_status()
 
-        # Получаем текущие клиенты
         inbound_id = 2
+
+        # Получаем текущий inbound
         get_resp = await client.get(f"panel/api/inbounds/get/{inbound_id}")
+        get_resp.raise_for_status()
         inbound_data = get_resp.json()
-        clients = json.loads(inbound_data["obj"]["settings"])["clients"]
+
+        # Достаём список клиентов
+        settings = json.loads(inbound_data["obj"]["settings"])
+        clients = settings.get("clients", [])
 
         # Генерируем нового клиента
         new_uuid = str(uuid.uuid4())
@@ -74,15 +79,16 @@ async def addkey(user_id: int):
             "fingerprint": "chrome"
         }
 
+        # Добавляем нового к списку
         clients.append(new_client)
 
-        # Отправляем обновлённый список
+        # Отправляем обратно через addClient
         payload = {
             "id": inbound_id,
             "settings": json.dumps({"clients": clients})
         }
 
-        resp = await client.post("panel/api/inbounds/updateClient", json=payload)
+        resp = await client.post("panel/api/inbounds/addClient", json=payload)
         resp.raise_for_status()
 
         # Строим ссылку
