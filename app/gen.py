@@ -23,7 +23,7 @@ async def addkey(user_id: int):
         new_uuid = str(uuid.uuid4())
         client_email = f"NL_{new_uuid[:8]}"
         payload = {
-            "id": 1,
+            "id": 2,
             "settings": json.dumps({
                 "clients": [{
                     "id": new_uuid,
