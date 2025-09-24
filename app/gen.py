@@ -6,7 +6,7 @@ from config import BASE_URL
 
 BASE_URL =  BASE_URL
 LOGIN_URL = BASE_URL + "login"
-API_URL = BASE_URL + "panel/inbound/addClient"
+API_URL = BASE_URL + "panel/api/inbounds/addClient"
 REALITY_PBK = "hQdDcFaCu3e5aF2De1x7FcP7NwLEdBWowAo0FZaEu24"
 REALITY_SNI = "google.com"
 REALITY_SID = "3535352f08be"
@@ -33,7 +33,7 @@ async def addkey(user_id: int):
             })
         }
 
-        resp = await client.post("panel/inbound/addClient", json=payload)
+        resp = await client.post("panel/api/inbounds/addClient", json=payload)
 
         if resp.status_code == 200:
             vless_link = (
@@ -68,7 +68,7 @@ async def delkey(uuides, tg_id):
             })
         }
 
-        resp = await client.post(f"panel/inbound/updateClient/{new_uuid}", json=payload)
+        resp = await client.post(f"panel/api/inbounds/updateClient/{new_uuid}", json=payload)
 
         if resp.status_code == 200:
             return
