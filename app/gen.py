@@ -7,9 +7,9 @@ from config import BASE_URL
 BASE_URL =  BASE_URL
 LOGIN_URL = BASE_URL + "login"
 API_URL = BASE_URL + "panel/api/inbounds/addClient"
-REALITY_PBK = "BMo9OvK7YJu4JPXIrR2TcY8u0lavNdlPvN2j8N56sBE"
+REALITY_PBK = "rZK50rxskpnFkkxvGWolSGOsmjQ3GenCWeTcE0jiiEI"
 REALITY_SNI = "google.com"
-REALITY_SID = "18d923c6768d6144"
+REALITY_SID = "52"
 INBOUND_NAME = "eschalon"
 
 async def addkey(user_id: int):
