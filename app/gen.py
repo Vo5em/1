@@ -7,13 +7,13 @@ from config import BASE_URL
 BASE_URL =  BASE_URL
 LOGIN_URL = BASE_URL + "login"
 API_URL = BASE_URL + "panel/api/inbounds/addClient"
-REALITY_PBK = "hQdDcFaCu3e5aF2De1x7FcP7NwLEdBWowAo0FZaEu24"
+REALITY_PBK = "BMo9OvK7YJu4JPXIrR2TcY8u0lavNdlPvN2j8N56sBE"
 REALITY_SNI = "google.com"
-REALITY_SID = "3535352f08be"
+REALITY_SID = "18d923c6768d6144"
 INBOUND_NAME = "eschalon"
 
 async def addkey(user_id: int):
-    async with httpx.AsyncClient(base_url=BASE_URL, timeout=10.0, verify=False) as client:
+    async with httpx.AsyncClient(base_url=BASE_URL, timeout=10.0) as client:
         # 1. Авторизация
         login_resp = await client.post("login", json={"username": "leg01", "password": "5sdvwlh25S"})
         if login_resp.status_code != 200:
