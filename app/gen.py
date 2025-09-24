@@ -13,7 +13,7 @@ REALITY_SID = "3535352f08be"
 INBOUND_NAME = "eschalon"
 
 async def addkey(user_id: int):
-    async with httpx.AsyncClient(base_url=BASE_URL, timeout=10.0) as client:
+    async with httpx.AsyncClient(base_url=BASE_URL, timeout=10.0, verify=False) as client:
         # 1. Авторизация
         login_resp = await client.post("login", json={"username": "leg01", "password": "5sdvwlh25S"})
         if login_resp.status_code != 200:
