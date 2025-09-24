@@ -55,7 +55,7 @@ async def delkey(uuides, tg_id):
 
 
         new_uuid = str(uuides)
-        client_email = f"NL_{new_uuid[:8]}"
+        client_email = f"NL-{new_uuid[:8]}"
         payload = {
             "id": 1,
             "settings": json.dumps({
