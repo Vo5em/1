@@ -37,7 +37,7 @@ async def addkey(user_id: int):
 
         if resp.status_code == 200:
             vless_link = (
-                f"vless://{new_uuid}@set.kabinetboos.ru:443?"
+                f"vless://{new_uuid}@eschalon.ru:443?"
                 f"type=tcp&encryption=none&security=reality&"
                 f"pbk={REALITY_PBK}&fp=chrome&"
                 f"sni={REALITY_SNI}&sid={REALITY_SID}&spx=%2F&"
