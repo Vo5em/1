@@ -23,7 +23,7 @@ async def activatekey(uuides, tg_id):
             })
         }
 
-        resp = await client.post(f"panel/api/inbounds/updateClient/{new_uuid}", json=payload)
+        resp = await client.post(f"panel/inbound/updateClient/{new_uuid}", json=payload)
 
         if resp.status_code == 200:
             return
