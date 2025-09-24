@@ -28,7 +28,9 @@ async def addkey(user_id: int):
                 "clients": [{
                     "id": new_uuid,
                     "email": client_email,
-                    "flow": "xtls-rprx-vision"
+                    "flow": "xtls-rprx-vision",
+                            "shortId": REALITY_SID,
+                            "fingerprint": "chrome"
                 }]
             })
         }
