@@ -196,7 +196,7 @@ async def schedulers():
     while True:
         await check_subscriptions()
         await check_end()
-        await asyncio.sleep(180)
+        await asyncio.sleep(18)
 
 
 def schedule_notifications(tg_id, dayend):
