@@ -2,28 +2,39 @@ import httpx
 import json
 from config import BASE_URL
 
-async def activatekey(uuides, tg_id):
+REALITY_FP = "chrome"
+REALITY_SID = "6dc9a670b54255f1"
+
+async def activatekey(user_uuid: str):
     async with httpx.AsyncClient(base_url=BASE_URL, timeout=10.0) as client:
-        login_resp = await client.post("login", json={"username": "leg01", "password": "5sdvwlh25S"})
+        # 1️⃣ Авторизация
+        login_resp = await client.post("login", data={"username": "leg01", "password": "5sdvwlh25S"})
         if login_resp.status_code != 200:
-            return
+            print("Ошибка авторизации:", login_resp.text)
+            return False
 
+        client_email = f"NL-{user_uuid[:8]}"
 
-        new_uuid = str(uuides)
-        client_email = f"NL_{new_uuid[:8]}"
+        # 2️⃣ Формируем payload
         payload = {
             "id": 1,
             "settings": json.dumps({
                 "clients": [{
-                    "id": new_uuid,
-                    "enable": True,
+                    "id": user_uuid,
                     "email": client_email,
-                    "flow": "xtls-rprx-vision"
+                    "flow": "xtls-rprx-vision",
+                    "fingerprint": REALITY_FP,
+                    "shortId": REALITY_SID,
+                    "enable": True
                 }]
             })
         }
 
-        resp = await client.post(f"panel/inbound/updateClient/{new_uuid}", json=payload)
+        # 3️⃣ Отправляем правильный запрос
+        resp = await client.post(f"panel/api/inbounds/updateClient/{user_uuid}", json=payload)
 
-        if resp.status_code == 200:
-            return
+        try:
+            resp.json()
+        except Exception:
+            print(f"Ошибка {resp.status_code}: {resp.text}")
+            return False
