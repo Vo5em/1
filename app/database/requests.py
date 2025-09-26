@@ -81,7 +81,7 @@ async def check_end():
         if not results:
             return
         for uuid, tg_id in results:
-            await delkey(uuid, tg_id)
+            await delkey(uuid)
         await session.commit()
 
 

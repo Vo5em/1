@@ -7,7 +7,6 @@ REALITY_SID = "6dc9a670b54255f1"
 
 async def activatekey(user_uuid: str):
     async with httpx.AsyncClient(base_url=BASE_URL, timeout=10.0) as client:
-        # 1️⃣ Авторизация
         login_resp = await client.post("login", data={"username": "leg01", "password": "5sdvwlh25S"})
         if login_resp.status_code != 200:
             print("Ошибка авторизации:", login_resp.text)
