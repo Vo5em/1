@@ -73,6 +73,7 @@ async def set_key(tg_id, vless_link, new_uuid):
 
 
 async def check_end():
+    print("ger")
     from app.gen import delkey
     now_moscow = datetime.now(tz=MOSCOW_TZ)
     async with async_session() as session:
