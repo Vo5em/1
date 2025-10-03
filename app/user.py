@@ -161,7 +161,7 @@ async def cmd_sub(message: Message):
         if is_day.tzinfo is None:
             is_day = is_day.replace(tzinfo=MOSCOW_TZ)
         await message.answer(
-            f"Следующее списание {is_day.strftime('%d.%m.%Y')}</b>\n\n"
+            f"Следующее списание <b>{is_day.strftime('%d.%m.%Y')}</b>\n\n"
             f"<b>Подписка на месяц — 150₽</b>\n"
             f"— Деньги будут списываться каждый месяц.\n"
             f"— Отключить автопродление можно в любой момент в этом разделе.\n"
