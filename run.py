@@ -21,9 +21,12 @@ MOSCOW_TZ = ZoneInfo("Europe/Moscow")
 scheduler = AsyncIOScheduler(timezone=MOSCOW_TZ)
 
 async def main():
+    logging.info("🔹 main() стартанул")
     dp.include_routers(user, admin)
     dp.startup.register(on_startup)
+    logging.info("🔹 dispatcher.start_polling вызывается")
     await dp.start_polling(bot)
+    logging.info("🔹 dispatcher.start_polling завершился")
 
 
 async def on_startup(dispatcher):
