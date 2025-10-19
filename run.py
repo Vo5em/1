@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from aiogram import Dispatcher
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from zoneinfo import ZoneInfo
@@ -6,19 +7,19 @@ from zoneinfo import ZoneInfo
 from config import bot
 from app.user import user
 from app.admin import admin
-import logging
+
+from app.database.models import async_main
+from app.database.requests import schedulers, restore_notifications
+
+
+dp = Dispatcher()
+MOSCOW_TZ = ZoneInfo("Europe/Moscow")
+scheduler = AsyncIOScheduler(timezone=MOSCOW_TZ)
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
-
-from app.database.models import async_main
-from app.database.requests import schedulers, restore_notifications
-
-dp = Dispatcher()
-MOSCOW_TZ = ZoneInfo("Europe/Moscow")
-scheduler = AsyncIOScheduler(timezone=MOSCOW_TZ)
 
 async def main():
     logging.info("🔹 main() стартанул")
