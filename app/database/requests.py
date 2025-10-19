@@ -85,7 +85,8 @@ async def check_end():
     now_moscow = datetime.now(tz=MOSCOW_TZ)
     try:
         async with async_session() as session:
-            end = await session.execute(select(User.uuid, User.tg_id).where(User.dayend != None, User.dayend < now_moscow))
+            end = await session.execute(select(User.uuid, User.tg_id).where
+                                        (User.dayend != None, User.dayend < now_moscow))
             results = end.all()
             if not results:
                 return

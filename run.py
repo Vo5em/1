@@ -6,6 +6,12 @@ from zoneinfo import ZoneInfo
 from config import bot
 from app.user import user
 from app.admin import admin
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
 
 from app.database.models import async_main
 from app.database.requests import schedulers, restore_notifications
@@ -21,19 +27,18 @@ async def main():
 
 
 async def on_startup(dispatcher):
-
-
-    # 1. Инициализация базы и прочих сервисов
+    # 1. Делаем любые асинхронные подготовительные функции
     await async_main()
 
-    # 2. Восстановление уведомлений из БД
-    await restore_notifications()
-
-    # 3. Запуск scheduler
+    # 2. Сначала стартуем scheduler
     scheduler.start()
+    logging.info("Scheduler запущен")
 
+    # 3. Только после старта scheduler добавляем все задачи
+    await restore_notifications()
+    logging.info("Задачи для уведомлений восстановлены")
 
-    # 4. Запуск дополнительного цикла, если нужен
+    # 4. Можно запускать дополнительный цикл проверки подписок
     asyncio.create_task(schedulers())
 
 
