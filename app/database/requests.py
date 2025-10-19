@@ -206,7 +206,11 @@ def schedule_notifications(tg_id, dayend):
 
     before = dayend - timedelta(days=1)
     now = datetime.now(tz=MOSCOW_TZ)
-    scheduler.add_job(test_job, "date", run_date=datetime.now(MOSCOW_TZ) + timedelta(seconds=10))
+    scheduler.add_job(test_job, "date", run_date=datetime.now(MOSCOW_TZ) + timedelta(seconds=10),
+                      args=[tg_id],
+                      id=f"before_{tg_id}",
+                      replace_existing=True
+                      )
 
     if before > now:
         scheduler.add_job(
