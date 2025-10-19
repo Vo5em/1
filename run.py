@@ -15,10 +15,10 @@ MOSCOW_TZ = ZoneInfo("Europe/Moscow")
 scheduler = AsyncIOScheduler(timezone=MOSCOW_TZ)
 
 async def main():
+    await dp.start_polling(bot)
     dp.include_routers(user, admin)
     asyncio.create_task(schedulers())
     dp.startup.register(on_startup)
-    await dp.start_polling(bot)
 
 
 async def on_startup(dispatcher):

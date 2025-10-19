@@ -12,6 +12,13 @@ from datetime import datetime, timedelta
 from yookassa import Payment, Configuration
 from config import yookassa_shopid, yookassa_api, mybot
 from app.gen2 import activatekey
+import logging
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
 
 
 MOSCOW_TZ = ZoneInfo("Europe/Moscow")
@@ -201,36 +208,59 @@ async def schedulers():
 
 
 def schedule_notifications(tg_id, dayend):
+    logging.info(f"📅 Добавляем задачи для tg_id={tg_id}, dayend={dayend}")
+
     if dayend.tzinfo is None:
         dayend = dayend.replace(tzinfo=MOSCOW_TZ)
+        logging.info(f"dayend был naive, добавлен tzinfo: {dayend}")
 
     before = dayend - timedelta(days=1)
     now = datetime.now(tz=MOSCOW_TZ)
-    scheduler.add_job(test_job, "date", run_date=datetime.now(MOSCOW_TZ) + timedelta(seconds=10),
-                      args=[tg_id],
-                      id=f"before_{tg_id}",
-                      replace_existing=True
-                      )
+    logging.info(f"Сейчас: {now}, до окончания: {dayend - now}")
 
+    # тестовая задача через 10 сек
+    try:
+        scheduler.add_job(
+            test_job,
+            "date",
+            run_date=datetime.now(MOSCOW_TZ) + timedelta(seconds=10),
+            args=[tg_id],
+            id=f"test_{tg_id}",
+            replace_existing=True
+        )
+        logging.info(f"✅ Тестовая задача test_{tg_id} добавлена (через 10 секунд)")
+    except Exception as e:
+        logging.exception(f"❌ Ошибка при добавлении тестовой задачи: {e}")
+
+    # основное уведомление за день
     if before > now:
-        scheduler.add_job(
-            notify_before_end,
-            trigger="date",
-            run_date=before,
-            args=[tg_id],
-            id=f"before_{tg_id}",
-            replace_existing=True
-        )
+        try:
+            scheduler.add_job(
+                notify_before_end,
+                trigger="date",
+                run_date=before,
+                args=[tg_id],
+                id=f"before_{tg_id}",
+                replace_existing=True
+            )
+            logging.info(f"✅ Добавлено уведомление за день (before_{tg_id}) на {before}")
+        except Exception as e:
+            logging.exception(f"❌ Ошибка при добавлении before_{tg_id}: {e}")
 
+    # уведомление в день окончания
     if dayend > now:
-        scheduler.add_job(
-            notify_end,
-            trigger="date",
-            run_date=dayend,
-            args=[tg_id],
-            id=f"end_{tg_id}",
-            replace_existing=True
-        )
+        try:
+            scheduler.add_job(
+                notify_end,
+                trigger="date",
+                run_date=dayend,
+                args=[tg_id],
+                id=f"end_{tg_id}",
+                replace_existing=True
+            )
+            logging.info(f"✅ Добавлено уведомление в момент окончания (end_{tg_id}) на {dayend}")
+        except Exception as e:
+            logging.exception(f"❌ Ошибка при добавлении end_{tg_id}: {e}")
 
 def schedule_notifications2(tg_id, dayend):
     if dayend.tzinfo is None:
