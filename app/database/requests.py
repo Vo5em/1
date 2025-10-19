@@ -83,14 +83,17 @@ async def check_end():
     print("ger")
     from app.gen import delkey
     now_moscow = datetime.now(tz=MOSCOW_TZ)
-    async with async_session() as session:
-        end = await session.execute(select(User.uuid, User.tg_id).where(User.dayend != None, User.dayend < now_moscow))
-        results = end.all()
-        if not results:
-            return
-        for uuid, tg_id in results:
-            await delkey(uuid)
-        await session.commit()
+    try:
+        async with async_session() as session:
+            end = await session.execute(select(User.uuid, User.tg_id).where(User.dayend != None, User.dayend < now_moscow))
+            results = end.all()
+            if not results:
+                return
+            for uuid, tg_id in results:
+                await delkey(uuid)
+            await session.commit()
+    except Exception as e:
+        logging.exception(f"Ошибка в check_end: {e}")
 
 
 async def get_users():
@@ -202,9 +205,12 @@ async def delpaymethod_id(tg_id):
 
 async def schedulers():
     while True:
-        await check_subscriptions()
-        await check_end()
-        await asyncio.sleep(18)
+        try:
+            await check_subscriptions()
+            await check_end()
+        except Exception as e:
+            logging.exception(f"Ошибка в schedulers(): {e}")
+        await asyncio.sleep(1800)
 
 
 def schedule_notifications(tg_id, dayend):
@@ -445,25 +451,28 @@ async def create_auto_payment(user: User, amount: float = 150.0, currency: str =
 async def check_subscriptions():
     print("g")
     now = datetime.now(tz=MOSCOW_TZ)
-    async with async_session() as session:
-        users = await session.execute(
-            select(User).where(User.dayend != None, User.dayend - timedelta(hours=1) <= now, User.dayend >= now)
-        )
-        for user in users.scalars().all():
-            result = await session.execute(
-                select(Order).where(
-                    Order.user_id == user.id,
-                    Order.status.in_(["pending"])
-                ).order_by(Order.create_at.desc())
+    try:
+        async with async_session() as session:
+            users = await session.execute(
+                select(User).where(User.dayend != None, User.dayend - timedelta(hours=1) <= now, User.dayend >= now)
             )
-            order = result.scalars().first()
+            for user in users.scalars().all():
+                result = await session.execute(
+                    select(Order).where(
+                        Order.user_id == user.id,
+                        Order.status.in_(["pending"])
+                    ).order_by(Order.create_at.desc())
+                )
+                order = result.scalars().first()
 
-            if order:
-                continue
+                if order:
+                    continue
 
-            await create_auto_payment(user)
+                await create_auto_payment(user)
 
-        await session.commit()
+            await session.commit()
+    except Exception as e:
+        logging.exception(f"Ошибка в check_subscriptions: {e}")
 
 @app.get("/")
 async def index(request: Request):

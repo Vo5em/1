@@ -16,14 +16,26 @@ scheduler = AsyncIOScheduler(timezone=MOSCOW_TZ)
 
 async def main():
     dp.include_routers(user, admin)
-    asyncio.create_task(schedulers())
     dp.startup.register(on_startup)
     await dp.start_polling(bot)
 
+
 async def on_startup(dispatcher):
+
+
+    # 1. Инициализация базы и прочих сервисов
     await async_main()
-    scheduler.start()
+
+    # 2. Восстановление уведомлений из БД
     await restore_notifications()
+
+    # 3. Запуск scheduler
+    scheduler.start()
+
+
+    # 4. Запуск дополнительного цикла, если нужен
+    asyncio.create_task(schedulers())
+
 
 
 if __name__ == '__main__':
