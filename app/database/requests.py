@@ -4,7 +4,7 @@ import asyncio
 import uuid
 from fastapi import FastAPI, Request
 from app.database.models import async_session, User, Order
-from app.notification import notify_before_end, notify_spss, notify_end
+from app.notification import notify_before_end, notify_spss, notify_end, test_job
 from zoneinfo import ZoneInfo
 from sqlalchemy import select, update, delete, desc
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -206,6 +206,7 @@ def schedule_notifications(tg_id, dayend):
 
     before = dayend - timedelta(days=1)
     now = datetime.now(tz=MOSCOW_TZ)
+    scheduler.add_job(test_job, "date", run_date=datetime.now(MOSCOW_TZ) + timedelta(seconds=10))
 
     if before > now:
         scheduler.add_job(

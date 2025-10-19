@@ -10,6 +10,13 @@ MOSCOW_TZ = ZoneInfo("Europe/Moscow")
 
 file04 = "AgACAgIAAxkBAAMaaNMPnzGPdHKD_6UQTSuLxSiiT54AAg4MMhtRY5lKmvQCMwSLnvwBAAMCAAN5AAM2BA"
 
+
+
+async def test_job(tg_id):
+    await bot.send_message(tg_id,
+                           "Твоя подписка истекла.",
+                           reply_markup=kb.go_pay)
+
 async def notify_before_end(tg_id: int):
     async with async_session() as session:
         user = await session.get(User, tg_id)
