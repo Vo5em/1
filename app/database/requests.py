@@ -225,10 +225,10 @@ def schedule_notifications(tg_id, dayend):
     now = datetime.now(tz=MOSCOW_TZ)
     logging.info(f"Сейчас: {now}, до окончания: {dayend - now}")
 
+    # ✅ Тестовая задача через 10 секунд
     try:
-        # 👇 Оборачиваем асинхронную функцию в asyncio.create_task()
         scheduler.add_job(
-            lambda: asyncio.create_task(test_job(tg_id)),
+            lambda: asyncio.create_task(test_job(tg_id)),  # 👈 обёртка
             "date",
             run_date=datetime.now(MOSCOW_TZ) + timedelta(seconds=10),
             id=f"test_{tg_id}",
@@ -238,14 +238,13 @@ def schedule_notifications(tg_id, dayend):
     except Exception as e:
         logging.exception(f"❌ Ошибка при добавлении тестовой задачи: {e}")
 
-    # основное уведомление за день
+    # ✅ Уведомление за день
     if before > now:
         try:
             scheduler.add_job(
-                notify_before_end,
+                lambda: asyncio.create_task(notify_before_end(tg_id)),  # 👈 тоже через create_task
                 trigger="date",
                 run_date=before,
-                args=[tg_id],
                 id=f"before_{tg_id}",
                 replace_existing=True
             )
@@ -253,14 +252,13 @@ def schedule_notifications(tg_id, dayend):
         except Exception as e:
             logging.exception(f"❌ Ошибка при добавлении before_{tg_id}: {e}")
 
-    # уведомление в день окончания
+    # ✅ Уведомление в момент окончания
     if dayend > now:
         try:
             scheduler.add_job(
-                notify_end,
+                lambda: asyncio.create_task(notify_end(tg_id)),  # 👈 и это
                 trigger="date",
                 run_date=dayend,
-                args=[tg_id],
                 id=f"end_{tg_id}",
                 replace_existing=True
             )
