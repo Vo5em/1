@@ -16,10 +16,19 @@ dp = Dispatcher()
 MOSCOW_TZ = ZoneInfo("Europe/Moscow")
 scheduler = AsyncIOScheduler(timezone=MOSCOW_TZ)
 
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
+
+
+async def on_startup(dispatcher):
+    logging.info("🔄 Инициализация on_startup...")
+    await async_main()
+    await restore_notifications()
+    asyncio.create_task(schedulers())
+
 
 async def main():
     logging.info("🔹 main() стартанул")
@@ -28,23 +37,6 @@ async def main():
     logging.info("🔹 dispatcher.start_polling вызывается")
     await dp.start_polling(bot)
     logging.info("🔹 dispatcher.start_polling завершился")
-
-
-async def on_startup(dispatcher):
-    # 1. Делаем любые асинхронные подготовительные функции
-    await async_main()
-
-    # 2. Сначала стартуем scheduler
-    scheduler.start()
-    logging.info("Scheduler запущен")
-
-    # 3. Только после старта scheduler добавляем все задачи
-    await restore_notifications()
-    logging.info("Задачи для уведомлений восстановлены")
-
-    # 4. Можно запускать дополнительный цикл проверки подписок
-    asyncio.create_task(schedulers())
-
 
 
 if __name__ == '__main__':
