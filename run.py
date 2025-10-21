@@ -27,6 +27,7 @@ async def on_startup(dispatcher):
     logging.info("🔄 Инициализация on_startup...")
     await async_main()
     await restore_notifications()
+    await schedulerс()
     asyncio.create_task(schedulers())
 
 
@@ -38,6 +39,14 @@ async def main():
     await dp.start_polling(bot)
     logging.info("🔹 dispatcher.start_polling завершился")
 
+
+async def schedulerс():
+    logging.info("🕒 Инициализация планировщика...")
+    if not scheduler.running:
+        scheduler.start()
+        logging.info(f"🚀 Scheduler стартанул! running={scheduler.running}")
+    else:
+        logging.info("⚙️ Scheduler уже запущен")
 
 if __name__ == '__main__':
     try:
