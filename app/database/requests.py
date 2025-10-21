@@ -225,13 +225,12 @@ def schedule_notifications(tg_id, dayend):
     now = datetime.now(tz=MOSCOW_TZ)
     logging.info(f"Сейчас: {now}, до окончания: {dayend - now}")
 
-    # тестовая задача через 10 сек
     try:
+        # 👇 Оборачиваем асинхронную функцию в asyncio.create_task()
         scheduler.add_job(
-            test_job,
+            lambda: asyncio.create_task(test_job(tg_id)),
             "date",
             run_date=datetime.now(MOSCOW_TZ) + timedelta(seconds=10),
-            args=[tg_id],
             id=f"test_{tg_id}",
             replace_existing=True
         )

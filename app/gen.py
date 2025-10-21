@@ -79,7 +79,6 @@ async def addkey(user_id):
             f"#{INBOUND_NAME}-{client_email}"
         )
 
-        print(f"Новый ключ создан: {vless_link} бесполезная хрень которая мне нужна {new_subid}")
         await set_key(user_id, vless_link, new_uuid)
 
 async def delkey(user_uuid: str):

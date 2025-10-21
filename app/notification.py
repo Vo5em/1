@@ -12,7 +12,7 @@ file04 = "AgACAgIAAxkBAAMaaNMPnzGPdHKD_6UQTSuLxSiiT54AAg4MMhtRY5lKmvQCMwSLnvwBAA
 
 
 
-async def test_job(tg_id):
+async def test_job(tg_id: int):
     await bot.send_message(tg_id,
                            "Твоя подписка истекла.",
                            reply_markup=kb.go_pay)
