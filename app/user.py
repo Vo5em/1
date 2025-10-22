@@ -432,7 +432,7 @@ async def connect_antv(callback: CallbackQuery):
 @user.callback_query(F.data == 'refka')
 async def refka(callback: CallbackQuery):
     tg_id = callback.from_user.id
-    BOT_USERNAME = 'test0viybotnafig_bot'
+    BOT_USERNAME = 'eschalon01bot'
     ref_link = f"https://t.me/{BOT_USERNAME}?start={tg_id}"
     escaped_link = escape_markdown(ref_link)
     await callback.answer('')

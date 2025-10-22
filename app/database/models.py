@@ -32,6 +32,7 @@ class User(Base):
     payment_method_id: Mapped[str] = mapped_column(String(100), nullable=True)
     payload: Mapped[str] = mapped_column(String(100), unique=True, nullable=True)
     message_id: Mapped[int] = mapped_column(BigInteger, nullable=True)
+    notify_message: Mapped[int] = mapped_column(befault=0)
 
 
 class Order(Base):

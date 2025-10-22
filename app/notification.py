@@ -5,21 +5,17 @@ from sqlalchemy import select, update, delete, desc
 import app.keyboard as kb
 from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta
-import logging
+
 
 MOSCOW_TZ = ZoneInfo("Europe/Moscow")
 
 file04 = "AgACAgIAAxkBAAMaaNMPnzGPdHKD_6UQTSuLxSiiT54AAg4MMhtRY5lKmvQCMwSLnvwBAAMCAAN5AAM2BA"
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s"
-)
+
 
 
 
 async def test_job(tg_id: int):
-    logging.info(f"🚀 test_job запущена для tg_id={tg_id}")
     await bot.send_message(tg_id, "Твоя подписка истекла.", reply_markup=kb.go_pay)
 
 async def notify_before_end(tg_id: int):

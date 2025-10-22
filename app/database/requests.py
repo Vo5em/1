@@ -12,13 +12,8 @@ from datetime import datetime, timedelta
 from yookassa import Payment, Configuration
 from config import yookassa_shopid, yookassa_api, mybot
 from app.gen2 import activatekey
-import logging
 
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s"
-)
 
 
 MOSCOW_TZ = ZoneInfo("Europe/Moscow")
@@ -70,13 +65,6 @@ async def set_key(tg_id, vless_link, new_uuid):
                                                                              dayend=dayend_naive,
                                                                              daybalance=0))
         await session.commit()
-        if dayend:
-            try:
-                scheduler.remove_job(f'before_{tg_id}')
-            except Exception:
-                pass
-
-            schedule_notifications(tg_id, dayend)
 
 
 async def check_end():
@@ -94,7 +82,7 @@ async def check_end():
                 await delkey(uuid)
             await session.commit()
     except Exception as e:
-        logging.exception(f"Ошибка в check_end: {e}")
+        print(f"Ошибка в check_end: {e}")
 
 
 async def get_users():
@@ -132,14 +120,15 @@ async def find_tgid(id):
         tg_id = await session.scalar(select(User.tg_id).where(User.id == id))
     return tg_id
 
-async def maketake(ref_id):
+
+async def maketake(iid, ref_id):
     async with async_session() as session:
         result = await session.execute(
-            select(Order).where(Order.user_id == ref_id, Order.status == "paid")
+            select(Order).where(Order.user_id == iid, Order.status == "paid")
         )
         paid_orders = result.scalars().all()
 
-        if ref_id and len(paid_orders) == 0:
+        if iid and len(paid_orders) <= 1:
             await takeprise(ref_id)
 
 
@@ -178,7 +167,7 @@ async def save_message(tg_id, message_id):
         print("t")
         if user:
             user.message_id = message_id
-            await session.commit()
+        await session.commit()
 
 
 async def find_message(tg_id):
@@ -200,8 +189,10 @@ async def delpaymethod_id(tg_id):
                                              (User.payment_method_id != None, User.tg_id == tg_id)
                                              )
         if paymenthod_id:
-            await session.execute(update(User).where(User.tg_id == tg_id).values(payment_method_id=None))
-            await session.commit()
+            await session.execute(update(User).where(User.tg_id == tg_id).values(payment_method_id=None,
+                                                                                 notify_message=0)
+                                  )
+        await session.commit()
 
 
 async def schedulers():
@@ -209,95 +200,52 @@ async def schedulers():
         try:
             await check_subscriptions()
             await check_end()
+            await check_notyfy()
         except Exception as e:
-            logging.exception(f"Ошибка в schedulers(): {e}")
+            print(f"Ошибка в schedulers(): {e}")
         await asyncio.sleep(1800)
 
 
-def schedule_notifications(tg_id, dayend):
-    logging.info(f"📅 Добавляем задачи для tg_id={tg_id}, dayend={dayend}")
-
-    if dayend.tzinfo is None:
-        dayend = dayend.replace(tzinfo=MOSCOW_TZ)
-        logging.info(f"dayend был naive, добавлен tzinfo: {dayend}")
-
-    before = dayend - timedelta(days=1)
-    now = datetime.now(tz=MOSCOW_TZ)
-    logging.info(f"Сейчас: {now}, до окончания: {dayend - now}")
-
-    # ✅ Тестовая задача через 10 секунд
-    try:
-        scheduler.add_job(
-            lambda: asyncio.create_task(test_job(tg_id)),  # 👈 обёртка
-            "date",
-            run_date=datetime.now(MOSCOW_TZ) + timedelta(seconds=10),
-            id=f"test_{tg_id}",
-            replace_existing=True
-        )
-        logging.info(f"✅ Тестовая задача test_{tg_id} добавлена (через 10 секунд)")
-    except Exception as e:
-        logging.exception(f"❌ Ошибка при добавлении тестовой задачи: {e}")
-
-    # ✅ Уведомление за день
-    if before > now:
-        try:
-            scheduler.add_job(
-                lambda: asyncio.create_task(notify_before_end(tg_id)),  # 👈 тоже через create_task
-                trigger="date",
-                run_date=before,
-                id=f"before_{tg_id}",
-                replace_existing=True
-            )
-            logging.info(f"✅ Добавлено уведомление за день (before_{tg_id}) на {before}")
-        except Exception as e:
-            logging.exception(f"❌ Ошибка при добавлении before_{tg_id}: {e}")
-
-    # ✅ Уведомление в момент окончания
-    if dayend > now:
-        try:
-            scheduler.add_job(
-                lambda: asyncio.create_task(notify_end(tg_id)),  # 👈 и это
-                trigger="date",
-                run_date=dayend,
-                id=f"end_{tg_id}",
-                replace_existing=True
-            )
-            logging.info(f"✅ Добавлено уведомление в момент окончания (end_{tg_id}) на {dayend}")
-        except Exception as e:
-            logging.exception(f"❌ Ошибка при добавлении end_{tg_id}: {e}")
-
-def schedule_notifications2(tg_id, dayend):
-    if dayend.tzinfo is None:
-        dayend = dayend.replace(tzinfo=MOSCOW_TZ)
-
-    now = datetime.now(tz=MOSCOW_TZ)
-
-    if dayend > now:
-        scheduler.add_job(
-            notify_end,
-            trigger="date",
-            run_date=dayend,
-            args=[tg_id],
-            id=f"end_{tg_id}",
-            replace_existing=True
-        )
-
-
-async def restore_notifications():
+async def plusnoty(tg_id):
     async with async_session() as session:
-        result = await session.execute(
-            select(User.tg_id, User.dayend, User.payload).where(User.dayend != None)
-        )
-        users = result.all()
-        now = datetime.now(tz=MOSCOW_TZ)
+        await session.execute(update(User).where(User.tg_id == tg_id).values(noty_message=2))
+        await session.commit
 
-        for tg_id, dayend, payload in users:
-            if payload and dayend > now:
-                schedule_notifications2(tg_id, dayend)
-            if dayend.tzinfo is None:
-                dayend = dayend.replace(tzinfo=MOSCOW_TZ)
-            if dayend > now:
-                schedule_notifications(tg_id, dayend)
+async def check_notyfy():
+    now_moscow = datetime.now(tz=MOSCOW_TZ)
+    try:
+        async with async_session() as session:
+            users_before = await session.execute(
+                select(User).where(User.dayend != None, User.dayend - timedelta(days=1) <= now_moscow,
+                                   User.dayend >= now_moscow, User.notify_message < 1)
+            )
+            for user in users_before.scalars().all():
+                tg_id = user.tg_id
+                await notify_before_end(tg_id)
+                notify_message = user.notify_message + 1
+                await session.execute(
+                    update(User).where(User.tg_id == tg_id).values(notify_message=notify_message)
+                )
+            users_end = await session.execute(
+                select(User.tg_id).where(User.dayend != None, User.dayend - timedelta(hours=1) <= now_moscow,
+                                         User.dayend >= now_moscow, User.notify_message < 2)
+            )
+            for usere in users_end.scalars().all():
+                tg_id01 = usere.tg_id
+                await notify_end(tg_id01)
+                notify_message01 = usere.message + 2
+                await session.execute(
+                    update(User).where(User.tg_id == tg_id01).values(notify_message=notify_message01)
+                )
+            await session.commit()
+
+    except Exception as e:
+        print(f'{e}')
+
+
+
+
+
 
 
 async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB") -> tuple[str, int]:
@@ -369,20 +317,20 @@ async def yookassa_webhook(request: Request):
 
                 ruuid = user.uuid
                 tg_id = int(user.tg_id)
-                dayend = user.dayend
+                iid = user.id
                 ref_id = user.referrer_id
 
 
                 await activatekey(ruuid)
                 try:
                     await notify_spss(tg_id)
+                    await plusnoty(tg_id)
                 except Exception as e:
                     print(f"Ошибка при notify_spss: {e}")
                 if ref_id is not None:
-                    await maketake(ref_id)
+                    await maketake(iid, ref_id)
                 else:
                     print("User has no referrer, skipping takeprise")
-                schedule_notifications2(tg_id,dayend)
 
 
                 if payment_method_id:
@@ -470,7 +418,7 @@ async def check_subscriptions():
 
             await session.commit()
     except Exception as e:
-        logging.exception(f"Ошибка в check_subscriptions: {e}")
+        print(f"Ошибка в check_subscriptions: {e}")
 
 @app.get("/")
 async def index(request: Request):
