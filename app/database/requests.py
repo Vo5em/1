@@ -235,7 +235,7 @@ async def check_notyfy():
             for usere in users_end.scalars().all():
                 tg_id01 = usere.tg_id
                 await notify_end(tg_id01)
-                notify_message01 = usere.message + 2
+                notify_message01 = usere.notify_message + 2
                 await session.execute(
                     update(User).where(User.tg_id == tg_id01).values(notify_message=notify_message01)
                 )
