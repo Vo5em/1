@@ -8,17 +8,15 @@ from app.user import user
 from app.admin import admin
 
 from app.database.models import async_main
-from app.database.requests import schedulers, restore_notifications
+from app.database.requests import schedulers
 
 
 dp = Dispatcher()
 MOSCOW_TZ = ZoneInfo("Europe/Moscow")
-scheduler = AsyncIOScheduler(timezone=MOSCOW_TZ)
 
 
 async def on_startup(dispatcher):
     await async_main()
-    await restore_notifications()
     asyncio.create_task(schedulers())
 
 
