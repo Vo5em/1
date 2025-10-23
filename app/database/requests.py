@@ -198,7 +198,7 @@ async def delpaymethod_id(tg_id):
 async def schedulers():
     while True:
         try:
-            print("ger")
+            print("geeer")
             await check_subscriptions()
             await check_end()
             await check_notyfy()
@@ -213,6 +213,7 @@ async def plusnoty(tg_id):
         await session.commit
 
 async def check_notyfy():
+    print("sta")
     now_moscow = datetime.now(tz=MOSCOW_TZ)
     try:
         async with async_session() as session:
