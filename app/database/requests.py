@@ -198,6 +198,7 @@ async def delpaymethod_id(tg_id):
 async def schedulers():
     while True:
         try:
+            print("ger")
             await check_subscriptions()
             await check_end()
             await check_notyfy()
