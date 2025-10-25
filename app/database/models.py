@@ -41,7 +41,7 @@ class Order(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     status: Mapped[str] = mapped_column(String(50),default="pending")
-    create_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(tz=MOSCOW_TZ))
+    create_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(MOSCOW_TZ))
     payment_id: Mapped[str] = mapped_column(String(100), unique=True, nullable=True)
 
 
