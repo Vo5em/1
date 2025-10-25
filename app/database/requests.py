@@ -202,15 +202,30 @@ async def schedulers():
             await check_subscriptions()
             await check_end()
             await check_notyfy()
+            await check_pending()
         except Exception as e:
             print(f"Ошибка в schedulers(): {e}")
         await asyncio.sleep(1800)
+
+async def check_pending():
+    now = datetime.now(tz=MOSCOW_TZ)
+    async with async_session() as session:
+        status = await session.execute(
+            select(Order.id).where(Order.create_at != None, Order.create_at <= now - timedelta(minutes=15),
+                                Order.status.in_(["pending"]))
+        )
+        for status in status.scalars().all():
+            await session.execute(update(Order).where(Order.id == status).values(status="canceled"))
+
+        await session.commit()
+
+
 
 
 async def plusnoty(tg_id):
     async with async_session() as session:
         await session.execute(update(User).where(User.tg_id == tg_id).values(noty_message=2))
-        await session.commit
+        await session.commit()
 
 async def check_notyfy():
     print("sta")
@@ -243,11 +258,6 @@ async def check_notyfy():
 
     except Exception as e:
         print(f'{e}')
-
-
-
-
-
 
 
 async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB") -> tuple[str, int]:
