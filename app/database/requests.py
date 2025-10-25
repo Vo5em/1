@@ -212,7 +212,7 @@ async def check_pending():
     async with async_session() as session:
         await session.execute(
             update(Order).where(Order.create_at != None, Order.create_at <= now - timedelta(minutes=15),
-                                Order.status.in_(["pending"]).values(status="canceled"))
+                                Order.status == "pending").values(status="canceled")
         )
         await session.commit()
 
