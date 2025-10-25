@@ -210,13 +210,10 @@ async def schedulers():
 async def check_pending():
     now = datetime.now(tz=MOSCOW_TZ)
     async with async_session() as session:
-        status = await session.execute(
+        await session.update(
             select(Order.id).where(Order.create_at != None, Order.create_at <= now - timedelta(minutes=15),
-                                Order.status.in_(["pending"]))
+                                Order.status.in_(["pending"]).values(status="canceled"))
         )
-        for status in status.scalars().all():
-            await session.execute(update(Order).where(Order.id == status).values(status="canceled"))
-
         await session.commit()
 
 
