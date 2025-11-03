@@ -392,9 +392,22 @@ async def connect_mc(callback: CallbackQuery):
                                            disable_web_page_preview=True,
                                            parse_mode="HTML",
                                            reply_markup=kb.downloadwin)
-    else: await callback.message.edit_text(f"`{is_key}`",
-                                           parse_mode="MarkdownV2",
-                                           reply_markup=kb.downloaddich)
+    else: await callback.message.edit_text(f'<b>ИНСТРУКЦИЯ:</b>\n\n'
+                                           f'<b>№1</b> - Скачай приложение'
+                                           f' <a href="https://github.com/MatsuriDayo/nekoray/releases'
+                                           f'/download/4.0.1/nekoray-4.0.1-2024-12-12-windows64.zip">v2RayTun</a>'"\n"
+                                           "<b>№2</b> - Нажми на ключ доступа cнизу ( начинается с vless://)\n"
+                                           "<b>№3</b> - Разархивируй и запусти программу «NekoBox»"
+                                           " имени администратора\n"
+                                           "<b>№4</b> - Включи режим TUN в правом веерхнем углу \n"
+                                           "<b>№5</b> - Нажми правой кнопкой мыши по пустому пространству"
+                                           " и выбери «Добавить профиль из буфера обмена»\n"
+                                           "<b>№6</b> - Нажми правой кнопкой мыши по появившимуся профилю"
+                                           " и выбери «Запустить»\n\n"
+                                           f"<blockquote expandable><code>{html.escape(is_key)}</code></blockquote>",
+                                           disable_web_page_preview=True,
+                                           parse_mode="HTML",
+                                           reply_markup=kb.downloadwin)
 
 
 @user.callback_query(F.data == 'androidtv')
