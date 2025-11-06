@@ -221,7 +221,7 @@ async def check_pending():
 
 async def plusnoty(tg_id):
     async with async_session() as session:
-        await session.execute(update(User).where(User.tg_id == tg_id).values(noty_message=2))
+        await session.execute(update(User).where(User.tg_id == tg_id).values(notify_message=2))
         await session.commit()
 
 async def check_notyfy():
