@@ -257,7 +257,7 @@ async def check_notyfy():
         print(f'{e}')
 
 
-async def create_payment(tg_id: int, amount: float = 15.0, currency: str = "RUB") -> tuple[str, int]:
+async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB") -> tuple[str, int]:
     async with async_session() as session:
         user = await session.scalar(select(User).where(User.tg_id == tg_id))
         if not user:
