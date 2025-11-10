@@ -229,28 +229,36 @@ async def check_notyfy():
     now_moscow = datetime.now(tz=MOSCOW_TZ)
     try:
         async with async_session() as session:
+            # За 1 день до окончания
             users_before = await session.execute(
-                select(User).where(User.dayend != None, User.dayend - timedelta(days=1) <= now_moscow,
-                                   User.dayend >= now_moscow, User.notify_message < 1)
+                select(User).where(
+                    User.dayend != None,
+                    User.dayend - timedelta(days=1) <= now_moscow,
+                    User.dayend - timedelta(hours=1) > now_moscow,
+                    User.notify_message < 1
+                )
             )
             for user in users_before.scalars().all():
-                tg_id = user.tg_id
-                await notify_before_end(tg_id)
-                notify_message = user.notify_message + 1
+                await notify_before_end(user.tg_id)
                 await session.execute(
-                    update(User).where(User.tg_id == tg_id).values(notify_message=notify_message)
+                    update(User).where(User.tg_id == user.tg_id).values(notify_message=1)
                 )
+
+            # За 1 час до окончания
             users_end = await session.execute(
-                select(User.tg_id).where(User.dayend != None, User.dayend - timedelta(hours=1) <= now_moscow,
-                                         User.dayend >= now_moscow, User.notify_message < 2)
-            )
-            for usere in users_end.scalars().all():
-                tg_id01 = usere.tg_id
-                await notify_end(tg_id01)
-                notify_message01 = usere.notify_message + 2
-                await session.execute(
-                    update(User).where(User.tg_id == tg_id01).values(notify_message=notify_message01)
+                select(User).where(
+                    User.dayend != None,
+                    User.dayend - timedelta(hours=1) <= now_moscow,
+                    User.dayend >= now_moscow,
+                    User.notify_message < 2
                 )
+            )
+            for user in users_end.scalars().all():
+                await notify_end(user.tg_id)
+                await session.execute(
+                    update(User).where(User.tg_id == user.tg_id).values(notify_message=2)
+                )
+
             await session.commit()
 
     except Exception as e:
