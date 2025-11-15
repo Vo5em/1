@@ -15,10 +15,9 @@ MOSCOW_TZ = ZoneInfo("Europe/Moscow")
 
 user = Router()
 
-file_id01="AgACAgIAAxkBAAMWaNMPKMhM0eMxvxxeVS5IyS3D9ZgAAgkMMhtRY5lKXCfNw71egRABAAMCAAN3AAM2BA"
-file_id02="AgACAgIAAxkBAAMUaNMO4S-2Y9lCRep1HONkhCy5ORkAAggMMhtRY5lKwXcd_K2BLJEBAAMCAAN3AAM2BA"
-file_id03="AgACAgIAAxkBAAIECmjLDehdsa2MTbFTRI7mhgK7hQs5AAIQCTIb985YSgO9r4rHggE3AQADAgADdwADNgQ"
-file_id05="AgACAgIAAxkBAAMYaNMPUVK_-d6ijTvoMtzzuFj_NpYAAgsMMhtRY5lKmiN6t7UeSm0BAAMCAAN5AAM2BA"
+file_id01="AgACAgIAAxkBAAMIaRiR-KRzzYnTb2Bim8fB1jKG-gYAApYOaxulBsFIS3wYfJSChDcBAAMCAAN3AAM2BA"
+file_id02="AgACAgIAAxkBAAMEaRiR3vyWrOlSNVH8AlCIXNDG24QAApQOaxulBsFIIWWE4RlHRNMBAAMCAAN3AAM2BA"
+file_id03="AgACAgIAAxkBAAMGaRiR63EUhOEY7XHJPAvo6QbPYdMAApUOaxulBsFIF1KdTXzq_wEBAAMCAAN5AAM2BA"
 
 def escape_markdown(text: str) -> str:
     return re.sub(r'([_\*\[\]\(\)~`>#+\-=|{}.!])', r'\\\1', text)
@@ -37,7 +36,7 @@ async def cmd_start(message: Message, command: CommandObject):
     is_key = await find_key(tg_id)
     if not is_key:
         await message.answer_photo(
-            photo=file_id05,
+            photo=file_id03,
             caption=f"<blockquote>eschalon district 01</blockquote>\n"
                     f"Ты близко.\n\n\n"
                     f"Анонимность начинается здесь, подключи 3 дня пробного периода.",
