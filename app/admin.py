@@ -77,3 +77,8 @@ async def newsmessage_broke(message: Message, state: FSMContext):
 @admin.message(Admin(), F.photo)
 async def get_photo(message: Message):
     await message.answer(f'ID фотографии: {message.photo[-1].file_id}')
+
+
+@admin.message(Admin(), F.sticker)
+async def get_sticker(message: Message):
+    await message.answer(f'ID стикера: {message.sticker.file_id}')

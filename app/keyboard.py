@@ -34,7 +34,7 @@ downloadand = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Скачать приложение',
                           url='https://play.google.com/store/apps/details?id=com.v2raytun.android')],
     [InlineKeyboardButton(text='⬅Назад', callback_data='period'),
-     InlineKeyboardButton(text='Видео инструкция', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
+     InlineKeyboardButton(text='Видео инструкция', url='https://t.me/c/3024101651/4')],
     [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
 ])
 
