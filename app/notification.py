@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 
 MOSCOW_TZ = ZoneInfo("Europe/Moscow")
 
-file04 = "AgACAgIAAxkBAAMCaRiQWS40Aq_PDnAIlxvdF0ztHT4AAo4OaxulBsFIAAHmgziKyolKAQADAgADeQADNgQ"
+file04 = "AgACAgIAAxkBAANjaSOIBpkVKbFzhFw6lgPW5BWXnA0AAmwSaxscgBlJMhyAknQZQ9kBAAMCAAN3AAM2BA"
 
 
 
