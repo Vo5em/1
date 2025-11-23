@@ -15,7 +15,7 @@ main_old = InlineKeyboardMarkup(inline_keyboard=[
 
 
 helps = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Поддержка',url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
+    [InlineKeyboardButton(text='Поддержка',url='https://t.me/eschalonsupport')],
     [InlineKeyboardButton(text='⬅Назад',callback_data='home')]
 ])
 
