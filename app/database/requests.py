@@ -207,6 +207,7 @@ async def schedulers():
             print(f"Ошибка в schedulers(): {e}")
         await asyncio.sleep(1800)
 
+
 async def check_pending():
     now = datetime.now(tz=MOSCOW_TZ)
     async with async_session() as session:
@@ -215,8 +216,6 @@ async def check_pending():
                                 Order.status == "pending").values(status="canceled")
         )
         await session.commit()
-
-
 
 
 async def plusnoty(tg_id):
@@ -228,31 +227,33 @@ async def check_notyfy():
     print("sta")
     now_moscow = datetime.now(tz=MOSCOW_TZ)
     try:
+
         async with async_session() as session:
-            # За 1 день до окончания
+
+            # За 24 часа
             users_before = await session.execute(
                 select(User).where(
                     User.dayend != None,
                     User.dayend - timedelta(days=1) <= now_moscow,
-                    User.dayend - timedelta(hours=1) > now_moscow,
-                    User.notify_message < 1
+                    User.notify_message == 0  # строго!
                 )
             )
+
             for user in users_before.scalars().all():
                 await notify_before_end(user.tg_id)
                 await session.execute(
                     update(User).where(User.tg_id == user.tg_id).values(notify_message=1)
                 )
 
-            # За 1 час до окончания
+            # За 1 час
             users_end = await session.execute(
                 select(User).where(
                     User.dayend != None,
                     User.dayend - timedelta(hours=1) <= now_moscow,
-                    User.dayend >= now_moscow,
-                    User.notify_message < 2
+                    User.notify_message == 1  # строго!
                 )
             )
+
             for user in users_end.scalars().all():
                 await notify_end(user.tg_id)
                 await session.execute(
