@@ -35,13 +35,7 @@ async def notify_before_end(tg_id: int):
 
 async def notify_end(tg_id: int):
     print("end")
-    async with async_session() as session:
-        result = await session.execute(select(User).where(User.tg_id == tg_id))
-        user = result.scalars().first()
-        now = datetime.now(tz=MOSCOW_TZ)
-        if user and user.dayend and now >= user.dayend:
-            await bot.send_message(tg_id, "Твоя подписка истекла.", reply_markup=kb.go_pay)
-            return
+    await bot.send_message(tg_id, "Твоя подписка истекла.", reply_markup=kb.go_pay)
 
 
 async def notify_spss(tg_id: int):
