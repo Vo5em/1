@@ -228,38 +228,36 @@ async def check_notyfy():
     print("sta")
     now_moscow = datetime.now(tz=MOSCOW_TZ)
     try:
-
         async with async_session() as session:
-
-            # За 24 часа
+            # За 1 день до окончания
             users_before = await session.execute(
                 select(User).where(
                     User.dayend != None,
                     User.dayend - timedelta(days=1) <= now_moscow,
-                    User.notify_message == 0  # строго!
+                    User.dayend - timedelta(hours=1) > now_moscow,
+                    User.notify_message < 1
                 )
             )
-
             for user in users_before.scalars().all():
+                await notify_before_end(user.tg_id)
                 await session.execute(
                     update(User).where(User.tg_id == user.tg_id).values(notify_message=1)
                 )
-                await notify_before_end(user.tg_id)
 
-            # За 1 час
+            # За 1 час до окончания
             users_end = await session.execute(
                 select(User).where(
                     User.dayend != None,
                     User.dayend - timedelta(hours=1) <= now_moscow,
-                    User.notify_message == 1  # строго!
+                    User.dayend >= now_moscow,
+                    User.notify_message < 2
                 )
             )
-
             for user in users_end.scalars().all():
+                await notify_end(user.tg_id)
                 await session.execute(
                     update(User).where(User.tg_id == user.tg_id).values(notify_message=2)
                 )
-                await notify_end(user.tg_id)
 
             await session.commit()
 
