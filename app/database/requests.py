@@ -223,6 +223,7 @@ async def plusnoty(tg_id):
         await session.execute(update(User).where(User.tg_id == tg_id).values(notify_message=2))
         await session.commit()
 
+
 async def check_notyfy():
     print("sta")
     now_moscow = datetime.now(tz=MOSCOW_TZ)
@@ -240,10 +241,10 @@ async def check_notyfy():
             )
 
             for user in users_before.scalars().all():
-                await notify_before_end(user.tg_id)
                 await session.execute(
                     update(User).where(User.tg_id == user.tg_id).values(notify_message=1)
                 )
+                await notify_before_end(user.tg_id)
 
             # За 1 час
             users_end = await session.execute(
@@ -255,10 +256,10 @@ async def check_notyfy():
             )
 
             for user in users_end.scalars().all():
-                await notify_end(user.tg_id)
                 await session.execute(
                     update(User).where(User.tg_id == user.tg_id).values(notify_message=2)
                 )
+                await notify_end(user.tg_id)
 
             await session.commit()
 
