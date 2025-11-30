@@ -34,7 +34,7 @@ downloadand = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Скачать приложение',
                           url='https://play.google.com/store/apps/details?id=com.v2raytun.android')],
     [InlineKeyboardButton(text='⬅Назад', callback_data='period'),
-     InlineKeyboardButton(text='Видео инструкция', url='https://t.me/c/3301031394/4')],
+     InlineKeyboardButton(text='Видео инструкция', url='https://t.me/e_instructions/17')],
     [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
 ])
 
@@ -42,7 +42,7 @@ downloadand = InlineKeyboardMarkup(inline_keyboard=[
 downloadiph = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Скачать приложение', url='https://apps.apple.com/lt/app/v2raytun/id6476628951')],
     [InlineKeyboardButton(text='⬅Назад', callback_data='period'),
-     InlineKeyboardButton(text='Видео инструкция', url='https://www.youtube.com/watch?v=CW5oGRx9CLM')],
+     InlineKeyboardButton(text='Видео инструкция', url='https://t.me/e_instructions/4')],
     [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
 ])
 
