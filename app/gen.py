@@ -141,7 +141,7 @@ async def addkey(user_id):
     await set_key(user_id, subscription_url, user_uuid)
 
 async def delkey(user_uuid: str):
-    async with httpx.AsyncClient(base_url=BASE_URL, timeout=10.0) as client:
+    async with httpx.AsyncClient(base_url=SUB_DOMAIN, timeout=10.0) as client:
         # 1️⃣ Авторизация
         login_resp = await client.post("login", data={"username": "leg01", "password": "5sdvwlh25S"})
         if login_resp.status_code != 200:
