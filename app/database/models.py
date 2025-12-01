@@ -1,7 +1,7 @@
 from email.policy import default
 
-from sqlalchemy import ForeignKey, String, BigInteger, DateTime
-from sqlalchemy.orm import Mapped, Boolean, mapped_column, DeclarativeBase, relationship
+from sqlalchemy import ForeignKey, String, BigInteger, DateTime, Boolean
+from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, relationship
 from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
 from datetime import datetime
 from zoneinfo import ZoneInfo
