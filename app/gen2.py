@@ -1,6 +1,6 @@
 import httpx
 import json
-from config import BASE_URL
+#from config import BASE_URL
 
 REALITY_FP = "chrome"
 REALITY_SID = "6dc9a670b54255f1"
