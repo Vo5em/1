@@ -1,85 +1,144 @@
 import httpx
 import uuid
+import base64
 import json
 from app.database.requests import set_key
-from config import BASE_URL
+from app.database.models import async_session, Servers
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from config import SUB_DOMAIN
+from fastapi import APIRouter
 
-LOGIN_URL = BASE_URL + "login"
-API_URL = BASE_URL + "panel/inbound/addClient"
-REALITY_PBK = "k-FhLsJOvN4lAFyVBoohK__IFCh6v6BzLn6Yo1j9Tm8"
-REALITY_SNI = "google.com"
-REALITY_SID = "6dc9a670b54255f1"
-INBOUND_NAME = "eschalon"
-REALITY_FP = "chrome"
+router = APIRouter()
+
+
+#REALITY_PBK = "k-FhLsJOvN4lAFyVBoohK__IFCh6v6BzLn6Yo1j9Tm8"
+#REALITY_SNI = "google.com"
+#REALITY_SID = "6dc9a670b54255f1"
+#INBOUND_NAME = "eschalon"
+#REALITY_FP = "chrome"
+
+
+@router.get("/sub/{code}")
+async def sub(code: str):
+    """
+    Возвращает раскодированные ключи по base64 кодовой строке.
+    """
+    # Добавляем padding для Base64
+    padded = code + "=" * (-len(code) % 4)
+
+    try:
+        decoded = base64.urlsafe_b64decode(padded.encode()).decode()
+        return decoded
+    except:
+        return "Invalid subscription code"
+
+
+async def get_servers():
+    async with async_session() as session:
+        result = await session.execute(select(Servers))
+        servers = result.scalars().all()
+
+    server_dicts = []
+    for s in servers:
+        server_dicts.append({
+            "id": s.id,
+            "name": s.name,
+            "base_url": s.base_url,
+            "address": s.address,
+            "port": s.port,
+            "pbk": s.pbk,
+            "sni": s.sni,
+            "sid": s.sid,
+            "fp": s.fp,
+            "enabled": s.enabled,
+            "login": s.login,
+            "password": s.password
+        })
+
+    return server_dicts
 
 
 async def addkey(user_id):
-    async with httpx.AsyncClient(base_url=BASE_URL, timeout=10.0) as client:
-        # 1️⃣ Авторизация
-        login_resp = await client.post("login", json={"username": "leg01", "password": "5sdvwlh25S"})
-        if login_resp.status_code != 200:
-            print("Ошибка авторизации")
-            return
+    # Один UUID для всех серверов
+    user_uuid = str(uuid.uuid4())
+    client_email = f"NL-{user_uuid[:8]}"
+    sub_id = str(uuid.uuid4())[:16]  # 🔥 ОДИН subId для всех серверов
 
-        # 2️⃣ Генерация UUID и email
-        new_uuid = str(uuid.uuid4())
-        client_email = f"NL-{new_uuid[:8]}"
-        new_subid = str(uuid.uuid4())[:16]  # subId как у панели
+    servers = await get_servers()
 
-        # 3️⃣ Формируем payload точно по образцу панели
-        payload = {
-            "id": 1,
-            "settings": json.dumps({
-                "clients": [{
-                    "id": new_uuid,
-                    "email": client_email,
-                    "flow": "xtls-rprx-vision",
-                    "fingerprint": REALITY_FP,
-                    "shortId": REALITY_SID,
-                    "subId": new_subid,
-                    "enable": True,
-                    "expiryTime": 0,
-                    "comment": "",
-                    "created_at": 0,
-                    "updated_at": 0
-                }],
-                "decryption": "none",
-                "encryption": "none"
-            }),
-            "streamSettings": json.dumps({
-                "network": "tcp",
-                "security": "reality",
-                "realitySettings": {
-                    "publicKey": REALITY_PBK,
-                    "fingerprint": REALITY_FP,
-                    "serverNames": [REALITY_SNI, f"www.{REALITY_SNI}"],
-                    "shortIds": [REALITY_SID],
-                    "spiderX": "/"
-                },
-                "tcpSettings": {
-                    "header": {"type": "none"},
-                    "acceptProxyProtocol": False
-                }
+    vless_links = []
+
+    for srv in servers:
+        if not srv["enabled"]:
+            continue
+
+        async with httpx.AsyncClient(base_url=srv["base_url"], timeout=10.0) as client:
+
+            # Логин
+            login_resp = await client.post("login", json={
+                "username": srv["login"],
+                "password": srv["password"]
             })
-        }
 
-        # 4️⃣ Создание клиента через API
-        resp = await client.post("panel/api/inbounds/addClient", json=payload)
-        if resp.status_code != 200:
-            print(f"Ошибка создания клиента: {resp.status_code} {resp.text}")
-            return
+            if login_resp.status_code != 200:
+                print(f"Ошибка логина {srv['name']}")
+                continue
 
-        # 5️⃣ Формируем рабочую VLESS ссылку
-        vless_link = (
-            f"vless://{new_uuid}@eschalon.ru:443?"
-            f"type=tcp&encryption=none&security=reality&"
-            f"pbk={REALITY_PBK}&fp={REALITY_FP}&"
-            f"sni={REALITY_SNI}&sid={REALITY_SID}&spx=%2F&"
-            f"flow=xtls-rprx-vision"
-            f"#{INBOUND_NAME}-{client_email}"
-        )
+            payload = {
+                "id": 1,
+                "settings": json.dumps({
+                    "clients": [{
+                        "id": user_uuid,
+                        "email": client_email,
+                        "flow": "xtls-rprx-vision",
+                        "fingerprint": srv["fp"],
+                        "shortId": srv["sid"],
+                        "subId": sub_id,     # один на все
+                        "enable": True
+                    }]
+                }),
+                "streamSettings": json.dumps({
+                    "network": "tcp",
+                    "security": "reality",
+                    "realitySettings": {
+                        "publicKey": srv["pbk"],
+                        "fingerprint": srv["fp"],
+                        "serverNames": [srv["sni"], f"www.{srv['sni']}"],
+                        "shortIds": [srv["sid"]],
+                        "spiderX": "/"
+                    }
+                })
+            }
 
-        await set_key(user_id, vless_link, new_uuid)
+            resp = await client.post("panel/api/inbounds/addClient", json=payload)
+
+            if resp.status_code != 200:
+                print(f"Ошибка клиента на {srv['name']}: {resp.text}")
+                continue
+
+            link = (
+                f"vless://{user_uuid}@{srv['address']}:{srv['port']}?"
+                f"type=tcp&security=reality&flow=xtls-rprx-vision"
+                f"&pbk={srv['pbk']}&fp={srv['fp']}"
+                f"&sni={srv['sni']}&sid={srv['sid']}&spx=%2F"
+                f"#{srv['name']}"
+            )
+
+            vless_links.append(link)
+
+    if not vless_links:
+        print("Нет активных серверов")
+        return
+
+    # Кодируем подписку
+    raw = "\n".join(vless_links)
+    encoded = base64.urlsafe_b64encode(raw.encode()).decode().rstrip("=")
+
+    # Каким должен быть домен подписки? → задаётся в config.SUB_DOMAIN
+    subscription_url = f"https://{SUB_DOMAIN}/sub/{encoded}"
+
+    await set_key(user_id, subscription_url, user_uuid)
 
 async def delkey(user_uuid: str):
     async with httpx.AsyncClient(base_url=BASE_URL, timeout=10.0) as client:
