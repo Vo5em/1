@@ -104,7 +104,7 @@ async def addkey(user_id):
 
             link = (
                 f"vless://{user_uuid}@{srv['address']}:{srv['port']}?"
-                f"type=tcp&security=reality&flow=xtls-rprx-vision"
+                f"type=tcp&encryption=none&security=reality&flow=xtls-rprx-vision"
                 f"&pbk={srv['pbk']}&fp={srv['fp']}"
                 f"&sni={srv['sni']}&sid={srv['sid']}&spx=%2F"
                 f"#{client_email}"
