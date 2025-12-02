@@ -1,21 +1,19 @@
 from fastapi import FastAPI, APIRouter
+from fastapi.responses import PlainTextResponse
 import base64
 
 router = APIRouter()
 
-@router.get("/sub/{code}")
+@router.get("/sub/{code}", response_class=PlainTextResponse)
 async def sub(code: str):
-    """
-    Возвращает раскодированные ключи по base64 кодовой строке.
-    """
-    # Добавляем padding для Base64
+    # Добавляем padding
     padded = code + "=" * (-len(code) % 4)
 
     try:
         decoded = base64.urlsafe_b64decode(padded.encode()).decode()
-        return decoded
+        return PlainTextResponse(decoded)
     except:
-        return "Invalid subscription code"
+        return PlainTextResponse("Invalid subscription code")
 
 app = FastAPI()
 app.include_router(router)
