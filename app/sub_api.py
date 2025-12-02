@@ -36,3 +36,6 @@ async def sub(uuid: str):
 
         raw = "\n".join(vless_links)
         return PlainTextResponse(raw)
+
+app = FastAPI()
+app.include_router(router)
