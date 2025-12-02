@@ -117,11 +117,9 @@ async def addkey(user_id):
         return
 
     # Кодируем подписку
-    raw = "\n".join(vless_links)
-    encoded = base64.urlsafe_b64encode(raw.encode()).decode().rstrip("=")
 
     # Каким должен быть домен подписки? → задаётся в config.SUB_DOMAIN
-    subscription_url = f"https://{SUB_DOMAIN}/sub/{encoded}"
+    subscription_url = f"https://{SUB_DOMAIN}/sub/{user_uuid}"
 
     await set_key(user_id, subscription_url, user_uuid)
 
