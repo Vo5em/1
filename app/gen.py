@@ -19,21 +19,6 @@ router = APIRouter()
 #REALITY_FP = "chrome"
 
 
-@router.get("/sub/{code}")
-async def sub(code: str):
-    """
-    Возвращает раскодированные ключи по base64 кодовой строке.
-    """
-    # Добавляем padding для Base64
-    padded = code + "=" * (-len(code) % 4)
-
-    try:
-        decoded = base64.urlsafe_b64decode(padded.encode()).decode()
-        return decoded
-    except:
-        return "Invalid subscription code"
-
-
 async def get_servers():
     async with async_session() as session:
         result = await session.execute(select(Servers))
@@ -122,7 +107,7 @@ async def addkey(user_id):
                 f"type=tcp&security=reality&flow=xtls-rprx-vision"
                 f"&pbk={srv['pbk']}&fp={srv['fp']}"
                 f"&sni={srv['sni']}&sid={srv['sid']}&spx=%2F"
-                f"#{srv['name']}"
+                f"#{client_email}"
             )
 
             vless_links.append(link)
