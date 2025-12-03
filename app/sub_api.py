@@ -1,29 +1,24 @@
-from fastapi import FastAPI, APIRouter
-from fastapi.responses import PlainTextResponse
+from fastapi import FastAPI, APIRouter, Response
 from sqlalchemy import select
 from app.database.models import async_session, User
 from app.gen import get_servers
 
 router = APIRouter()
 
-@router.get("/sub/{uuid}", response_class=PlainTextResponse)
+@router.get("/sub/{uuid}")
 async def sub(uuid: str):
     async with async_session() as session:
         user = await session.scalar(select(User).where(User.uuid == uuid))
-
         if not user:
-            return PlainTextResponse("User not found", status_code=404)
+            return Response("User not found", status_code=404, media_type="text/plain")
 
         servers = await get_servers()
-
         vless_lines = []
 
         for srv in servers:
             if not srv["enabled"]:
                 continue
-
             client_email = f"NL-{uuid[:8]}"
-
             link = (
                 f"vless://{uuid}@{srv['address']}:{srv['port']}?"
                 f"type=tcp&encryption=none&security=reality&flow=xtls-rprx-vision"
@@ -31,18 +26,14 @@ async def sub(uuid: str):
                 f"&sni={srv['sni']}&sid={srv['sid']}&spx=%2F"
                 f"#{client_email}"
             )
-
             vless_lines.append(link)
 
-        # Формируем ответ
-        response = PlainTextResponse("\n".join(vless_lines))
+        headers = {
+            "X-Name": "OAO_beautiful_VPN",
+            "X-Desc": "Change_location_if_not_working"
+        }
 
-        # 🔥 Заголовки для V2RayTun
-        response.headers["X-Name"] = "OAO_beautiful_VPN"
-        response.headers["X-Desc"] = "Change_location_if_not_working"
-
-        return response
-
+        return Response("\n".join(vless_lines), media_type="text/plain", headers=headers)
 
 app = FastAPI()
 app.include_router(router)
