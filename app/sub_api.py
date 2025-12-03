@@ -2,6 +2,7 @@ from fastapi import FastAPI, APIRouter, Response
 from sqlalchemy import select
 from app.database.models import async_session, User
 from app.gen import get_servers
+import json
 
 router = APIRouter()
 
@@ -10,10 +11,10 @@ async def sub(uuid: str):
     async with async_session() as session:
         user = await session.scalar(select(User).where(User.uuid == uuid))
         if not user:
-            return Response("User not found", status_code=404, media_type="text/plain")
+            return Response("User not found", status_code=404, media_type="application/json")
 
         servers = await get_servers()
-        vless_lines = []
+        server_list = []
 
         for srv in servers:
             if not srv["enabled"]:
@@ -27,16 +28,16 @@ async def sub(uuid: str):
                 f"&sni={srv['sni']}&sid={srv['sid']}&spx=%2F"
                 f"#{client_email}"
             )
-            vless_lines.append(link)
+            server_list.append(link)
 
-        # Первая строка — название подписки
-        subscription_name = "OAO_beautiful_VPN"
-        # Вторая строка — описание подписки
-        subscription_desc = "Change_location_if_not_working"
+        subscription_data = {
+            "subscription_name": "OAO_beautiful_VPN",
+            "subscription_desc": "Change_location_if_not_working",
+            "servers": server_list
+        }
 
-        response_body = "\n".join([f"# {subscription_name}", f"# {subscription_desc}"] + vless_lines)
-
-        return Response(response_body, media_type="text/plain")
+        return Response(json.dumps(subscription_data, ensure_ascii=False, indent=2),
+                        media_type="application/json")
 
 app = FastAPI()
 app.include_router(router)
