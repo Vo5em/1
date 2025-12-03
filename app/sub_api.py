@@ -1,5 +1,5 @@
 from fastapi import FastAPI, APIRouter
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse, JSONResponse
 from app.database.models import async_session, User
 from sqlalchemy import select, update, delete, desc
 from app.gen import get_servers
@@ -35,7 +35,12 @@ async def sub(uuid: str):
             vless_links.append(link)
 
         raw = "\n".join(vless_links)
-        return PlainTextResponse(raw)
+        return JSONResponse({
+    "version": 1,
+    "title": "eschalon «VPN»",
+    "description": "Сменил локацию? Нажми на стрелку ↗️",
+    "links": raw
+})
 
 app = FastAPI()
 app.include_router(router)
