@@ -18,11 +18,6 @@ async def sub(uuid: str):
 
         vless_lines = []
 
-        # ---- 🔥 ВСТАВЛЯЕМ НАЗВАНИЕ И ОПИСАНИЕ ПРЯМО В ПОДПИСКУ ----
-        vless_lines.append("# NAME: OAO «beautiful VPN»")
-        vless_lines.append("# DESC: Сменил локацию и не работает? Нажми на стрелку выше⬆️")
-        vless_lines.append("")  # пустая строка — обязательно
-
         for srv in servers:
             if not srv["enabled"]:
                 continue
@@ -39,7 +34,14 @@ async def sub(uuid: str):
 
             vless_lines.append(link)
 
-        return PlainTextResponse("\n".join(vless_lines))
+        # Формируем ответ
+        response = PlainTextResponse("\n".join(vless_lines))
+
+        # 🔥 Заголовки для V2RayTun
+        response.headers["X-Name"] = "OAO «beautiful VPN»"
+        response.headers["X-Desc"] = "Сменил локацию и не работает? Нажми на стрелку выше⬆️"
+
+        return response
 
 
 app = FastAPI()
