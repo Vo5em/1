@@ -1,14 +1,16 @@
 import base64
+import logging
 from fastapi import FastAPI, APIRouter
 from fastapi.responses import PlainTextResponse
 from sqlalchemy import select
 from app.database.models import async_session, User
 from app.gen import get_servers
 
+logger = logging.getLogger("uvicorn.error")
 router = APIRouter()
 
 def to_base64_prefixed(s: str) -> str:
-    # v2raytun/doc examples use prefix "base64:" followed by base64 of UTF-8
+    """Возвращает строку вида 'base64:<base64-of-utf8>' — ascii-only."""
     b = base64.b64encode(s.encode("utf-8")).decode("ascii")
     return f"base64:{b}"
 
@@ -24,7 +26,7 @@ async def sub(uuid: str):
 
         vless_lines = []
         for srv in servers:
-            if not srv["enabled"]:
+            if not srv.get("enabled"):
                 continue
 
             client_label = f"NL-{uuid[:8]}"
@@ -40,14 +42,35 @@ async def sub(uuid: str):
         body = "\n".join(vless_lines)
         response = PlainTextResponse(body)
 
-        # Название подписки (v2raytun and similar accept raw or base64:)
-        profile_title = "OAO beautiful VPN"        # ascii-safe fallback
-        profile_title_utf = "OAO «beautiful VPN»"  # human-friendly (unicode)
-        response.headers["Profile-Title"] = to_base64_prefixed(profile_title_utf)
-        # Дополнительный header с кратким описанием (варианты названий у разных клиентов)
-        response.headers["Subscription-Userinfo"] = "description=Персональная подписка;owner=OAO"
-        # Content-Disposition полезен для имени скачиваемого файла
-        response.headers["Content-Disposition"] = 'attachment; filename="OAO_beautiful_VPN.txt"'
+        # Формируем безопасные ASCII header values
+        title_utf = "OAO «beautiful VPN»"     # человекочитаемая версия (юникод)
+        title_ascii_fallback = "OAO_beautiful_VPN"  # ascii fallback
+        title_b64 = to_base64_prefixed(title_utf)
+
+        descr = "Персональная подписка для клиента"  # описание (юникод)
+        descr_b64 = to_base64_prefixed(descr)
+
+        # Попробуем аккуратно установить несколько вариантов заголовков.
+        # Устанавливаем в try/except чтобы не приводить к 500.
+        try:
+            # base64 вариант, который поддерживает v2raytun / xray clients
+            response.headers["Profile-Title"] = title_b64
+            response.headers["X-Profile-Title"] = title_b64
+
+            # ascii fallback (чтобы избежать non-ascii проблем)
+            response.headers["profile-title"] = title_ascii_fallback
+
+            # описание/метаданные — тоже в base64-формате
+            response.headers["Subscription-Userinfo"] = f"base64:{base64.b64encode(descr.encode('utf-8')).decode('ascii')}"
+            response.headers["X-Subscription-Userinfo"] = f"description={descr_b64}"
+
+            # Content-Disposition — чтобы в некоторых клиентах отображалось имя файла
+            # Используем ascii-safe filename (цитирование ровное)
+            response.headers["Content-Disposition"] = 'attachment; filename="OAO_beautiful_VPN.txt"'
+
+        except Exception as exc:
+            # Логируем проблему, но возвращаем тело, чтобы не обрывать работу подписки
+            logger.exception("Cannot set subscription headers: %s", exc)
 
         return response
 
