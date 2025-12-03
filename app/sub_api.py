@@ -41,7 +41,7 @@ async def sub(uuid: str):
         # ✨ ЭТО ГЛАВНОЕ: Метаданные подписки
         # ---------------------------------------
         headers = {
-            "profile-title": "OAO_beautiful_VPN",             # Название подписки
+            "profile-title": "OAO beautiful VPN",             # Название подписки
             "profile-desc": "Change_location_if_not_working", # Описание
             "Content-Type": "text/plain; charset=utf-8",
             # По желанию: отображение трафика
