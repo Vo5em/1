@@ -16,28 +16,36 @@ async def sub(uuid: str):
 
         servers = await get_servers()
 
-        vless_links = []
+        nodes = []
+
         for srv in servers:
             if not srv["enabled"]:
                 continue
 
-            client_email = f"NL-{uuid[:8]}"
-
-            link = (
-                f"vless://{uuid}@{srv['address']}:{srv['port']}?"
-                f"type=tcp&encryption=none&security=reality&flow=xtls-rprx-vision"
-                f"&pbk={srv['pbk']}&fp={srv['fp']}"
-                f"&sni={srv['sni']}&sid={srv['sid']}&spx=%2F"
-                f"#{client_email}"
-            )
-
-            vless_links.append(link)
+            nodes.append({
+                "type": "vless",
+                "tag": srv["name"],         # имя в приложении
+                "server": srv["address"],
+                "port": srv["port"],
+                "uuid": uuid,
+                "network": "tcp",
+                "flow": "xtls-rprx-vision",
+                "tls": {
+                    "enabled": True,
+                    "type": "reality",
+                    "serverName": srv["sni"],
+                    "publicKey": srv["pbk"],
+                    "shortId": srv["sid"],
+                    "fingerprint": srv["fp"],
+                    "spiderX": "/"
+                }
+            })
 
         return JSONResponse({
             "version": 1,
             "title": "eschalon VPN",
             "description": "Сменил локацию? Нажми на стрелку ↗️",
-            "links": vless_links    # ВАЖНО — список, не строка
+            "nodes": nodes
         })
 
 
