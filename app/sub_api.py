@@ -38,8 +38,8 @@ async def sub(uuid: str):
         response = PlainTextResponse("\n".join(vless_lines))
 
         # 🔥 Заголовки для V2RayTun
-        response.headers["X-Name"] = "OAO «beautiful VPN»"
-        response.headers["X-Desc"] = "Сменил локацию и не работает? Нажми на стрелку выше⬆️"
+        response.headers["X-Name"] = "OAO_beautiful_VPN"
+        response.headers["X-Desc"] = "Change_location_if_not_working"
 
         return response
 
