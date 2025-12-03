@@ -20,7 +20,7 @@ async def sub(uuid: str):
             if not srv["enabled"]:
                 continue
 
-            remark = f"🇳🇱 NL-{uuid[:8]} TCP"
+            remark = f"NL-{uuid[:8]}"
 
             link = (
                 f"vless://{uuid}@{srv['address']}:{srv['port']}?"
