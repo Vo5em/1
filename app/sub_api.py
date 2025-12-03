@@ -6,15 +6,14 @@ from app.gen import get_servers
 
 router = APIRouter()
 
-@router.get("/sub/{uuid}", response_class=PlainTextResponse)
+@router.get("/sub/{uuid}")
 async def sub(uuid: str):
     async with async_session() as session:
         user = await session.scalar(select(User).where(User.uuid == uuid))
 
         if not user:
-            return PlainTextResponse("User not found")
+            return JSONResponse({"error": "User not found"}, status_code=404)
 
-        # Получаем список серверов
         servers = await get_servers()
 
         vless_links = []
@@ -34,13 +33,13 @@ async def sub(uuid: str):
 
             vless_links.append(link)
 
-        raw = "\n".join(vless_links)
         return JSONResponse({
-    "version": 1,
-    "title": "eschalon «VPN»",
-    "description": "Сменил локацию? Нажми на стрелку ↗️",
-    "links": raw
-})
+            "version": 1,
+            "title": "eschalon VPN",
+            "description": "Сменил локацию? Нажми на стрелку ↗️",
+            "links": vless_links    # ВАЖНО — список, не строка
+        })
+
 
 app = FastAPI()
 app.include_router(router)
