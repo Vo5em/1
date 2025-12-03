@@ -1,7 +1,7 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Response
 from fastapi.responses import PlainTextResponse
-from app.database.models import async_session, User
 from sqlalchemy import select
+from app.database.models import async_session, User
 from app.gen import get_servers
 
 router = APIRouter()
@@ -18,12 +18,6 @@ async def sub(uuid: str):
 
         vless_lines = []
 
-        # ---------- 🔥 Добавляем название и описание в PlainText ----------
-        vless_lines.append("OAO «beautiful VPN»")
-        vless_lines.append("Добро пожаловать! Вот ваша VPN-подписка:")
-        vless_lines.append("")  # пустая строка
-
-        # ---------- 🔥 VLESS ссылки ----------
         for srv in servers:
             if not srv["enabled"]:
                 continue
@@ -40,8 +34,16 @@ async def sub(uuid: str):
 
             vless_lines.append(link)
 
-        # ---------- 🔥 Возвращаем ровно строку ----------
-        return "\n".join(vless_lines)
+        body = "\n".join(vless_lines)
+
+        response = PlainTextResponse(body)
+
+        # ---- 🔥 Добавляем название и описание подписки ----
+        response.headers["Content-Disposition"] = 'attachment; filename="OAO_beautiful_VPN.txt"'
+        response.headers["X-Display-Name"] = "OAO «beautiful VPN»"
+        response.headers["X-Subscription-Userinfo"] = "description=Ваши персональные серверы"
+
+        return response
 
 
 app = FastAPI()
