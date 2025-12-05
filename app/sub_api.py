@@ -11,7 +11,11 @@ async def sub(uuid: str):
         user = await session.scalar(select(User).where(User.uuid == uuid))
 
         if not user:
-            return Response("User not found", status_code=404, media_type="text/plain")
+            return Response(
+                "User not found",
+                status_code=404,
+                media_type="text/plain"
+            )
 
         servers = await get_servers()
         vless_lines = []
@@ -36,16 +40,18 @@ async def sub(uuid: str):
 
             vless_lines.append(link)
 
-        body = "\n".join(vless_lines)
+        # <<< Вот эти две строки — секретный формат V2RayTun >>>
+        meta = (
+            "#!name: eschalon «VPN»\n"
+            "#!desc: Change_location_if_not_working\n"
+        )
 
-        headers = {
-            "profile-title": "eschalon \u00ABVPN\u00BB",
-            "profile-desc": "Change_location_if_not_working",
-            "Content-Type": "text/plain; charset=utf-8",
-            "subscription-userinfo": "upload=0; download=0; total=0; expire=0"
-        }
+        body = meta + "\n".join(vless_lines)
 
-        return Response(content=body, media_type="text/plain", headers=headers)
+        return Response(
+            content=body,
+            media_type="text/plain; charset=utf-8"
+        )
 
 app = FastAPI()
 app.include_router(router)
