@@ -52,7 +52,6 @@ async def sub(uuid: str):
             "profile-desc": "Change_location_if_not_working",
             "Content-Type": "text/plain; charset=utf-8",
             # опционально: статистика
-            "subscription-userinfo": "upload=0; download=0; total=0; expire=0",
         }
 
         return Response(content=body, media_type="text/plain", headers=headers)
