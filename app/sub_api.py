@@ -39,7 +39,7 @@ async def sub(uuid: str):
         body = "\n".join(vless_lines)
 
         headers = {
-            "profile-title": "eschalon «VPN»",
+            "profile-title": "eschalon \u00ABVPN\u00BB",
             "profile-desc": "Change_location_if_not_working",
             "Content-Type": "text/plain; charset=utf-8",
             "subscription-userinfo": "upload=0; download=0; total=0; expire=0"
