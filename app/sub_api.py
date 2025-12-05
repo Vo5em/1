@@ -20,32 +20,28 @@ async def sub(uuid: str):
             if not srv["enabled"]:
                 continue
 
-            remark = f"NL-{uuid[:8]}"
-
             link = (
                 f"vless://{uuid}@{srv['address']}:{srv['port']}?"
-                f"security=reality&type=tcp"
-                f"&fp={srv['fp']}"
+                f"type=tcp"
+                f"&encryption=none"
+                f"&security=reality"
                 f"&pbk={srv['pbk']}"
+                f"&fp={srv['fp']}"
                 f"&sni={srv['sni']}"
                 f"&sid={srv['sid']}"
                 f"&spx=%2F"
-                f"#{remark}"
+                f"&flow=xtls-rprx-vision"
+                f"#eschalon-NL-{uuid[:8]}"
             )
 
             vless_lines.append(link)
 
         body = "\n".join(vless_lines)
 
-        # ---------------------------------------
-        # ✨ ЭТО ГЛАВНОЕ: Метаданные подписки
-        # ---------------------------------------
         headers = {
-            "profile-title": "eschalon «VPN»",             # Название подписки
-            "profile-desc": "Change_location_if_not_working", # Описание
+            "profile-title": "eschalon «VPN»",
+            "profile-desc": "Change_location_if_not_working",
             "Content-Type": "text/plain; charset=utf-8",
-            # По желанию: отображение трафика
-            # upload=0; download=0; total=0; expire=0
             "subscription-userinfo": "upload=0; download=0; total=0; expire=0"
         }
 
