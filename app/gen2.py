@@ -1,12 +1,36 @@
 import httpx
 import json
-from app.gen import get_servers
+from app.database.models import async_session, Servers
+from sqlalchemy import select
 
 #REALITY_FP = "chrome"
 #REALITY_SID = "6dc9a670b54255f1"
+async def get_serv():
+    async with async_session() as session:
+        result = await session.execute(select(Servers))
+        servers = result.scalars().all()
+
+    server_dicts = []
+    for s in servers:
+        server_dicts.append({
+            "id": s.id,
+            "name": s.name,
+            "base_url": s.base_url,
+            "address": s.address,
+            "port": s.port,
+            "pbk": s.pbk,
+            "sni": s.sni,
+            "sid": s.sid,
+            "fp": s.fp,
+            "enabled": s.enabled,
+            "login": s.login,
+            "password": s.password
+        })
+
+    return server_dicts
 
 async def activatekey(user_uuid: str):
-    servers = await get_servers()
+    servers = await get_serv()
     client_email = f"NL-{user_uuid[:8]}"
     for srv in servers:
         async with httpx.AsyncClient(base_url=srv["base_url"], timeout=10.0) as client:
