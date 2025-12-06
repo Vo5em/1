@@ -34,10 +34,12 @@ async def activatekey(user_uuid: str):
     client_email = f"NL-{user_uuid[:8]}"
     for srv in servers:
         async with httpx.AsyncClient(base_url=srv["base_url"], timeout=10.0) as client:
+
             login_resp = await client.post("login", json={
                 "username": srv["login"],
                 "password": srv["password"]
             })
+
         if login_resp.status_code != 200:
             print("Ошибка авторизации:", login_resp.text)
             continue
