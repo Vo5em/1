@@ -32,37 +32,56 @@ async def get_serv():
 async def activatekey(user_uuid: str):
     servers = await get_serv()
     client_email = f"NL-{user_uuid[:8]}"
-    for srv in servers:
-        async with httpx.AsyncClient(base_url=srv["base_url"], timeout=10.0) as client:
 
+    for srv in servers:
+        if not srv["enabled"]:
+            continue
+
+        # Гарантируем, что URL правильный
+        base_url = srv["base_url"]
+        if not base_url.startswith(("http://", "https://")):
+            base_url = "http://" + base_url
+
+        async with httpx.AsyncClient(base_url=base_url, timeout=10.0) as client:
+
+            # --- 1. Логин ---
             login_resp = await client.post("login", json={
                 "username": srv["login"],
                 "password": srv["password"]
             })
 
-        if login_resp.status_code != 200:
-            print("Ошибка авторизации:", login_resp.text)
-            continue
+            if login_resp.status_code != 200:
+                print(f"[{srv['name']}] ❌ Ошибка авторизации: {login_resp.text}")
+                continue
 
-        # 2️⃣ Формируем payload
-        payload = {
-            "id": 1,
-            "settings": json.dumps({
-                "clients": [{
-                    "id": user_uuid,
-                    "email": client_email,
-                    "flow": "xtls-rprx-vision",
-                    "fingerprint": srv["fp"],
-                    "shortId": [srv["sid"]],
-                    "enable": True
-                }]
-            })
-        }
+            # --- 2. Формируем payload ---
+            payload = {
+                "id": 1,
+                "settings": json.dumps({
+                    "clients": [{
+                        "id": user_uuid,
+                        "email": client_email,
+                        "flow": "xtls-rprx-vision",
+                        "fingerprint": srv["fp"],
+                        "shortId": [srv["sid"]],
+                        "enable": True
+                    }]
+                })
+            }
 
-        # 3️⃣ Отправляем правильный запрос
-        resp = await client.post(f"panel/api/inbounds/updateClient/{user_uuid}", json=payload)
+            # --- 3. Запрос активации ---
+            resp = await client.post(
+                f"panel/api/inbounds/updateClient/{user_uuid}",
+                json=payload
+            )
 
-        try:
-            resp.json()
-        except Exception:
-            print(f"Ошибка {resp.status_code}: {resp.text}")
+            try:
+                j = resp.json()
+            except:
+                print(f"[{srv['name']}] ❌ Ошибка активации {resp.status_code}: {resp.text}")
+                continue
+
+            if j.get("success"):
+                print(f"[{srv['name']}] ✅ Пользователь {client_email} активирован")
+            else:
+                print(f"[{srv['name']}] ❌ Ответ API: {j}")
