@@ -124,44 +124,49 @@ async def addkey(user_id):
     await set_key(user_id, subscription_url, user_uuid)
 
 async def delkey(user_uuid: str):
-    async with httpx.AsyncClient(base_url=SUB_DOMAIN, timeout=10.0) as client:
-        # 1️⃣ Авторизация
-        login_resp = await client.post("login", data={"username": "leg01", "password": "5sdvwlh25S"})
-        if login_resp.status_code != 200:
-            print("Ошибка авторизации:", login_resp.text)
-            return False
 
-        client_email = f"NL-{user_uuid[:8]}"
+    servers = await get_servers()
+    client_email = f"NL-{user_uuid[:8]}"
 
-        # 2️⃣ Формируем payload
-        payload = {
-            "id": 1,
-            "settings": json.dumps({
-                "clients": [{
-                    "id": user_uuid,
-                    "email": client_email,
-                    "flow": "xtls-rprx-vision",
-                    "fingerprint": REALITY_FP,
-                    "shortId": REALITY_SID,
-                    "enable": False
-                }]
+    for srv in servers:
+        async with httpx.AsyncClient(base_url=srv["base_url"], timeout=10.0) as client:
+
+            # 1️⃣ Логин в панель
+            login_resp = await client.post("login", json={
+                "username": srv["login"],
+                "password": srv["password"]
             })
-        }
 
-        # 3️⃣ Отправляем правильный запрос
-        resp = await client.post(f"panel/api/inbounds/updateClient/{user_uuid}", json=payload)
+            if login_resp.status_code != 200:
+                print(f"[{srv['name']}] ❌ Ошибка логина")
+                continue
 
-        try:
-            resp_json = resp.json()
-        except Exception:
-            print(f"Ошибка {resp.status_code}: {resp.text}")
-            return False
+            # 2️⃣ Формируем payload
+            payload = {
+                "id": 1,
+                "settings": json.dumps({
+                    "clients": [{
+                        "id": user_uuid,
+                        "email": client_email,
+                        "flow": "xtls-rprx-vision",
+                        "fingerprint": srv["fp"],
+                        "shortId": [srv["sid"]],
+                        "enable": False
+                    }]
+                })
+            }
 
-        if resp_json.get("success"):
-            print(f"Пользователь {client_email} отключён")
-            return True
-        else:
-            print(f"Ошибка API: {resp_json}")
-            return False
+            # 3️⃣ Отправляем правильный запрос
+            resp = await client.post(f"panel/api/inbounds/updateClient/{user_uuid}", json=payload)
+
+            try:
+                resp_json = resp.json()
+            except Exception:
+                print(f"Ошибка {resp.status_code}: {resp.text}")
+
+            if resp_json.get("success"):
+                print(f"Пользователь {client_email} отключён")
+            else:
+                print(f"Ошибка API: {resp_json}")
 
 

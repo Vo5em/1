@@ -1,18 +1,23 @@
 import httpx
 import json
-#from config import BASE_URL
+from gen import get_servers
 
-REALITY_FP = "chrome"
-REALITY_SID = "6dc9a670b54255f1"
+#REALITY_FP = "chrome"
+#REALITY_SID = "6dc9a670b54255f1"
 
 async def activatekey(user_uuid: str):
-    async with httpx.AsyncClient(base_url=BASE_URL, timeout=10.0) as client:
+    servers = await get_servers()
+    client_email = f"NL-{user_uuid[:8]}"
+    for srv in servers:
+        async with httpx.AsyncClient(base_url=srv["base_url"], timeout=10.0) as client:
+            login_resp = await client.post("login", json={
+                "username": srv["login"],
+                "password": srv["password"]
+            })
         login_resp = await client.post("login", data={"username": "leg01", "password": "5sdvwlh25S"})
         if login_resp.status_code != 200:
             print("Ошибка авторизации:", login_resp.text)
-            return False
-
-        client_email = f"NL-{user_uuid[:8]}"
+            continue
 
         # 2️⃣ Формируем payload
         payload = {
@@ -22,8 +27,8 @@ async def activatekey(user_uuid: str):
                     "id": user_uuid,
                     "email": client_email,
                     "flow": "xtls-rprx-vision",
-                    "fingerprint": REALITY_FP,
-                    "shortId": REALITY_SID,
+                    "fingerprint": srv["fp"],
+                    "shortId": [srv["sid"]],
                     "enable": True
                 }]
             })
@@ -36,4 +41,3 @@ async def activatekey(user_uuid: str):
             resp.json()
         except Exception:
             print(f"Ошибка {resp.status_code}: {resp.text}")
-            return False
