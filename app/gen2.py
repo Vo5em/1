@@ -1,6 +1,6 @@
 import httpx
 import json
-from gen import get_servers
+from app.gen import get_servers
 
 #REALITY_FP = "chrome"
 #REALITY_SID = "6dc9a670b54255f1"
