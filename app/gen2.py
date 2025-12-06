@@ -14,7 +14,6 @@ async def activatekey(user_uuid: str):
                 "username": srv["login"],
                 "password": srv["password"]
             })
-        login_resp = await client.post("login", data={"username": "leg01", "password": "5sdvwlh25S"})
         if login_resp.status_code != 200:
             print("Ошибка авторизации:", login_resp.text)
             continue
