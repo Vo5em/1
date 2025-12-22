@@ -175,7 +175,7 @@ async def cmd_sub(message: Message):
 @user.message(Command('ref_programm'))
 async def cmd_ref(message: Message):
     tg_id = message.from_user.id
-    BOT_USERNAME = 't.me/eschalonvpnbot'
+    BOT_USERNAME = 'eschalonvpnbot'
     ref_link = f"https://t.me/{BOT_USERNAME}?start={tg_id}"
     escaped_link = escape_markdown(ref_link)
     await message.answer(
@@ -444,7 +444,7 @@ async def connect_antv(callback: CallbackQuery):
 @user.callback_query(F.data == 'refka')
 async def refka(callback: CallbackQuery):
     tg_id = callback.from_user.id
-    BOT_USERNAME = 'eschalon01bot'
+    BOT_USERNAME = 'eschalonvpnbot'
     ref_link = f"https://t.me/{BOT_USERNAME}?start={tg_id}"
     escaped_link = escape_markdown(ref_link)
     await callback.answer('')
