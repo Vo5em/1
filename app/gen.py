@@ -117,7 +117,7 @@ async def addkey(user_id):
                 print(f"Ошибка клиента на {srv['name']}: {resp.text}")
                 continue
             else:
-                await plusserverid(user_id, srv["id"])
+                await plusserverid(user_uuid, srv["id"])
 
     # Каким должен быть домен подписки? → задаётся в config.SUB_DOMAIN
     subscription_url = f"https://{SUB_DOMAIN}/sub/{user_uuid}"
