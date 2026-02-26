@@ -2,8 +2,8 @@ import httpx
 import uuid
 import base64
 import json
-from app.database.requests import set_key
-from app.database.models import async_session, Servers
+from app.database.requests import set_key, cheng_state_d
+from app.database.models import async_session, Servers, UserServer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from config import SUB_DOMAIN
@@ -43,6 +43,22 @@ async def get_servers():
 
     return server_dicts
 
+async def plusserverid(uuid, pull):
+    async with async_session() as session:
+        session.add(UserServer(uuid=uuid, server=pull))
+        await session.commit()
+
+
+async def serch_pull(uuid):
+    async with async_session() as session:
+        result = await session.execute(
+            select(UserServer.server)
+            .where(UserServer.user_uuid == uuid)
+        )
+
+        servers = result.scalars().all()
+    return servers
+
 
 async def addkey(user_id):
     # Один UUID для всех серверов
@@ -52,7 +68,6 @@ async def addkey(user_id):
 
     servers = await get_servers()
 
-    vless_links = []
 
     for srv in servers:
         if not srv["enabled"]:
@@ -101,22 +116,8 @@ async def addkey(user_id):
             if resp.status_code != 200:
                 print(f"Ошибка клиента на {srv['name']}: {resp.text}")
                 continue
-
-            link = (
-                f"vless://{user_uuid}@{srv['address']}:{srv['port']}?"
-                f"type=tcp&encryption=none&security=reality&flow=xtls-rprx-vision"
-                f"&pbk={srv['pbk']}&fp={srv['fp']}"
-                f"&sni={srv['sni']}&sid={srv['sid']}&spx=%2F"
-                f"#{client_email}"
-            )
-
-            vless_links.append(link)
-
-    if not vless_links:
-        print("Нет активных серверов")
-        return
-
-    # Кодируем подписку
+            else:
+                await plusserverid(user_id, srv["id"])
 
     # Каким должен быть домен подписки? → задаётся в config.SUB_DOMAIN
     subscription_url = f"https://{SUB_DOMAIN}/sub/{user_uuid}"
@@ -126,9 +127,12 @@ async def addkey(user_id):
 async def delkey(user_uuid: str):
 
     servers = await get_servers()
+    final_server_ids = set(await serch_pull(user_uuid))
     client_email = f"NL-{user_uuid[:8]}"
 
     for srv in servers:
+        if srv["id"] not in final_server_ids:
+            continue
         async with httpx.AsyncClient(base_url=srv["base_url"], timeout=10.0) as client:
 
             # 1️⃣ Логин в панель
@@ -150,7 +154,7 @@ async def delkey(user_uuid: str):
                         "email": client_email,
                         "flow": "xtls-rprx-vision",
                         "fingerprint": srv["fp"],
-                        "shortId": [srv["sid"]],
+                        "shortId": srv["sid"],
                         "enable": False
                     }]
                 })
@@ -168,5 +172,6 @@ async def delkey(user_uuid: str):
                 print(f"Пользователь {client_email} отключён")
             else:
                 print(f"Ошибка API: {resp_json}")
+    await cheng_state_d(user_uuid)
 
 

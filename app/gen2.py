@@ -1,10 +1,27 @@
 import httpx
 import json
-from app.database.models import async_session, Servers
-from sqlalchemy import select
+from app.database.models import async_session, Servers, UserServer, User
+from sqlalchemy import select, update
 
 #REALITY_FP = "chrome"
 #REALITY_SID = "6dc9a670b54255f1"
+async def serch_pull2(uuid):
+    async with async_session() as session:
+        result = await session.execute(
+            select(UserServer.server)
+            .where(UserServer.user_uuid == uuid)
+        )
+
+        servers = result.scalars().all()
+    return servers
+
+
+async def cheng_state_a(uuid):
+    async with async_session() as session:
+        await session.execute(update(User).where(User.uuid == uuid).values(keys_active = True))
+        await session.commit()
+
+
 async def get_serv():
     async with async_session() as session:
         result = await session.execute(select(Servers))
@@ -32,9 +49,10 @@ async def get_serv():
 async def activatekey(user_uuid: str):
     servers = await get_serv()
     client_email = f"NL-{user_uuid[:8]}"
+    final_server_ids = set(await serch_pull2(user_uuid))
 
     for srv in servers:
-        if not srv["enabled"]:
+        if srv["id"] not in final_server_ids:
             continue
 
         # Гарантируем, что URL правильный
@@ -85,3 +103,4 @@ async def activatekey(user_uuid: str):
                 print(f"[{srv['name']}] ✅ Пользователь {client_email} активирован")
             else:
                 print(f"[{srv['name']}] ❌ Ответ API: {j}")
+    await cheng_state_a(user_uuid)

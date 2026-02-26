@@ -74,7 +74,7 @@ async def check_end():
     try:
         async with async_session() as session:
             end = await session.execute(select(User.uuid, User.tg_id).where
-                                        (User.dayend != None, User.dayend < now_moscow))
+                                        (User.dayend != None, User.dayend < now_moscow, User.keys_active == True))
             results = end.all()
             if not results:
                 return
@@ -83,6 +83,17 @@ async def check_end():
             await session.commit()
     except Exception as e:
         print(f"Ошибка в check_end: {e}")
+
+
+async def cheng_state_d(uuid):
+    async with async_session() as session:
+        await session.execute(update(User).where(User.uuid == uuid).values(keys_active = False))
+        await session.commit()
+
+async def cheng_state_a(uuid):
+    async with async_session() as session:
+        await session.execute(update(User).where(User.uuid == uuid).values(keys_active = True))
+        await session.commit()
 
 
 async def get_users():
@@ -391,7 +402,7 @@ async def yookassa_webhook(request: Request):
     return {"status": "ok"}
 
 
-async def create_auto_payment(user: User, amount: float = 150.0, currency: str = "RUB"):
+async def create_auto_payment(user: User,session, amount: float = 150.0, currency: str = "RUB"):
     if not user.payment_method_id:
         raise ValueError("Нет сохранённого способа оплаты")
 
@@ -402,11 +413,21 @@ async def create_auto_payment(user: User, amount: float = 150.0, currency: str =
         },
         "capture": True,
         "payment_method_id": user.payment_method_id,  # ключ для автосписания
-        "description": f"Автопродление подписки",
+        "description": f"Автопродление подписки {user.tg_id}",
         "metadata": {
-            "payload": user.payload
+            "payload": user.payload,
+            "type": "auto"
         }
     })
+    order = Order(
+        user_id=user.id,
+        payment_id=payment.id,
+        amount=amount,
+        status=payment.status,  # pending / succeeded
+        type="auto"
+    )
+
+    session.add(order)
 
     return payment.id  # можем сохранить для логов
 
@@ -423,15 +444,16 @@ async def check_subscriptions():
                 result = await session.execute(
                     select(Order).where(
                         Order.user_id == user.id,
-                        Order.status.in_(["pending"])
-                    ).order_by(Order.create_at.desc())
+                        Order.status == "pending",
+                        Order.type == "auto"
+                    )
                 )
                 order = result.scalars().first()
 
                 if order:
                     continue
 
-                await create_auto_payment(user)
+                await create_auto_payment(user, session)
 
             await session.commit()
     except Exception as e:

@@ -32,6 +32,7 @@ class User(Base):
     payment_method_id: Mapped[str] = mapped_column(String(100), nullable=True)
     payload: Mapped[str] = mapped_column(String(100), unique=True, nullable=True)
     message_id: Mapped[int] = mapped_column(BigInteger, nullable=True)
+    keys_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     notify_message: Mapped[int] = mapped_column(default=0)
 
 
@@ -67,6 +68,14 @@ class Servers(Base):
 
     # Активен ли сервер
     enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+
+class UserServer(Base):
+    __tablename__ = 'userserver'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    uuid: Mapped[str] = mapped_column(String(60),nullable=True)
+    server: Mapped[int] = mapped_column(BigInteger, nullable=True)
+
 
 
 async def async_main():
