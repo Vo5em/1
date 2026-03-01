@@ -77,19 +77,23 @@ async def sub(uuid: str):
         enabled_server_ids = {
             srv["id"] for srv in servers if srv.get("enabled")
         }
-
+        if user.keys_active:
         # 3. какие сервера нужно ДОБАВИТЬ пользователю
-        missing_server_ids = enabled_server_ids - user_server_ids
+            missing_server_ids = enabled_server_ids - user_server_ids
 
-        for srv in servers:
-            if srv["id"] in missing_server_ids:
-                try:
-                    await create_key_on_server(uuid, srv)
-                except Exception as e:
-                    print(e)
+            for srv in servers:
+                if srv["id"] in missing_server_ids:
+                    try:
+                        await create_key_on_server(uuid, srv)
+                    except Exception as e:
+                        print(e)
 
-            # 5. финальный список серверов для подписки
-        final_server_ids = user_server_ids | enabled_server_ids
+                # 5. финальный список серверов для подписки
+            final_server_ids = user_server_ids | enabled_server_ids
+        else:
+            # ❌ не создаём новые ключи
+            # ❌ не добавляем enabled сервера
+            final_server_ids = user_server_ids
 
         vless_lines = []
 
