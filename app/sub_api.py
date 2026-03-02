@@ -52,8 +52,7 @@ async def create_key_on_server(user_uuid: str, srv: dict):
 
         if resp.status_code != 200:
             raise Exception(f"Failed to create client on {srv['name']}")
-        else:
-            await plusserverid(user_uuid, srv["id"])
+        await plusserverid(user_uuid, srv["id"])
 
 def to_profile_title_b64(s: str) -> str:
     # Вернёт строку в виде "base64:<BASE64_UTF8>"
