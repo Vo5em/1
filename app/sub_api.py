@@ -63,6 +63,7 @@ def to_profile_title_b64(s: str) -> str:
 
 @router.get("/sub/{uuid}")
 async def sub(uuid: str):
+    print('dfg')
     async with async_session() as session:
         user = await session.scalar(select(User).where(User.uuid == uuid))
 
