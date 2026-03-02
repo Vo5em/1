@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 async def create_key_on_server(user_uuid: str, srv: dict):
-    client_email = f"NL-{user_uuid[:8]}"
+    client_email = f"{"name"}-{user_uuid[:8]}"
     sub_id = user_uuid[:16]
 
     async with httpx.AsyncClient(base_url=srv["base_url"], timeout=10.0) as client:
@@ -112,7 +112,7 @@ async def sub(uuid: str):
                 f"&sid={srv['sid']}"
                 f"&spx=%2F"
                 f"&flow=xtls-rprx-vision"
-                f"#eschalon-NL-{uuid[:8]}"
+                f"#{srv["name"]}-{uuid[:8]}"
             )
             vless_lines.append(link)
 

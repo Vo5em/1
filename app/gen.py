@@ -63,7 +63,6 @@ async def serch_pull(uuid):
 async def addkey(user_id):
     # Один UUID для всех серверов
     user_uuid = str(uuid.uuid4())
-    client_email = f"NL-{user_uuid[:8]}"
     sub_id = str(uuid.uuid4())[:16]  # 🔥 ОДИН subId для всех серверов
 
     servers = await get_servers()
@@ -72,6 +71,7 @@ async def addkey(user_id):
     for srv in servers:
         if not srv["enabled"]:
             continue
+        client_email = f"{srv['name']}-{user_uuid[:8]}"
 
         async with httpx.AsyncClient(base_url=srv["base_url"], timeout=10.0) as client:
 
@@ -128,9 +128,9 @@ async def delkey(user_uuid: str):
 
     servers = await get_servers()
     final_server_ids = set(await serch_pull(user_uuid))
-    client_email = f"NL-{user_uuid[:8]}"
 
     for srv in servers:
+        client_email = f"{srv['name']}-{user_uuid[:8]}"
         if srv["id"] not in final_server_ids:
             continue
         async with httpx.AsyncClient(base_url=srv["base_url"], timeout=10.0) as client:

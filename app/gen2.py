@@ -48,10 +48,10 @@ async def get_serv():
 
 async def activatekey(user_uuid: str):
     servers = await get_serv()
-    client_email = f"NL-{user_uuid[:8]}"
     final_server_ids = set(await serch_pull2(user_uuid))
 
     for srv in servers:
+        client_email = f"{srv['name']}-{user_uuid[:8]}"
         if srv["id"] not in final_server_ids:
             continue
 
