@@ -104,7 +104,7 @@ async def addkey(user_id):
                     "realitySettings": {
                         "publicKey": srv["pbk"],
                         "fingerprint": srv["fp"],
-                        "serverNames": [srv["sni"], f"www.{srv['sni']}"],
+                        "serverNames": [srv["sni"]],
                         "shortIds": [srv["sid"]],
                         "spiderX": "/"
                     }
