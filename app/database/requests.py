@@ -422,7 +422,6 @@ async def create_auto_payment(user: User,session, amount: float = 150.0, currenc
     order = Order(
         user_id=user.id,
         payment_id=payment.id,
-        amount=amount,
         status=payment.status,  # pending / succeeded
         type="auto"
     )
@@ -444,8 +443,7 @@ async def check_subscriptions():
                 result = await session.execute(
                     select(Order).where(
                         Order.user_id == user.id,
-                        Order.status == "pending",
-                        Order.type == "auto"
+                        Order.status == "pending"
                     )
                 )
                 order = result.scalars().first()
