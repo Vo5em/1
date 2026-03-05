@@ -415,14 +415,16 @@ async def create_auto_payment(user: User,session, amount: float = 150.0, currenc
         "payment_method_id": user.payment_method_id,  # ключ для автосписания
         "description": f"Автопродление подписки {user.tg_id}",
         "metadata": {
-            "payload": user.payload
+            "payload": user.payload,
+            "type": "auto"
         }
     })
     order = Order(
         user_id=user.id,
         payment_id=payment.id,
         amount=amount,
-        status=payment.status  # pending / succeeded
+        status=payment.status,  # pending / succeeded
+        type="auto"
     )
 
     session.add(order)

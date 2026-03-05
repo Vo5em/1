@@ -43,6 +43,7 @@ class Order(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     status: Mapped[str] = mapped_column(String(50),default="pending")
     create_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(MOSCOW_TZ))
+    type: Mapped[str] = mapped_column(String(50), nullable=True)
     payment_id: Mapped[str] = mapped_column(String(100), unique=True, nullable=True)
 
 class Servers(Base):
