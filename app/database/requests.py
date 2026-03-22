@@ -214,6 +214,7 @@ async def schedulers():
             await check_end()
             await check_notyfy()
             await check_pending()
+            await disable_autopay_if_failed()
         except Exception as e:
             print(f"Ошибка в schedulers(): {e}")
         await asyncio.sleep(1800)
@@ -456,6 +457,37 @@ async def check_subscriptions():
             await session.commit()
     except Exception as e:
         print(f"Ошибка в check_subscriptions: {e}")
+
+
+async def disable_autopay_if_failed():
+    print('dis')
+    now = datetime.now(tz=MOSCOW_TZ)
+
+    async with async_session() as session:
+        result = await session.execute(
+            select(User)
+            .where(
+                User.dayend < now,
+                User.keys_active.is_(False),
+                User.payment_method_id != None
+            )
+        )
+
+        for user, sub in result.all():
+
+            # Ищем последний заказ
+            last_order = await session.scalar(
+                select(Order)
+                .where(Order.user_id == user.id)
+                .order_by(Order.create_at.desc())
+            )
+
+            # 👉 Проверяем что была неудачная попытка оплаты
+            if last_order and last_order.status == "canceled":
+                user.payment_method_id = None
+
+
+        await session.commit()
 
 @app.get("/")
 async def index(request: Request):
