@@ -473,7 +473,7 @@ async def disable_autopay_if_failed():
             )
         )
 
-        for user in result.all():
+        for user in result.scalars():
 
             # Ищем последний заказ
             last_order = await session.scalar(
