@@ -9,7 +9,7 @@ async def serch_pull2(uuid):
     async with async_session() as session:
         result = await session.execute(
             select(UserServer.server)
-            .where(UserServer.user_uuid == uuid)
+            .where(UserServer.uuid == uuid)
         )
 
         servers = result.scalars().all()
