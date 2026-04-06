@@ -81,7 +81,7 @@ async def activatekey(user_uuid: str):
                         "email": client_email,
                         "flow": "xtls-rprx-vision",
                         "fingerprint": srv["fp"],
-                        "shortId": [srv["sid"]],
+                        "shortId": srv["sid"],
                         "enable": True
                     }]
                 })
