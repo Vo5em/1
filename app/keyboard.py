@@ -42,7 +42,7 @@ downloadand = InlineKeyboardMarkup(inline_keyboard=[
 downloadiph = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Скачать приложение', url='https://apps.apple.com/lt/app/v2raytun/id6476628951')],
     [InlineKeyboardButton(text='⬅Назад', callback_data='period'),
-     InlineKeyboardButton(text='Видео инструкция', url='https://t.me/e_instructions/4')],
+     InlineKeyboardButton(text='Видео инструкция', url='https://t.me/e_instructio4')],
     [InlineKeyboardButton(text='↩️На главную', callback_data='home')]
 ])
 
