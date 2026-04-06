@@ -44,6 +44,7 @@ async def get_servers():
     return server_dicts
 
 async def plusserverid(uuid, pull):
+    print(f"💾 SAVE UserServer: uuid={uuid}, server={pull}")
     async with async_session() as session:
         session.add(UserServer(uuid=uuid, server=pull))
         await session.commit()
@@ -57,6 +58,7 @@ async def serch_pull(uuid):
         )
 
         servers = result.scalars().all()
+    print(f"📦 USER SERVERS (del): {uuid} -> {servers}")
     return servers
 
 
@@ -125,9 +127,11 @@ async def addkey(user_id):
     await set_key(user_id, subscription_url, user_uuid)
 
 async def delkey(user_uuid: str):
+    print(f"\n🛑 DELETE USER: {user_uuid}")
 
     servers = await get_servers()
     final_server_ids = set(await serch_pull(user_uuid))
+    print("FINAL SERVER IDS:", final_server_ids)
 
     for srv in servers:
         client_email = f"{srv['name']}-{user_uuid[:8]}"

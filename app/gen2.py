@@ -13,6 +13,7 @@ async def serch_pull2(uuid):
         )
 
         servers = result.scalars().all()
+    print(f"📦 USER SERVERS (activate): {uuid} -> {servers}")
     return servers
 
 
@@ -47,8 +48,14 @@ async def get_serv():
     return server_dicts
 
 async def activatekey(user_uuid: str):
+    print(f"\n🚀 ACTIVATE USER: {user_uuid}")
     servers = await get_serv()
     final_server_ids = set(await serch_pull2(user_uuid))
+    print("FINAL SERVER IDS:", final_server_ids)
+
+    if not final_server_ids:
+        print("⚠️ НЕТ серверов у пользователя!")
+        return
 
     for srv in servers:
         client_email = f"{srv['name']}-{user_uuid[:8]}"
