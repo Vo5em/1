@@ -350,8 +350,8 @@ async def yookassa_webhook(request: Request):
                 ref_id = user.referrer_id
 
 
-                await activatekey(ruuid)
                 try:
+                    await activatekey(ruuid)
                     await notify_spss(tg_id)
                     await plusnoty(tg_id)
                 except Exception as e:
