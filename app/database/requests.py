@@ -329,22 +329,14 @@ async def yookassa_webhook(request: Request):
 
     if event == "payment.succeeded":
         payload = obj.get("metadata", {}).get("payload")
-        payment_id = obj.get("id")
         payment_method_id = obj.get("payment_method", {}).get("id")
 
         if payload:
             async with async_session() as session:
-                user = await session.scalar(
-                    select(User).where(User.payload == payload)
-                )
+                result = await session.execute(select(User).where(User.payload == payload))
+                user = result.scalars().first()
                 if not user:
                     return {"status": "user_not_found"}
-
-                order = await session.scalar(
-                    select(Order).where(Order.payment_id == payment_id)
-                )
-                if order and order.status == "paid":
-                    return {"status": "already_processed"}
 
                 now = datetime.now(tz=MOSCOW_TZ)
                 if not user.dayend or user.dayend < now:
@@ -352,18 +344,12 @@ async def yookassa_webhook(request: Request):
                 else:
                     user.dayend += timedelta(days=30)
 
-                if payment_method_id:
-                    user.payment_method_id = payment_method_id
-
-                if order:
-                    order.status = "paid"
-
-                await session.commit()
-
                 ruuid = user.uuid
                 tg_id = int(user.tg_id)
                 iid = user.id
                 ref_id = user.referrer_id
+
+
                 await activatekey(ruuid)
                 try:
                     await notify_spss(tg_id)
@@ -376,29 +362,19 @@ async def yookassa_webhook(request: Request):
                     print("User has no referrer, skipping takeprise")
 
 
-    elif event == "payment.canceled":
-        payload = obj.get("metadata", {}).get("payload")
-        payment_id = obj.get("id")
+                if payment_method_id:
+                    user.payment_method_id = payment_method_id
 
-        if payload:
-            async with async_session() as session:
-                user = await session.scalar(
-                    select(User).where(User.payload == payload)
+                result = await session.execute(
+                    select(Order)
+                    .where(Order.user_id == user.id)
+                    .order_by(Order.create_at.desc())
                 )
-                if not user:
-                    return {"status": "user_not_found"}
-
-                order = await session.scalar(
-                    select(Order).where(Order.payment_id == payment_id)
-                )
-
+                order = result.scalars().first()
                 if order:
-                    order.status = "canceled"
+                    order.status = "paid"
 
                 await session.commit()
-
-
-    return {"status": "ok"}
 
 
 async def create_auto_payment(user: User,session, amount: float = 150.0, currency: str = "RUB"):
