@@ -12,11 +12,6 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
-#REALITY_PBK = "k-FhLsJOvN4lAFyVBoohK__IFCh6v6BzLn6Yo1j9Tm8"
-#REALITY_SNI = "google.com"
-#REALITY_SID = "6dc9a670b54255f1"
-#INBOUND_NAME = "eschalon"
-#REALITY_FP = "chrome"
 
 
 async def get_servers():

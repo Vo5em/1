@@ -3,8 +3,7 @@ import json
 from app.database.models import async_session, Servers, UserServer, User
 from sqlalchemy import select, update
 
-#REALITY_FP = "chrome"
-#REALITY_SID = "6dc9a670b54255f1"
+
 async def serch_pull2(uuid):
     async with async_session() as session:
         result = await session.execute(
@@ -13,7 +12,7 @@ async def serch_pull2(uuid):
         )
 
         servers = result.scalars().all()
-    print(f"📦 USER SERVERS (activate): {uuid} -> {servers}")
+    print(f" USER SERVERS (activate): {uuid} -> {servers}")
     return servers
 
 
@@ -48,13 +47,13 @@ async def get_serv():
     return server_dicts
 
 async def activatekey(user_uuid: str):
-    print(f"\n🚀 ACTIVATE USER: {user_uuid}")
+    print(f"\n ACTIVATE USER: {user_uuid}")
     servers = await get_serv()
     final_server_ids = set(await serch_pull2(user_uuid))
     print("FINAL SERVER IDS:", final_server_ids)
 
     if not final_server_ids:
-        print("⚠️ НЕТ серверов у пользователя!")
+        print(" НЕТ серверов у пользователя!")
         return
 
     for srv in servers:
@@ -62,24 +61,23 @@ async def activatekey(user_uuid: str):
         if srv["id"] not in final_server_ids:
             continue
 
-        # Гарантируем, что URL правильный
         base_url = srv["base_url"]
         if not base_url.startswith(("http://", "https://")):
             base_url = "http://" + base_url
 
         async with httpx.AsyncClient(base_url=base_url, timeout=10.0) as client:
 
-            # --- 1. Логин ---
+
             login_resp = await client.post("login", json={
                 "username": srv["login"],
                 "password": srv["password"]
             })
 
             if login_resp.status_code != 200:
-                print(f"[{srv['name']}] ❌ Ошибка авторизации: {login_resp.text}")
+                print(f"[{srv['name']}]  Ошибка авторизации: {login_resp.text}")
                 continue
 
-            # --- 2. Формируем payload ---
+
             payload = {
                 "id": 1,
                 "settings": json.dumps({
@@ -94,7 +92,7 @@ async def activatekey(user_uuid: str):
                 })
             }
 
-            # --- 3. Запрос активации ---
+
             resp = await client.post(
                 f"panel/api/inbounds/updateClient/{user_uuid}",
                 json=payload
@@ -103,11 +101,11 @@ async def activatekey(user_uuid: str):
             try:
                 j = resp.json()
             except:
-                print(f"[{srv['name']}] ❌ Ошибка активации {resp.status_code}: {resp.text}")
+                print(f"[{srv['name']}]  Ошибка активации {resp.status_code}: {resp.text}")
                 continue
 
             if j.get("success"):
-                print(f"[{srv['name']}] ✅ Пользователь {client_email} активирован")
+                print(f"[{srv['name']}]  Пользователь {client_email} активирован")
             else:
-                print(f"[{srv['name']}] ❌ Ответ API: {j}")
+                print(f"[{srv['name']}]  Ответ API: {j}")
     await cheng_state_a(user_uuid)

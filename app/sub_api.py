@@ -55,7 +55,6 @@ async def create_key_on_server(user_uuid: str, srv: dict):
         await plusserverid(user_uuid, srv["id"])
 
 def to_profile_title_b64(s: str) -> str:
-    # Вернёт строку в виде "base64:<BASE64_UTF8>"
     b = s.encode("utf-8")
     return "base64:" + base64.b64encode(b).decode("ascii")
 
@@ -71,14 +70,14 @@ async def sub(uuid: str):
 
         user_server_ids = set(await serch_pull(uuid))
 
-        # 2. все сервера системы
+
         servers = await get_servers()
 
         enabled_server_ids = {
             srv["id"] for srv in servers if srv.get("enabled")
         }
         if user.keys_active:
-        # 3. какие сервера нужно ДОБАВИТЬ пользователю
+
             missing_server_ids = enabled_server_ids - user_server_ids
 
             for srv in servers:
@@ -88,11 +87,11 @@ async def sub(uuid: str):
                     except Exception as e:
                         print(e)
 
-                # 5. финальный список серверов для подписки
+
             final_server_ids = user_server_ids | enabled_server_ids
         else:
-            # ❌ не создаём новые ключи
-            # ❌ не добавляем enabled сервера
+
+
             final_server_ids = user_server_ids
 
         vless_lines = []
@@ -118,15 +117,14 @@ async def sub(uuid: str):
 
         body = "\n".join(vless_lines)
 
-        # НАЗВАНИЕ с кавычками — кодируем в base64 UTF-8 и ставим в profile-title
+
         profile_title_value = to_profile_title_b64('eschalon «VPN»')
         headers = {
-            # важное: значение ASCII (base64:...), имя заголовка в нижнем регистре OK
+
             "profile-title": profile_title_value,
-            # описание можно передать как простой ASCII заголовок
             "profile-desc": "Change_location_if_not_working",
             "Content-Type": "text/plain; charset=utf-8",
-            # опционально: статистика
+
         }
 
         return Response(content=body, media_type="text/plain", headers=headers)

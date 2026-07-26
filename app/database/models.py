@@ -50,24 +50,16 @@ class Servers(Base):
     __tablename__ = "servers"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    # Имя сервера (удобный label)
     name: Mapped[str] = mapped_column(String(60), nullable=False)
-    # URL панели → https://domain.com/ или https://x.x.x.x/
     base_url: Mapped[str] = mapped_column(String(120), nullable=False)
-    # Адрес реального сервера (домен или IP)
     address: Mapped[str] = mapped_column(String(120), nullable=False)
-    # Порт (обычно 443)
     port: Mapped[int] = mapped_column(nullable=False, default=443)
-    # Reality параметры
-    pbk: Mapped[str] = mapped_column(String(120), nullable=False)   # publicKey
+    pbk: Mapped[str] = mapped_column(String(120), nullable=False)
     sni: Mapped[str] = mapped_column(String(120), nullable=False)
     sid: Mapped[str] = mapped_column(String(120), nullable=False)
-    fp: Mapped[str] = mapped_column(String(60), nullable=False)     # fingerprint
-    #login
+    fp: Mapped[str] = mapped_column(String(60), nullable=False)
     login: Mapped[str] = mapped_column(String(60), nullable=False)
     password: Mapped[str] = mapped_column(String(60), nullable=False)
-
-    # Активен ли сервер
     enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
 class UserServer(Base):

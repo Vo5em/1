@@ -308,7 +308,6 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
     payment_id = str(payment.id)
     payment_url = payment.confirmation.confirmation_url
 
-    # Сохраняем payment_id в заказе
     async with async_session() as session:
         order = await session.get(Order, order_id)
         order.payment_id = payment_id
@@ -321,7 +320,7 @@ async def create_payment(tg_id: int, amount: float = 150.0, currency: str = "RUB
 @app.post("/yookassa/webhook")
 async def yookassa_webhook(request: Request):
     raw = await request.body()
-    print("RAW webhook:", raw.decode())  # для отладки
+    print("RAW webhook:", raw.decode())
 
     data = await request.json()
     event = data.get("event")
@@ -387,7 +386,7 @@ async def create_auto_payment(user: User,session, amount: float = 150.0, currenc
             "currency": currency
         },
         "capture": True,
-        "payment_method_id": user.payment_method_id,  # ключ для автосписания
+        "payment_method_id": user.payment_method_id,
         "description": f"Автопродление подписки {user.tg_id}",
         "metadata": {
             "payload": user.payload,
@@ -397,13 +396,13 @@ async def create_auto_payment(user: User,session, amount: float = 150.0, currenc
     order = Order(
         user_id=user.id,
         payment_id=payment.id,
-        status=payment.status,  # pending / succeeded
+        status=payment.status,
         type="auto"
     )
 
     session.add(order)
 
-    return payment.id  # можем сохранить для логов
+    return payment.id
 
 
 async def check_subscriptions():
@@ -449,14 +448,14 @@ async def disable_autopay_if_failed():
 
         for user in result.scalars():
 
-            # Ищем последний заказ
+
             last_order = await session.scalar(
                 select(Order)
                 .where(Order.user_id == user.id)
                 .order_by(Order.create_at.desc())
             )
 
-            # 👉 Проверяем что была неудачная попытка оплаты
+
             if last_order and last_order.status == "canceled":
                 user.payment_method_id = None
 
